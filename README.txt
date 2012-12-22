@@ -1,5 +1,6 @@
 The directory structure we've agreed on is:
 bin #should not get committed
+dist #should not get committed
 doc #should not get committed
 lib
 src
