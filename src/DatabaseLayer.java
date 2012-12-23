@@ -1,3 +1,5 @@
+import java.sql.Connection;
+
 /**
  * The DatabaseLayer class contains static methods for accessing the sqlite
  * database. It includes methods to get, update, and create objects in the
@@ -8,15 +10,46 @@
 
 public class DatabaseLayer
 {
-	/**
-	 * File path of the sqlite database.
-	 **/
-	private static String dbLocation;
+	/** Default location of the database. */
+	public static final String DEFAULT_DB_LOCATION="hclc.db";
+
+	/** File path to the sqlite database. */
+	private static String dbLocation=DEFAULT_DB_LOCATION;
+
+	/** Singleton instance itself. */
+	private static DatabaseLayer instance=null;
+
+	/** Connection to the database. Statements are run against this object. */
+	private Connection db;
 
 	/**
-	 * Connection to the sqlite database. Statements are run against this object.
-	 **/
-	private static Connection db;
+	 * Selects a custom database location.
+	 * This is only useful if the instance has not yet been constructed; otherwise, it does nothing.
+	 * @param path valid readable/writable path to the database file to create or use
+	 * @return whether the path could be set (i.e. <tt>getInstance()</tt> has never been called
+	 */
+	public static boolean setDatabaseLocation(String path)
+	{
+	}
+
+	/**
+	 * Retrieves singleton instance.
+	 * The database will be located at the default location unless <tt>setDatabaseLocation(String)</tt> has first been used.
+	 * @return the <tt>DatabaseLayer</tt> instance, or <tt>null</tt> upon error
+	 */
+	public static DatabaseLayer getInstance()
+	{
+	}
+
+	/**
+	 * Instance constructor.
+	 * This will only be invoked once per run.
+	 * Precondition: The database driver must already be loaded.
+	 * @throws SQLException in case of a database error
+	 */
+	private DatabaseLayer() throws SQLException
+	{
+	}
 
 	/**
 	 * Fetches the item with a given id from the database.
@@ -24,7 +57,7 @@ public class DatabaseLayer
 	 * @return The item in the database with the given id or null if no item
 	 * with the given id exists.
 	 **/
-	public static Item getItemById(int id)
+	public Item getItemById(int id)
 	{
 	}
 
@@ -32,7 +65,7 @@ public class DatabaseLayer
 	 * Gets all of the items in the database.
 	 * @return A collection of all of the items in the database.
 	 **/
-	public static Collection<Item> getItemsAll()
+	public Collection<Item> getItemsAll()
 	{
 	}
 
@@ -42,7 +75,7 @@ public class DatabaseLayer
 	 * is created then the id is updated with the auto incremented one.
 	 * @param item The item to update
 	 **/
-	public static void updateOrCreateItem(Item item)
+	public void updateOrCreateItem(Item item)
 	{
 	}
 
@@ -52,7 +85,7 @@ public class DatabaseLayer
 	 * @return The vending machine with the given id or null if the vending
 	 * machine does not exist.
 	 **/
-	public static VendingMachine getVendingMachineById(int id)
+	public VendingMachine getVendingMachineById(int id)
 	{
 	}
 
@@ -60,7 +93,7 @@ public class DatabaseLayer
 	 * Fetches all of the vending machines in the database.
 	 * @return Collection of all of the vending machines in the database.
 	 **/
-	public static Collection<VendingMachine> getVendingMachinesAll()
+	public Collection<VendingMachine> getVendingMachinesAll()
 	{
 	}
 
@@ -69,7 +102,7 @@ public class DatabaseLayer
 	 * @param zip The zip code to fetch the vending machines from.
 	 * @return Collection of all of the vending machines at the given zip code.
 	 **/
-	public static Collection<VendingMachine> getVendingMachinesByZip(int zip)
+	public Collection<VendingMachine> getVendingMachinesByZip(int zip)
 	{
 	}
 
@@ -78,7 +111,7 @@ public class DatabaseLayer
 	 * @param state The state to fetch the vending machines from.
 	 * @return Collection of all of the vending machines in the given state.
 	 **/
-	public static Collection<VendingMachine> getVendingMachinesByState(String state);
+	public Collection<VendingMachine> getVendingMachinesByState(String state);
 	{
 	}
 
@@ -90,7 +123,7 @@ public class DatabaseLayer
 	 * the machine.
 	 * @param vm The vending machine to update or create.
 	 **/
-	public static void updateOrCreateVendingMachine(VendingMachine vm)
+	public void updateOrCreateVendingMachine(VendingMachine vm)
 	{
 	}
 
@@ -100,7 +133,7 @@ public class DatabaseLayer
 	 * @return The customer with given id or null if the customer does not
 	 * exist.
 	 **/
-	public static Customer getCustomerById(int id)
+	public Customer getCustomerById(int id)
 	{
 	}
 
@@ -109,7 +142,7 @@ public class DatabaseLayer
 	 * if it does not exist.
 	 * @param customer The Customer to update/create.
 	 **/
-	public static void updateOrCreateCustomer(Customer customer)
+	public void updateOrCreateCustomer(Customer customer)
 	{
 	}
 
@@ -118,7 +151,7 @@ public class DatabaseLayer
 	 * @param id The id of the manager to fetch.
 	 * @return The manager with the given id or null if no such manager exists.
 	 **/
-	public static Manager getManagerById(int id)
+	public Manager getManagerById(int id)
 	{
 	}
 
@@ -127,7 +160,7 @@ public class DatabaseLayer
 	 * if it does not exist.
 	 * @param manager The manager to update/create.
 	 **/
-	public static void updateOrCreateManager(Manager manager)
+	public void updateOrCreateManager(Manager manager)
 	{
 	}
 
@@ -138,7 +171,7 @@ public class DatabaseLayer
 	 * @return The transaction with the given id or null if no such transaction
 	 * exists.
 	 **/
-	public static Transaction getTransactionById(int id)
+	public Transaction getTransactionById(int id)
 	{
 	}
 
@@ -150,7 +183,7 @@ public class DatabaseLayer
 	 * @return A collection containing the transactions that occurred at the
 	 * given vending machine.
 	 **/
-	public static Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm)
+	public Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm)
 	{
 	}
 
@@ -160,7 +193,7 @@ public class DatabaseLayer
 	 * @return A collection containing the transactions the given customer
 	 * performed.
 	 **/
-	public static Collection<Transaction> getTransactionsByCustomer(Customer customer)
+	public Collection<Transaction> getTransactionsByCustomer(Customer customer)
 	{
 	}
 
@@ -168,7 +201,7 @@ public class DatabaseLayer
 	 * Fetches all of the transactions that have ever occurred.
 	 * @return A collection of all of the transactions.
 	 **/
-	public static Collection<Transaction> getTransactionsAll()
+	public Collection<Transaction> getTransactionsAll()
 	{
 	}
 
@@ -177,7 +210,7 @@ public class DatabaseLayer
 	 * it if it doesn't exist.
 	 * @param transaction The transaction to create/update.
 	 **/
-	 public static void updateOrCreateTransaction(Transaction transaction)
-	 {
-	 }
+	public void updateOrCreateTransaction(Transaction transaction)
+	{
+	}
 }
