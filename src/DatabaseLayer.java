@@ -1,4 +1,6 @@
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * The DatabaseLayer class contains static methods for accessing the sqlite
@@ -12,6 +14,12 @@ public class DatabaseLayer
 {
 	/** Default location of the database. */
 	public static final String DEFAULT_DB_LOCATION="hclc.db";
+
+	/** Driver with which to access the database. */
+	private static final String DB_DRIVER="jdbc:sqlite:";
+
+	/** Package and class providing the requested driver. */
+	private static final String DRIVER_CLASS="org.sqlite.JDBC";
 
 	/** File path to the sqlite database. */
 	private static String dbLocation=DEFAULT_DB_LOCATION;
@@ -30,6 +38,14 @@ public class DatabaseLayer
 	 */
 	public static boolean setDatabaseLocation(String path)
 	{
+		if(instance==null) //instance not yet constructed
+		{
+			dbLocation=path;
+			
+			return true;
+		}
+		else
+			return false;
 	}
 
 	/**
@@ -39,6 +55,29 @@ public class DatabaseLayer
 	 */
 	public static DatabaseLayer getInstance()
 	{
+		try
+		{
+			Class.forName(DRIVER_CLASS); //load driver
+			
+			if(instance==null) //instance not yet constructed
+				instance=new DatabaseLayer();
+			
+			return instance;
+		}
+		catch(ClassNotFoundException gone)
+		{
+			System.err.println("ERROR: Unable to locate database driver! Is your classpath set correctly?");
+			System.err.println("Technical details: "+gone);
+			
+			return null;
+		}
+		catch(SQLException disconnected)
+		{
+			System.err.println("ERROR: Unable to connect to the database! Do you have the proper permissions?");
+			System.err.println("Technical details: "+disconnected);
+			
+			return null;
+		}
 	}
 
 	/**
@@ -49,6 +88,7 @@ public class DatabaseLayer
 	 */
 	private DatabaseLayer() throws SQLException
 	{
+		db=DriverManager.getConnection(DB_DRIVER+dbLocation);
 	}
 
 	/**
