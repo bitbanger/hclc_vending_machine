@@ -4,6 +4,7 @@ LIBS=sqlite-jdbc-3.7.2.jar
 
 #command aliases
 JAR=jar
+JAVA=java
 JAVAC=javac
 JAVADOC=javadoc
 
@@ -14,7 +15,7 @@ DOCDIR=doc
 LIBDIR=lib
 SRCDIR=src
 
-devel: classes documents
+devel: classes documents launchers
 
 classes:
 	- mkdir ${BINDIR}
@@ -30,7 +31,13 @@ documents:
 	- mkdir ${DOCDIR}
 	${JAVADOC} -d ${DOCDIR} ${SRCDIR}/*.java
 
+launchers:
+	echo "export CLASSPATH=${BINDIR}$(foreach library,${LIBS},:${LIBDIR}/${library})" > vars.include
+	$(foreach class,${EXEC},echo -e "#!/bin/sh\n. ./vars.include\n${JAVA} ${class}" > run-${class}.sh ; chmod +x run-${class}.sh)
+
 clean: cleanbin cleandoc
+	- rm run-*.sh
+	- rm *.include
 	- rm Manifest
 
 distclean: clean cleandist
