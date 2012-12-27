@@ -92,6 +92,38 @@ public class DatabaseLayer
 	}
 
 	/**
+	 * Creates all of the necessary tables in the database
+	 * @throws SQLException in case of a database error
+	 **/
+	private void initializeDatabase() throws SQLException
+	{
+		Statement stmt = db.createStatement();
+		
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS Location( locationId INTEGER PRIMARY KEY AUTOINCREMENT, zipCode INTEGER, state TEXT);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS Item( itemId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, price INTEGER NOT NULL, freshLength INTEGER NOT NULL);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), layoutId INTEGER REFERENCES VMLayout(layoutId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL, rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VendingMachine( machineId INTEGER PRIMARY KEY AUTOINCREMENT, active INTEGER NOT NULL, currentLayoutId INTEGER REFERENCES VMLayout(layoutId), nextLayoutId INTEGER REFERENCES VMLayout(layoutId), locationId INTEGER REFERENCES Location(locationId));");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS NearbyBusiness( nearbyBusinessId INTEGER PRIMARY KEY AUTOINCREMENT, locationId INTEGER REFERENCES Location(locationId), name TEXT NOT NULL);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMUser( userId INTEGER PRIMARY KEY AUTOINCREMENT);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS Customer( customerId INTEGER PRIMARY KEY AUTOINCREMENT, userID INTEGER REFERENCES VMUser(userId), money INTEGER NOT NULL);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS Manager( managerId INTEGER PRIMARY KEY AUTOINCREMENT, password TEXT NOT NULL);");
+
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMTransaction( transactionId INTEGER PRIMARY KEY AUTOINCREMENT, timestamp INTEGER NOT NULL, machineId INTEGER REFERENCES VendingMachine(machineId), customerId INTEGER REFERENCES Customer(customerId), productId INTEGER REFERENCES Item(itemId), rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
+
+		stmt.executeBatch();
+		stmt.close();
+	}
+
+	/**
 	 * Fetches the item with a given id from the database.
 	 * @param id The id of the item to fetch.
 	 * @return The item in the database with the given id or null if no item
