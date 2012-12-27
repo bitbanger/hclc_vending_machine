@@ -1,3 +1,7 @@
 bin
 dist
 doc
+
+Manifest
+run-*.sh
+*.include
