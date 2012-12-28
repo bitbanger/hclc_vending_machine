@@ -21,25 +21,28 @@ public class VendingMachine implements ModelBase
 
 	/**
 	 * Fresh constructor.
-	 * Creates an instance with the specified <tt>id</tt> and <tt>location</tt>.
+	 * Creates an instance with the specified <tt>id</tt>, <tt>location</tt>, and layout.
 	 * Initially, the machine is considered to be active, but lacks any next layout.
 	 * This method is intended to be invoked only by classes that know a good value for this <tt>id</tt>
 	 * @param id the instance's primary key
 	 * @param location the <tt>VendingMachine</tt>'s abode
 	 * @param currentLayout the <tt>VendingMachine</tt>'s layout
-	 * @throws IllegalArgumentException if the <tt>id</tt> is invalid or <tt>location</tt> or <tt>currentLayout</tt> is missing
+	 * @throws IllegalArgumentException if the <tt>id</tt> is invalid or <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>
 	 */
 	public VendingMachine(int id, Location location, Layout currentLayout) throws IllegalArgumentException
 	{
-		if(id>=MIN_ID && location!=null && currentLayout!=null)
-		{
-			machineId=id;
-			active=true;
-			this.location=location;
-			this.currentLayout=currentLayout;
-			nextLayout=null;
-		}
-		else throw new IllegalArgumentException("ID too low");
+		if(id<MIN_ID)
+			throw new IllegalArgumentException("ID too low");
+		else if(location==null)
+			throw new IllegalArgumentException("Location cannot be null");
+		else if(currentLayout==null)
+			throw new IllegalArgumentException("Current layout cannot be null");
+		
+		machineId=id;
+		active=true;
+		this.location=location;
+		this.currentLayout=currentLayout;
+		nextLayout=null;
 	}
 
 	/**
@@ -66,9 +69,13 @@ public class VendingMachine implements ModelBase
 
 	/**
 	 * @param location a replacement location
+	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setLocation(Location location)
+	public void setLocation(Location location) throws IllegalArgumentException
 	{
+		if(location==null)
+			throw new IllegalArgumentException("Location cannot be null");
+		
 		this.location=location;
 	}
 
