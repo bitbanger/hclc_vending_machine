@@ -7,4 +7,7 @@ public interface ModelBase
 {
 	/** The minimum allowable primary key. */
 	public static final int MIN_ID=0;
+	
+	/** Accessor for the item's ID. */
+	public int getId();
 }
