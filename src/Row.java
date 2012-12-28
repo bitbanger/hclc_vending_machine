@@ -64,7 +64,7 @@ public class Row implements ModelBase
 	 */
 	public int getId()
 	{
-		return machineId;
+		return rowId;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class Row implements ModelBase
 	/**
 	 * @return the remaining quantity
 	 */
-	public void getRemainingQuantity()
+	public int getRemainingQuantity()
 	{
 		return remainingQuantity;
 	}
