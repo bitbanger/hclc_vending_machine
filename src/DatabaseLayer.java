@@ -1,4 +1,6 @@
 import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -128,10 +130,18 @@ public class DatabaseLayer
 	 * Fetches the item with a given id from the database.
 	 * @param id The id of the item to fetch.
 	 * @return The item in the database with the given id or null if no item
+	 * @throws SQLException in case of a database error
 	 * with the given id exists.
 	 **/
-	public Item getItemById(int id)
+	public FoodItem getFoodItemById(int id) throws SQLException
 	{
+		FoodItem returnValue = null;
+		Statement stmt = db.createStatement();
+		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item WHERE itemId=" + id);
+		if (results.next())
+			returnValue = new FoodItem(results.getInt(1), results.getString(2), results.getInt(3), results.getInt(4));
+		results.close();
+		return returnValue;
 	}
 
 	/**
