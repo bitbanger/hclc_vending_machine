@@ -82,7 +82,7 @@ public class Row implements ModelBase
 	/**
 	 * @return the product
 	 */
-	public Location getProduct()
+	public FoodItem getProduct()
 	{
 		return product;
 	}
@@ -112,7 +112,7 @@ public class Row implements ModelBase
 	 * @param expirationDate a replacement expiration date
 	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setExpirationDate(FoodItem expirationDate) throws IllegalArgumentException
+	public void setExpirationDate(GregorianCalendar expirationDate) throws IllegalArgumentException
 	{
 		if(expirationDate==null)
 			throw new IllegalArgumentException("Expiration date cannot be null");
