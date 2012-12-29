@@ -2,7 +2,7 @@
  * Represents a vending machine's location.
  * @author Lane Lawley <lxl5734@rit.edu>
  */
-public class Location {
+public class Location implements ModelBase {
 	/** The location's primary key. */
 	private int locationId;
 

@@ -24,7 +24,7 @@ public class FoodItem implements ModelBase {
 	 * @param freshLength	How long the food item is good for, after being added to the machine.
 	 */
 	public FoodItem(int itemId, String name, int price, long freshLength) {
-		if(id >= MIN_ID) throw new IllegalArgumentException("ID too low");
+		if(itemId >= MIN_ID) throw new IllegalArgumentException("ID too low");
 		if(name.equals("")) throw new IllegalArgumentException("Name must be non-null");
 		if(price <= 0) throw new IllegalArgumentException("Price must be greater than zero");
 		if(freshLength <= 0) throw new IllegalArgumentException("Fresh length must be greater than zero");
