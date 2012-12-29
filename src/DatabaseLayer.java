@@ -197,13 +197,102 @@ public class DatabaseLayer
 	}
 
 	/**
+	 * Fetches the VMLayout with the given id. Should only be called by the methods
+	 * inside this class that need to work with VMLayouts, which is mostly the
+	 * VendingMachine methods.
+	 * @param id The id of the VMLayout to get.
+	 * @return The VMLayout from the database with the given id or null if no such
+	 * VMLayout exists.
+	 * @throws SQLException in case of a database error.
+	 **/
+	private VMLayout getVMLayoutById(int id) throws SQLException
+	{
+		Statement rowStmt = db.createStatement();
+		ResultSet rowResults = rowStmt.executeQuery("SELECT vmRowId, productId, expirationDate, remainingQuant, rowX, rowY FROM VMRow WHERE layoutId=" + id);
+		int maxX = -1;
+		int maxY = -1;
+		LinkedList<Pair<Row,Pair<Integer,Integer>>> raw = new LinkedList<Pair<Row,Pair<Integer,Integer>>>();
+		while (rowResults.next())
+		{
+			int productId = rowResults.getInt(2);
+			long dateInt = rowResults.getInt(3);
+			int rowX = rowResults.getInt(5);
+			int rowY = rowResults.getInt(6);
+
+			maxX = Math.max(maxX, rowX);
+			maxY = Math.min(maxY, rowY);
+
+			FoodItem item = getFoodItemById(productId);
+			
+			GregorianCalendar date = new GregorianCalendar();
+			date.setTimeInMillis(dateInt);
+
+			raw.add(new Pair<Row,Pair<Integer,Integer>>(new Row(rowResults.getInt(1), item, rowResults.getInt(4), date), new Pair<Integer, Integer>(rowX, rowY)));
+		}
+
+		rowStmt.close();
+
+		if (maxX == -1 || maxY == -1)
+			return null;
+
+		Row[][] rows = new Row[maxY+1][maxX+1];
+		for (Pair<Row,Pair<Integer,Integer>> entry : raw)
+			rows[entry.second.second][entry.second.first] = entry.first;
+		return new VMLayout(id, rows);
+	}
+
+	/**
+	 * Fetches the Location with the given id. Only this class should ever need
+	 * to do that.
+	 * @param id The id of the Location to fetch.
+	 * @return The Location with the given id or null if no such Location exists.
+	 * @throws SQLException in case of a database error.
+	 **/
+	private Location getLocationById(int id) throws SQLException
+	{
+		Location returnValue = null;
+		Statement locStmt = db.createStatement();
+		ResultSet locSet = locStmt.executeQuery("SELECT locationId, zipCode, state FROM Location WHERE locationId=" + id);
+		if (locSet.next())
+		{
+			Statement busStmt = db.createStatement();
+			ResultSet busSet = busStmt.executeQuery("SELECT name FROM NearbyBusiness WHERE locationId=" + id);
+			LinkedList<String> busList = new LinkedList<String>();
+			while (busSet.next())
+				busList.add(busSet.getString(1));
+			returnValue = new Location(locSet.getInt(1), locSet.getInt(2), locSet.getString(3), busList.toArray(new String[0]));
+		}
+		locStmt.close();
+		return returnValue;
+	}
+
+	/**
 	 * Fetches the vending machine with the given id.
 	 * @param id The id of the vending machine to fetch.
 	 * @return The vending machine with the given id or null if the vending
 	 * machine does not exist.
+	 * @throws SQLException in case of a database error
 	 **/
-	public VendingMachine getVendingMachineById(int id)
+	public VendingMachine getVendingMachineById(int id) throws SQLException
 	{
+		VendingMachine returnValue = null;
+		Statement vmStmt = db.createStatement();
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId FROM VendingMachine WHERE machineId=" + id);
+		if (vmResults.next())
+		{
+			id = vmResults.getInt(1);
+			boolean active = !(vmResults.getInt(2) == 0);
+			int curId = vmResults.getInt(3);
+			int nextId = vmResults.getInt(4);
+			int locationId = vmResults.getInt(5);
+			
+			VMLayout cur = getVMLayoutById(curId);
+			VMLayout next = getVMLayoutById(nextId);
+			Location loc = getLocationById(locationId);
+			returnValue = new VendingMachine(id, loc, cur, next, active);
+		}
+		vmResults.close();
+		return returnValue;
 	}
 
 	/**
