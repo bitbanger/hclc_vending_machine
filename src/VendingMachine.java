@@ -29,7 +29,7 @@ public class VendingMachine implements ModelBase
 	 * @param currentLayout the <tt>VendingMachine</tt>'s layout
 	 * @throws IllegalArgumentException if the <tt>id</tt> is invalid or <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>
 	 */
-	public VendingMachine(int id, Location location, Layout currentLayout) throws IllegalArgumentException
+	public VendingMachine(int id, Location location, VMLayout currentLayout) throws IllegalArgumentException
 	{
 		if(id<MIN_ID)
 			throw new IllegalArgumentException("ID too low");
@@ -90,7 +90,7 @@ public class VendingMachine implements ModelBase
 	/**
 	 * @return the current layout
 	 */
-	public Layout getCurrentLayout()
+	public VMLayout getCurrentLayout()
 	{
 		return currentLayout;
 	}
@@ -98,7 +98,7 @@ public class VendingMachine implements ModelBase
 	/**
 	 * @param nextLayout a replacement future layout
 	 */
-	public void setNextLayout(Layout nextLayout)
+	public void setNextLayout(VMLayout nextLayout)
 	{
 		this.nextLayout=nextLayout;
 	}
@@ -106,7 +106,7 @@ public class VendingMachine implements ModelBase
 	/**
 	 * @return the next layout
 	 */
-	public Layout getNextLayout()
+	public VMLayout getNextLayout()
 	{
 		return nextLayout;
 	}
