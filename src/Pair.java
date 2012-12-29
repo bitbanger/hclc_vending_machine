@@ -34,7 +34,7 @@ public class Pair<L,R> {
 	 *
 	 * @param old	Pair to copy.
 	 */
-	public Pair(Pair old) {
+	public Pair(Pair<L,R> old) {
 		this.first = old.first;
 		this.second = old.second;
 	}
