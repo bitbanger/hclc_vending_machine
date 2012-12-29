@@ -4,10 +4,10 @@
  */
 public class Pair<L,R> {
 	/** First object. */
-	public A first;
+	public L first;
 
 	/** Second object. */
-	public B second;
+	public R second;
 
 	/**
 	 * Blank constructor.
@@ -24,7 +24,7 @@ public class Pair<L,R> {
 	 * @param first		The first object in the pair.
 	 * @param second	The second object in the pair.
 	 */
-	public Pair(A first, B second) {
+	public Pair(L first, R second) {
 		this.first = first;
 		this.second = second;
 	}
