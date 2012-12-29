@@ -170,9 +170,30 @@ public class DatabaseLayer
 	 * (determined by the id of the item) then the item is created. If an item
 	 * is created then the id is updated with the auto incremented one.
 	 * @param item The item to update
+	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateItem(Item item)
+	public void updateOrCreateFoodItem(FoodItem item) throws SQLException
 	{
+		Statement qStmt = db.createStatement();
+		ResultSet results = qStmt.executeQuery("SELECT COUNT(itemId) FROM Item WHERE itemId=" + item.getId());
+		results.next();
+		int count = results.getInt(1);
+		if (count == 0)
+		{
+			Statement insertStmt = db.createStatement();
+			String query = String.format("INSERT INTO Item(name, price, freshLength) VALUES(\"%s\", %d, %d)", item.getName(), item.getPrice(), item.getFreshLength());
+			insertStmt.executeUpdate(query);
+			ResultSet keys = insertStmt.getGeneratedKeys();
+			keys.next();
+			int id = keys.getInt(1);
+			item.setId(id);
+		}
+		else
+		{
+			Statement updateStmt = db.createStatement();
+			String query = String.format("UPDATE Item SET name=\"%s\" price=%d freshLength=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.getId());
+			updateStmt.executeUpdate(query);
+		}
 	}
 
 	/**
