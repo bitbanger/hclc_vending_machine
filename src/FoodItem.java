@@ -67,6 +67,14 @@ public class FoodItem implements ModelBase {
 		return this.freshLength;
 	}
 
+	/**
+	 * @param id The new id
+	 **/
+	public void setId(int id)
+	{
+		this.itemId = id;
+	}
+
 	/** @param name	The new name. */
 	public void setName(String name) {
 		this.name = name;
