@@ -3,6 +3,9 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.GregorianCalendar;
 
 /**
  * The DatabaseLayer class contains static methods for accessing the sqlite
@@ -147,9 +150,19 @@ public class DatabaseLayer
 	/**
 	 * Gets all of the items in the database.
 	 * @return A collection of all of the items in the database.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Item> getItemsAll()
+	public Collection<FoodItem> getFoodItemsAll() throws SQLException
 	{
+		Collection<FoodItem> returnSet = new LinkedList<FoodItem>();
+		Statement stmt = db.createStatement();
+		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item");
+		while (results.next())
+		{
+			returnSet.add(new FoodItem(results.getInt(1), results.getString(2), results.getInt(3), results.getInt(4)));
+		}
+		results.close();
+		return returnSet;
 	}
 
 	/**
