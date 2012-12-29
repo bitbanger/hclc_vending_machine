@@ -89,6 +89,7 @@ public class DatabaseLayer
 	private DatabaseLayer() throws SQLException
 	{
 		db=DriverManager.getConnection(DB_DRIVER+dbLocation);
+		initializeDatabase();
 	}
 
 	/**
