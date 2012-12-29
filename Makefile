@@ -1,12 +1,15 @@
 #space-delimited lists of executable classes and libraries to ship
 EXEC=Test
 LIBS=sqlite-jdbc-3.7.2.jar
+TESTCHAIN=org.junit.runner.JUnitCore
+TESTLIBS=junit-4.11.jar
 
 #command aliases
 JAR=jar
 JAVA=java
 JAVAC=javac
 JAVADOC=javadoc
+SHELLPATH=/bin/sh
 
 #directory tree
 BINDIR=bin
@@ -14,12 +17,27 @@ DISTDIR=dist
 DOCDIR=doc
 LIBDIR=lib
 SRCDIR=src
+TBDIR=tbin
+TESTDIR=test
 
+#launcher scripts
+INCPOSTFIX=.include
+POSTFIX=.sh
+RUNPREFIX=run-
+TESTSTEM=testsuite
+
+#targets
 devel: classes documents launchers
 
 classes:
 	- mkdir ${BINDIR}
 	${JAVAC} -d ${BINDIR} -cp ${SRCDIR} ${SRCDIR}/*.java
+
+tests: classes
+	- mkdir ${TBDIR}
+	${JAVAC} -d ${TBDIR} -cp ${TESTDIR}:${BINDIR}:$(foreach library,${TESTLIBS},:${LIBDIR}/${library}) ${TESTDIR}/*.java
+	echo -e "#!${SHELLPATH}\n${JAVA} -cp ${TBDIR}:${BINDIR}$(foreach library,${TESTLIBS},:${LIBDIR}/${library}) ${TESTCHAIN} $(patsubst ${TESTDIR}/%.java,%,$(wildcard ${TESTDIR}/*.java))" > ${TESTSTEM}${POSTFIX}
+	chmod +x ${TESTSTEM}${POSTFIX}
 
 distribution: classes
 	- mkdir ${DISTDIR}
@@ -32,12 +50,13 @@ documents:
 	${JAVADOC} -d ${DOCDIR} ${SRCDIR}/*.java
 
 launchers:
-	echo "export CLASSPATH=${BINDIR}$(foreach library,${LIBS},:${LIBDIR}/${library})" > vars.include
-	$(foreach class,${EXEC},echo -e "#!/bin/sh\n. ./vars.include\n${JAVA} ${class}" > run-${class}.sh ; chmod +x run-${class}.sh)
+	echo "export CLASSPATH=${BINDIR}$(foreach library,${LIBS},:${LIBDIR}/${library})" > vars${INCPOSTFIX}
+	$(foreach class,${EXEC},echo -e "#!${SHELLPATH}\n. ./vars.include\n${JAVA} ${class}" > ${RUNPREFIX}${class}${POSTFIX} ; chmod +x ${RUNPREFIX}${class}${POSTFIX})
 
-clean: cleanbin cleandoc
-	- rm run-*.sh
-	- rm *.include
+clean: cleanbin cleandoc cleantbin
+	- rm ${RUNPREFIX}*${POSTFIX}
+	- rm *${INCPOSTFIX}
+	- rm ${TESTSTEM}${POSTFIX}
 	- rm Manifest
 
 distclean: clean cleandist
@@ -50,3 +69,6 @@ cleandist:
 
 cleandoc:
 	- rm -r ${DOCDIR}
+
+cleantbin:
+	- rm -r ${TBDIR}

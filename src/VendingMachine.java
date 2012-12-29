@@ -45,6 +45,13 @@ public class VendingMachine implements ModelBase
 		nextLayout=null;
 	}
 
+	public VendingMachine(int id, Location location, VMLayout currentLayout, VMLayout nextLayout, boolean active)
+	{
+		this(id, location, currentLayout);
+		this.active=active;
+		this.nextLayout = nextLayout;
+	}
+
 	/**
 	 * Copy constructor.
 	 * Creates a copy of the supplied instance.

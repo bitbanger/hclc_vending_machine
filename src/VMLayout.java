@@ -33,6 +33,12 @@ public class VMLayout implements ModelBase
 		rows=new Row[height][width];
 	}
 
+	public VMLayout(int id, Row[][] rows)
+	{
+		this.layoutId = id;
+		this.rows = rows;
+	}
+
 	/**
 	 * Copy constructor.
 	 * Creates a copy of the supplied instance.
