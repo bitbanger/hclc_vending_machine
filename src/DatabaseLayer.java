@@ -188,12 +188,14 @@ public class DatabaseLayer
 			keys.next();
 			int id = keys.getInt(1);
 			item.setId(id);
+			insertStmt.close();
 		}
 		else
 		{
 			Statement updateStmt = db.createStatement();
 			String query = String.format("UPDATE Item SET name=\"%s\" price=%d freshLength=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.getId());
 			updateStmt.executeUpdate(query);
+			updateStmt.close();
 		}
 	}
 
@@ -221,7 +223,7 @@ public class DatabaseLayer
 			int rowY = rowResults.getInt(6);
 
 			maxX = Math.max(maxX, rowX);
-			maxY = Math.min(maxY, rowY);
+			maxY = Math.max(maxY, rowY);
 
 			FoodItem item = getFoodItemById(productId);
 			
