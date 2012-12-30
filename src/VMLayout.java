@@ -31,7 +31,7 @@ public class VMLayout extends ModelBase
 	 * @param rows the rows to be held in the machine
 	 * @throws IllegalArgumentException if <tt>rows</tt> is <tt>null</tt> or ragged
 	 */
-	public VMLayout(int id, Row[][] rows)
+	public VMLayout(Row[][] rows)
 	{
 		if(rows==null)
 			throw new IllegalArgumentException("Rows cannot be null");
