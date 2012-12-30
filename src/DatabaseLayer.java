@@ -142,7 +142,10 @@ public class DatabaseLayer
 		Statement stmt = db.createStatement();
 		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item WHERE itemId=" + id);
 		if (results.next())
-			returnValue = new FoodItem(results.getInt(1), results.getString(2), results.getInt(3), results.getInt(4));
+		{
+			returnValue = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4));
+			returnValue.setId(results.getInt(1));
+		}
 		results.close();
 		return returnValue;
 	}
@@ -159,7 +162,9 @@ public class DatabaseLayer
 		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item");
 		while (results.next())
 		{
-			returnSet.add(new FoodItem(results.getInt(1), results.getString(2), results.getInt(3), results.getInt(4)));
+			FoodItem item = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4));
+			item.setId(results.getInt(1));
+			returnSet.add(item);
 		}
 		results.close();
 		return returnSet;
@@ -174,11 +179,7 @@ public class DatabaseLayer
 	 **/
 	public void updateOrCreateFoodItem(FoodItem item) throws SQLException
 	{
-		Statement qStmt = db.createStatement();
-		ResultSet results = qStmt.executeQuery("SELECT COUNT(itemId) FROM Item WHERE itemId=" + item.getId());
-		results.next();
-		int count = results.getInt(1);
-		if (count == 0)
+		if (item.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
 			String query = String.format("INSERT INTO Item(name, price, freshLength) VALUES(\"%s\", %d, %d)", item.getName(), item.getPrice(), item.getFreshLength());
@@ -227,7 +228,10 @@ public class DatabaseLayer
 			GregorianCalendar date = new GregorianCalendar();
 			date.setTimeInMillis(dateInt);
 
-			raw.add(new Pair<Row,Pair<Integer,Integer>>(new Row(rowResults.getInt(1), item, rowResults.getInt(4), date), new Pair<Integer, Integer>(rowX, rowY)));
+			Row row = new Row(item, rowResults.getInt(4), date);
+			row.setId(rowResults.getInt(1));
+
+			raw.add(new Pair<Row,Pair<Integer,Integer>>(row, new Pair<Integer, Integer>(rowX, rowY)));
 		}
 
 		rowStmt.close();
@@ -289,7 +293,8 @@ public class DatabaseLayer
 			VMLayout cur = getVMLayoutById(curId);
 			VMLayout next = getVMLayoutById(nextId);
 			Location loc = getLocationById(locationId);
-			returnValue = new VendingMachine(id, loc, cur, next, active);
+			returnValue = new VendingMachine(loc, cur, next, active);
+			returnValue.setId(id);
 		}
 		vmResults.close();
 		return returnValue;
