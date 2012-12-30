@@ -29,7 +29,6 @@ nextLayoutId INTEGER REFERENCES VMLayout(layoutId),
 locationId INTEGER REFERENCES Location(locationId));
 
 CREATE TABLE IF NOT EXISTS NearbyBusiness(
-nearbyBusinessId INTEGER PRIMARY KEY AUTOINCREMENT,
 locationId INTEGER REFERENCES Location(locationId),
 name TEXT NOT NULL);
 

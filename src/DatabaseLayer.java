@@ -115,7 +115,7 @@ public class DatabaseLayer
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VendingMachine( machineId INTEGER PRIMARY KEY AUTOINCREMENT, active INTEGER NOT NULL, currentLayoutId INTEGER REFERENCES VMLayout(layoutId), nextLayoutId INTEGER REFERENCES VMLayout(layoutId), locationId INTEGER REFERENCES Location(locationId));");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS NearbyBusiness( nearbyBusinessId INTEGER PRIMARY KEY AUTOINCREMENT, locationId INTEGER REFERENCES Location(locationId), name TEXT NOT NULL);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS NearbyBusiness( locationId INTEGER REFERENCES Location(locationId), name TEXT NOT NULL);");
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMUser( userId INTEGER PRIMARY KEY AUTOINCREMENT);");
 
