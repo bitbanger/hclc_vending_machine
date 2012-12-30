@@ -414,27 +414,90 @@ public class DatabaseLayer
 	/**
 	 * Fetches all of the vending machines in the database.
 	 * @return Collection of all of the vending machines in the database.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesAll()
+	public Collection<VendingMachine> getVendingMachinesAll() throws SQLException
 	{
+		Collection<VendingMachine> returnSet = null;
+		Statement vmStmt = db.createStatement();
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId FROM VendingMachine");
+		while (vmResults.next())
+		{
+			int id = vmResults.getInt(1);
+			boolean active = !(vmResults.getInt(2) == 0);
+			int curId = vmResults.getInt(3);
+			int nextId = vmResults.getInt(4);
+			int locationId = vmResults.getInt(5);
+			
+			VMLayout cur = getVMLayoutById(curId);
+			VMLayout next = getVMLayoutById(nextId);
+			Location loc = getLocationById(locationId);
+			VendingMachine machine = new VendingMachine(loc, cur, next, active);
+			machine.setId(id);
+			returnSet.add(machine);
+		}
+		vmResults.close();
+		return returnSet;
 	}
 
 	/**
 	 * Fetches all of the vending machines at a given zip code.
 	 * @param zip The zip code to fetch the vending machines from.
 	 * @return Collection of all of the vending machines at the given zip code.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesByZip(int zip)
+	public Collection<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException
 	{
+		Collection<VendingMachine> returnSet = null;
+		Statement vmStmt = db.createStatement();
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.zipCode=" + zip);
+		while (vmResults.next())
+		{
+			int id = vmResults.getInt(1);
+			boolean active = !(vmResults.getInt(2) == 0);
+			int curId = vmResults.getInt(3);
+			int nextId = vmResults.getInt(4);
+			int locationId = vmResults.getInt(5);
+			
+			VMLayout cur = getVMLayoutById(curId);
+			VMLayout next = getVMLayoutById(nextId);
+			Location loc = getLocationById(locationId);
+			VendingMachine machine = new VendingMachine(loc, cur, next, active);
+			machine.setId(id);
+			returnSet.add(machine);
+		}
+		vmResults.close();
+		return returnSet;
 	}
 
 	/**
 	 * Fetches all of the vending machines in a state.
 	 * @param state The state to fetch the vending machines from.
 	 * @return Collection of all of the vending machines in the given state.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesByState(String state);
+	public Collection<VendingMachine> getVendingMachinesByState(String state) throws SQLException
 	{
+		Collection<VendingMachine> returnSet = null;
+		Statement vmStmt = db.createStatement();
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=" + state);
+		while (vmResults.next())
+		{
+			int id = vmResults.getInt(1);
+			boolean active = !(vmResults.getInt(2) == 0);
+			int curId = vmResults.getInt(3);
+			int nextId = vmResults.getInt(4);
+			int locationId = vmResults.getInt(5);
+			
+			VMLayout cur = getVMLayoutById(curId);
+			VMLayout next = getVMLayoutById(nextId);
+			Location loc = getLocationById(locationId);
+			VendingMachine machine = new VendingMachine(loc, cur, next, active);
+			machine.setId(id);
+			returnSet.add(machine);
+		}
+		vmResults.close();
+		return returnSet;
 	}
 
 	/**
@@ -444,9 +507,32 @@ public class DatabaseLayer
 	 * update/create the location, VMLayouts, and Rows that are associated with
 	 * the machine.
 	 * @param vm The vending machine to update or create.
+	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateVendingMachine(VendingMachine vm)
+	public void updateOrCreateVendingMachine(VendingMachine vm) throws SQLException
 	{
+		updateOrCreateVMLayout(vm.getCurrentLayout());
+		updateOrCreateVMLayout(vm.getNextLayout());
+		updateOrCreateLocation(vm.getLocation());
+
+		if (vm.isTempId())
+		{
+			Statement insertStmt = db.createStatement();
+			String query = String.format("INSERT INTO VendingMachine(active, currentLayoutId, nextLayoutId, locationId) VALUES(%d, %d, %d, %d)", vm.isActive() ? 1 : 0, vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId());
+			insertStmt.executeUpdate(query);
+			ResultSet keys = insertStmt.getGeneratedKeys();
+			keys.next();
+			int id = keys.getInt(1);
+			vm.setId(id);
+			insertStmt.close();
+		}
+		else
+		{
+			Statement updateStmt = db.createStatement();
+			String query = String.format("UPDATE VendingMachine SET active=%d currentLayoutId=%d nextLayoutId=%d locationId=%d WHERE machineId=%d", vm.isActive() ? 1 : 0, vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId(), vm.getId());
+			updateStmt.executeUpdate(query);
+			updateStmt.close();
+		}
 	}
 
 	/**
