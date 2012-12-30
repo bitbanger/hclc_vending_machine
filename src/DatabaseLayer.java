@@ -325,10 +325,60 @@ public class DatabaseLayer
 			LinkedList<String> busList = new LinkedList<String>();
 			while (busSet.next())
 				busList.add(busSet.getString(1));
-			returnValue = new Location(locSet.getInt(1), locSet.getInt(2), locSet.getString(3), busList.toArray(new String[0]));
+			returnValue = new Location(locSet.getInt(2), locSet.getString(3), busList.toArray(new String[0]));
+			returnValue.setId(locSet.getInt(1));
+			busStmt.close();
 		}
 		locStmt.close();
 		return returnValue;
+	}
+
+	/**
+	 * Updates the given location if it exists in the database. If it does not
+	 * exist then it is created.
+	 * @param location The location to create/update.
+	 * @throws SQLException in case of a database error.
+	 **/
+	private void updateOrCreateLocation(Location location) throws SQLException
+	{
+		if (location.isTempId())
+		{
+			Statement insertStmt = db.createStatement();
+			String query = String.format("INSERT INTO Location(zipCode, state) VALUES(%d, \"%s\")", location.getZipCode(), location.getState());
+			insertStmt.executeUpdate(query);
+			ResultSet keys = insertStmt.getGeneratedKeys();
+			keys.next();
+			int id = keys.getInt(1);
+			location.setId(id);
+			insertStmt.close();
+
+			for (String business : location.getNearbyBusinesses())
+			{
+				Statement busStmt = db.createStatement();
+				String busQuery = String.format("INSERT INTO NearbyBusiness(locationId, name) VALUES(%d, \"%s\")", location.getId(), business);
+				busStmt.executeUpdate(busQuery);
+				busStmt.close();
+			}
+		}
+		else
+		{
+			Statement updateStmt = db.createStatement();
+			String query = String.format("UPDATE Location SET zipCode=%d state=\"%s\" WHERE locationId=%d", location.getZipCode(), location.getState(), location.getId());
+			updateStmt.executeUpdate(query);
+			updateStmt.close();
+
+			Statement delStatement = db.createStatement();
+			delStatement.executeUpdate("DELETE FROM NearbyBusiness WHERE locationId=" + location.getId());
+			delStatement.close();
+
+			for (String business : location.getNearbyBusinesses())
+			{
+				Statement busStmt = db.createStatement();
+				String busQuery = String.format("INSERT INTO NearbyBusiness(locationId, name) VALUES(%d, \"%s\")", location.getId(), business);
+				busStmt.executeUpdate(busQuery);
+				busStmt.close();
+			}
+		}
 	}
 
 	/**
