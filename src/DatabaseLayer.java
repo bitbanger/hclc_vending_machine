@@ -543,6 +543,7 @@ public class DatabaseLayer
 	 **/
 	public Customer getCustomerById(int id)
 	{
+		return null;
 	}
 
 	/**
@@ -561,6 +562,7 @@ public class DatabaseLayer
 	 **/
 	public Manager getManagerById(int id)
 	{
+		return null;
 	}
 
 	/**
@@ -581,6 +583,7 @@ public class DatabaseLayer
 	 **/
 	public Transaction getTransactionById(int id)
 	{
+		return null;
 	}
 
 	/**
@@ -593,6 +596,7 @@ public class DatabaseLayer
 	 **/
 	public Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm)
 	{
+		return null;
 	}
 
 	/**
@@ -603,6 +607,7 @@ public class DatabaseLayer
 	 **/
 	public Collection<Transaction> getTransactionsByCustomer(Customer customer)
 	{
+		return null;
 	}
 
 	/**
@@ -611,6 +616,7 @@ public class DatabaseLayer
 	 **/
 	public Collection<Transaction> getTransactionsAll()
 	{
+		return null;
 	}
 
 	/**
