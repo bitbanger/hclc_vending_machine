@@ -244,7 +244,9 @@ public class DatabaseLayer
 		Row[][] rows = new Row[maxY+1][maxX+1];
 		for (Pair<Row,Pair<Integer,Integer>> entry : raw)
 			rows[entry.second.second][entry.second.first] = entry.first;
-		return new VMLayout(id, rows);
+		VMLayout layout = new VMLayout(rows);
+		layout.setId(id);
+		return layout;
 	}
 
 	/**
