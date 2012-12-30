@@ -2,11 +2,8 @@
  * Represents a vending machine.
  * @author Sol Boucher <slb1566@rit.edu>
  */
-public class VendingMachine implements ModelBase
+public class VendingMachine extends ModelBase
 {
-	/** The machine's primary key. */
-	private int machineId;
-
 	/** Whether the machine is currently active. */
 	private boolean active;
 
@@ -20,34 +17,43 @@ public class VendingMachine implements ModelBase
 	private VMLayout nextLayout;
 
 	/**
-	 * Fresh constructor.
-	 * Creates an instance with the specified <tt>id</tt>, <tt>location</tt>, and layout.
+	 * Simple constructor.
+	 * Creates an instance with the specified <tt>location</tt> and layout.
 	 * Initially, the machine is considered to be active, but lacks any next layout.
-	 * This method is intended to be invoked only by classes that know a good value for this <tt>id</tt>
-	 * @param id the instance's primary key
 	 * @param location the <tt>VendingMachine</tt>'s abode
 	 * @param currentLayout the <tt>VendingMachine</tt>'s layout
-	 * @throws IllegalArgumentException if the <tt>id</tt> is invalid or <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>
+	 * @throws IllegalArgumentException if <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>
 	 */
-	public VendingMachine(int id, Location location, VMLayout currentLayout) throws IllegalArgumentException
+	public VendingMachine(Location location, VMLayout currentLayout) throws IllegalArgumentException
 	{
-		if(id<MIN_ID)
-			throw new IllegalArgumentException("ID too low");
-		else if(location==null)
+		if(location==null)
 			throw new IllegalArgumentException("Location cannot be null");
 		else if(currentLayout==null)
 			throw new IllegalArgumentException("Current layout cannot be null");
 		
-		machineId=id;
 		active=true;
 		this.location=location;
 		this.currentLayout=currentLayout;
 		nextLayout=null;
 	}
 
-	public VendingMachine(int id, Location location, VMLayout currentLayout, VMLayout nextLayout, boolean active)
+	/**
+	 * Thorough constructor.
+	 * Creates an instance with the specified <tt>location</tt> and layout.
+	 * Both the future layout and the machine's activity are also supplied.
+	 * @param location the <tt>VendingMachine</tt>'s abode
+	 * @param currentLayout the <tt>VendingMachine</tt>'s present layout
+	 * @param nextLayout the <tt>VendingMachine</tt>'s future layout
+	 * @param active whether the <tt>VendingMachine</tt> is currently activated
+	 * @throws IllegalArgumentException if anything is <tt>null</tt>
+	 */
+	public VendingMachine(Location location, VMLayout currentLayout, VMLayout nextLayout, boolean active)
 	{
-		this(id, location, currentLayout);
+		this(location, currentLayout);
+		
+		if(nextLayout==null)
+			throw new IllegalArgumentException("Next layout cannot be null");
+		
 		this.active=active;
 		this.nextLayout = nextLayout;
 	}
@@ -59,7 +65,7 @@ public class VendingMachine implements ModelBase
 	 */
 	public VendingMachine(VendingMachine existing)
 	{
-		this.machineId=existing.machineId;
+		super(existing);
 		this.active=existing.active;
 		this.location=existing.location;
 		this.currentLayout=existing.currentLayout;
@@ -67,11 +73,19 @@ public class VendingMachine implements ModelBase
 	}
 
 	/**
-	 * @return the primary key
+	 * @param active the new activation status
 	 */
-	public int getId()
+	public void makeActive(boolean active)
 	{
-		return machineId;
+		this.active=active;
+	}
+
+	/**
+	 * @return whether the machine is active
+	 */
+	public boolean isActive()
+	{
+		return active;
 	}
 
 	/**

@@ -5,11 +5,8 @@ import java.util.GregorianCalendar;
  * Each such row contains a certain number of the same product.
  * @author Sol Boucher <slb1566@rit.edu>
  */
-public class Row implements ModelBase
+public class Row extends ModelBase
 {
-	/** The row's primary key. */
-	private int rowId;
-
 	/** The product stored in the row. */
 	private FoodItem product;
 
@@ -22,25 +19,20 @@ public class Row implements ModelBase
 	/**
 	 * Fresh constructor.
 	 * Creates an instance with the specified values.
-	 * This method is intended to be invoked only by classes that know a good value for this <tt>id</tt>
-	 * @param id the instance's primary key
 	 * @param product the product carrried by the <tt>Row</tt>
 	 * @param quantity the number of items stocked in the <tt>Row</tt>
 	 * @param sellBy the expiration date of the items in the <tt>Row</tt>
-	 * @throws IllegalArgumentException if the <tt>id</tt> or <tt>quantity</tt> is invalid or something else is <tt>null</tt>
+	 * @throws IllegalArgumentException if the <tt>quantity</tt> is invalid or something else is <tt>null</tt>
 	 */
-	public Row(int id, FoodItem product, int quantity, GregorianCalendar sellBy) throws IllegalArgumentException
+	public Row(FoodItem product, int quantity, GregorianCalendar sellBy) throws IllegalArgumentException
 	{
-		if(id<MIN_ID)
-			throw new IllegalArgumentException("ID too low");
-		else if(product==null)
+		if(product==null)
 			throw new IllegalArgumentException("Product cannot be null");
 		else if(quantity<0)
 			throw new IllegalArgumentException("Quantity cannot be negative");
 		else if(sellBy==null)
 			throw new IllegalArgumentException("Expiration date cannot be null");
 		
-		rowId=id;
 		this.product=product;
 		remainingQuantity=quantity;
 		expirationDate=sellBy;
@@ -53,18 +45,10 @@ public class Row implements ModelBase
 	 */
 	public Row(Row existing)
 	{
-		this.rowId=existing.rowId;
+		super(existing);
 		this.product=existing.product;
 		this.remainingQuantity=existing.remainingQuantity;
 		this.expirationDate=existing.expirationDate;
-	}
-
-	/**
-	 * @return the primary key
-	 */
-	public int getId()
-	{
-		return rowId;
 	}
 
 	/**

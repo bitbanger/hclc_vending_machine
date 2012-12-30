@@ -2,40 +2,47 @@
  * Encapsulates a vending machine's layout.
  * @author Sol Boucher <slb1566@rit.edu>
  */
-public class VMLayout implements ModelBase
+public class VMLayout extends ModelBase
 {
-	/** The layout's primary key. */
-	private int layoutId;
-
 	/** The rows of products. */
 	private Row[][] rows;
 
 	/**
-	 * Fresh constructor.
-	 * Creates an instance of the specified size and with the specified identifier.
+	 * Dimension specification constructor.
+	 * Creates an instance of the specified size.
 	 * The actual rows are left empty until filled.
-	 * This method is intended to be invoked only by classes that know a good value for this <tt>id</tt>
-	 * @param id the instance's primary key
 	 * @param height the major size
 	 * @param width the minor size
-	 * @throws IllegalArgumentException if the <tt>id</tt>, <tt>height</tt>, or <tt>width</tt> is invalid
+	 * @throws IllegalArgumentException if the <tt>height</tt>, or <tt>width</tt> is invalid
 	 */
-	public VMLayout(int id, int height, int width) throws IllegalArgumentException
+	public VMLayout(int height, int width) throws IllegalArgumentException
 	{
-		if(id<MIN_ID)
-			throw new IllegalArgumentException("ID too low");
-		else if(height<=0)
+		if(height<=0)
 			throw new IllegalArgumentException("Height must be positive");
 		else if(width<=0)
 			throw new IllegalArgumentException("Width must be positive");
 		
-		layoutId=id;
 		rows=new Row[height][width];
 	}
 
-	public VMLayout(int id, Row[][] rows)
+	/**
+	 * Contents initialization constructor.
+	 * Creates an instance with the provided contents.
+	 * @param rows the rows to be held in the machine
+	 * @throws IllegalArgumentException if <tt>rows</tt> is <tt>null</tt> or ragged
+	 */
+	public VMLayout(Row[][] rows)
 	{
-		this.layoutId = id;
+		if(rows==null)
+			throw new IllegalArgumentException("Rows cannot be null");
+		for(Row[] line : rows)
+		{
+			if(line==null)
+				throw new IllegalArgumentException("Rows cannot contain a null group");
+			else if(line.length!=rows[0].length)
+				throw new IllegalArgumentException("Rows cannot have ragged sizing");
+		}
+		
 		this.rows = rows;
 	}
 
@@ -46,16 +53,8 @@ public class VMLayout implements ModelBase
 	 */
 	public VMLayout(VMLayout existing)
 	{
-		this.layoutId=existing.layoutId;
+		super(existing);
 		this.rows=existing.rows;
-	}
-
-	/**
-	 * @return the primary key
-	 */
-	public int getId()
-	{
-		return layoutId;
 	}
 
 	/**

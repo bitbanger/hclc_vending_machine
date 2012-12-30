@@ -4,8 +4,11 @@
  */
 public class Customer extends User
 {
+	/** The name by which cash customers are known. */
+	public static final String CASH_NAME="Anonymous";
+
 	/** The ID reserved for cash customers. */
-	private static final int CASH_ID=-1;
+	private static final int CASH_ID=Integer.MAX_VALUE;
 
 	/** The person's account balance. */
 	private int money;
@@ -17,25 +20,23 @@ public class Customer extends User
 	 */
 	public Customer()
 	{
-		super(CASH_ID);
+		super(CASH_NAME);
+		setId(CASH_ID); //we *cannot* get an IllegalStateException because we just created the parent instance
 		money=0;
 	}
 
 	/**
 	 * Fresh (account-backed customer) constructor.
-	 * Creates an instance with the specified primary key.
-	 * This method is intended to be invoked only by classes that know a good value for this <tt>id</tt>
-	 * @param id the instance's primary key
+	 * Creates an instance with the specified initial balance.
+	 * @param name the <tt>Customer</tt>'s name
 	 * @param money the <tt>Customer</tt>'s initial balance
-	 * @throws IllegalArgumentException if the <tt>id</tt> is invalid
+	 * @throws IllegalArgumentException if the <tt>name</tt> is invalid or the <tt>money</tt> is negative
 	 */
-	public Customer(int id, int money) throws IllegalArgumentException
+	public Customer(String name, int money) throws IllegalArgumentException
 	{
-		super(id);
+		super(name);
 		
-		if(id<ModelBase.MIN_ID)
-			throw new IllegalArgumentException("ID too low");
-		else if(money<0)
+		if(money<0)
 			throw new IllegalArgumentException("Money must not be negative");
 		
 		this.money=money;
@@ -52,6 +53,21 @@ public class Customer extends User
 		this.money=existing.money;
 	}
 
+	/**
+	 * This method may only be used to obtain the primary key of a <i>non-cash</i> customer if such a key has actually been set.
+	 * @return the primary key
+	 * @throws IllegalStateException if the instance has never been assigned a primary key
+	 * @throws UnsupportedOperationException if the instance is a cash customer
+	 */
+	@Override
+	public int getId() throws IllegalStateException, UnsupportedOperationException
+	{
+		if(super.getId()==CASH_ID)
+			throw new UnsupportedOperationException("Cash customers refuse to show their IDs");
+		
+		return super.getId();
+	}
+	
 	/**
 	 * Note that <tt>deductMoney(int)</tt> is more appropriate for fulfilling purchases.
 	 * @param money the new balance
@@ -97,6 +113,17 @@ public class Customer extends User
 	 */
 	public boolean isCashCustomer()
 	{
-		return getId()==CASH_ID;
+		try
+		{
+			return getId()==CASH_ID; //always false if it doesn't fail
+		}
+		catch(IllegalStateException noneSet) //ID was unset
+		{
+			return false; //not a cash customer
+		}
+		catch(UnsupportedOperationException informationWithheld) //no reply
+		{
+			return true; //must be a cash customer
+		}
 	}
 }
