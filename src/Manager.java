@@ -9,19 +9,16 @@ public class Manager extends User
 
 	/**
 	 * Fresh constructor.
-	 * Creates an instance of the specified primary key and initial password.
-	 * This method is intended to be invoked only by classes that know a good value for this <tt>id</tt>
-	 * @param id the instance's primary key
+	 * Creates an instance with the specified initial password.
+	 * @param name the <tt>Manager</tt>'s name
 	 * @param password the <tt>Manager</tt>'s initial password
-	 * @throws IllegalArgumentException if the <tt>id</tt> is invalid or the <tt>password</tt> is null
+	 * @throws IllegalArgumentException if the <tt>name</tt> is invalid or the <tt>password</tt> is <tt>null</tt>
 	 */
-	public Manager(int id, String password) throws IllegalArgumentException
+	public Manager(String name, String password) throws IllegalArgumentException
 	{
-		super(id);
+		super(name);
 		
-		if(id<ModelBase.MIN_ID)
-			throw new IllegalArgumentException("ID too low");
-		else if(password==null)
+		if(password==null)
 			throw new IllegalArgumentException("Password must not be null");
 		
 		this.password=password;

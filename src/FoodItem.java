@@ -2,10 +2,7 @@
  * Represents an item sold in vending machines.
  * @author Lane Lawley <lxl5734@rit.edu>
  */
-public class FoodItem implements ModelBase {
-	/** The food item's primary key. */
-	private int itemId;
-
+public class FoodItem extends ModelBase {
 	/** The food item's name. */
 	private String name;
 
@@ -18,18 +15,17 @@ public class FoodItem implements ModelBase {
 	/**
 	 * FoodItem constructor.
 	 *
-	 * @param itemId		The food item's primary key.
 	 * @param name 			The food item's name.
 	 * @param price			The food item's price.
 	 * @param freshLength	How long the food item is good for, after being added to the machine.
+	 * @throws IllegalArgumentException if <tt>name</tt> is <tt>null</tt>, <tt>price</tt> is negative, or <tt>freshLength</tt> is nonpositive
 	 */
-	public FoodItem(int itemId, String name, int price, long freshLength) {
-		if(itemId < MIN_ID) throw new IllegalArgumentException("ID too low");
-		if(name.equals("")) throw new IllegalArgumentException("Name must be non-null");
-		if(price <= 0) throw new IllegalArgumentException("Price must be greater than zero");
-		if(freshLength <= 0) throw new IllegalArgumentException("Fresh length must be greater than zero");
-
-		this.itemId = itemId;
+	public FoodItem(String name, int price, long freshLength) throws IllegalArgumentException
+	{
+		if(name==null) throw new IllegalArgumentException("Name must be non-null");
+		else if(price < 0) throw new IllegalArgumentException("Price must be nonnegative");
+		else if(freshLength <= 0) throw new IllegalArgumentException("Fresh length must be greater than zero");
+		
 		this.name = name;
 		this.price = price;
 		this.freshLength = freshLength;
@@ -41,15 +37,10 @@ public class FoodItem implements ModelBase {
 	 * @param old	FoodItem to copy.
 	 */
 	public FoodItem(FoodItem old) {
-		this.itemId = old.itemId;
+		super(old);
 		this.name = old.name;
 		this.price = old.price;
 		this.freshLength = old.freshLength;
-	}
-
-	/** @return	The food item's ID. */
-	public int getId() {
-		return this.itemId;
 	}
 
 	/** @return	The food item's name. */
@@ -68,25 +59,38 @@ public class FoodItem implements ModelBase {
 	}
 
 	/**
-	 * @param id The new id
-	 **/
-	public void setId(int id)
+	 * @param name	The new name.
+	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 */
+	public void setName(String name) throws IllegalArgumentException
 	{
-		this.itemId = id;
-	}
-
-	/** @param name	The new name. */
-	public void setName(String name) {
+		if(name==null)
+			throw new IllegalArgumentException("Name must not be null");
+		
 		this.name = name;
 	}
 
-	/** @param price	The new price. */
-	public void setPrice(int price) {
+	/**
+	 * @param price	The new price.
+	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 */
+	public void setPrice(int price) throws IllegalArgumentException
+	{
+		if(name==null)
+			throw new IllegalArgumentException("Name must not be null");
+		
 		this.price = price;
 	}
 
-	/** @param freshLength	The new fresh length. */
-	public void setFreshLength(long freshLength) {
+	/**
+	 * @param freshLength	The new fresh length.
+	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 */
+	public void setFreshLength(long freshLength) throws IllegalArgumentException
+	{
+		if(name==null)
+			throw new IllegalArgumentException("Name must not be null");
+		
 		this.freshLength = freshLength;
 	}
 }
