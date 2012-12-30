@@ -250,6 +250,63 @@ public class DatabaseLayer
 	}
 
 	/**
+	 * Updates the VMLayout and its rows if it exists in the database. If it does not exist
+	 * then it and its rows are created.
+	 * @param layout The VMLayout to update/create.
+	 **/
+	private void updateOrCreateVMLayout(VMLayout layout) throws SQLException
+	{
+		if (layout.isTempId())
+		{
+			Statement insertStmt = db.createStatement();
+			String query = String.format("INSERT INTO VMLayout(layoutId) VALUES(NULL)");
+			insertStmt.executeUpdate(query);
+			ResultSet keys = insertStmt.getGeneratedKeys();
+			keys.next();
+			int id = keys.getInt(1);
+			layout.setId(id);
+			insertStmt.close();
+			
+			Row[][] grid = layout.getRows();
+			for (int y=0;y<grid.length;++y)
+			{
+				for (int x=0;x<grid[y].length;++x)
+				{
+					Row row = grid[y][x];
+					Statement rowStmt = db.createStatement();
+					String rowQuery = String.format("INSERT INTO VMRow(productId, layoutId, expirationDate, remainingQuant, rowX, rowY) VALUES(%d, %d, %d, %d, %d, %d)", row.getProduct().getId(), layout.getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y);
+					rowStmt.executeUpdate(rowQuery);
+					ResultSet rowKeys = rowStmt.getGeneratedKeys();
+					rowKeys.next();
+					row.setId(rowKeys.getInt(1));
+					rowStmt.close();
+				}
+			}
+		}
+		else
+		{
+			Statement deleteStmt = db.createStatement();
+			deleteStmt.executeUpdate("DELETE FROM VMRow WHERE layoutId=" + layout.getId());
+			deleteStmt.close();
+			Row[][] grid = layout.getRows();
+			for (int y=0;y<grid.length;++y)
+			{
+				for (int x=0;x<grid[y].length;++x)
+				{
+					Row row = grid[y][x];
+					Statement rowStmt = db.createStatement();
+					String query = String.format("INSERT INTO VMRow(productId, layoutId, expirationDate, remainingQuant, rowX, rowY) VALUES(%d, %d, %d, %d, %d, %d)", row.getProduct().getId(), layout.getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y);
+					rowStmt.executeUpdate(query);
+					ResultSet rowKeys = rowStmt.getGeneratedKeys();
+					rowKeys.next();
+					row.setId(rowKeys.getInt(1));
+					rowStmt.close();
+				}
+			}
+		}
+	}
+
+	/**
 	 * Fetches the Location with the given id. Only this class should ever need
 	 * to do that.
 	 * @param id The id of the Location to fetch.
