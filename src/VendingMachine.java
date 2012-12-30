@@ -73,6 +73,22 @@ public class VendingMachine extends ModelBase
 	}
 
 	/**
+	 * @param active the new activation status
+	 */
+	public void makeActive(boolean active)
+	{
+		this.active=active;
+	}
+
+	/**
+	 * @return whether the machine is active
+	 */
+	public boolean isActive()
+	{
+		return active;
+	}
+
+	/**
 	 * @param location a replacement location
 	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
 	 */

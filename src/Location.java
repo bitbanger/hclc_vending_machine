@@ -44,7 +44,7 @@ public class Location extends ModelBase {
 	}
 
 	/**
-	 * Be aware that the <tt>retriveFormattedZipCode()</tt> method may be your best friend.
+	 * Be aware that the <tt>retrieveFormattedZipCode()</tt> method may be your best friend.
 	 * @return	The location's five-digit ZIP code.
 	 */
 	public int getZipCode() {
@@ -101,7 +101,7 @@ public class Location extends ModelBase {
 	 * Retrieves the ZIP code, formatted to 5 digits as one might expect.
 	 * @return the formatted code
 	 */
-	public String retriveFormattedZipCode()
+	public String retrieveFormattedZipCode()
 	{
 		return String.format("%05d", zipCode);
 	}
