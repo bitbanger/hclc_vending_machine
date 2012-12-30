@@ -61,4 +61,9 @@ public abstract class ModelBase
 		
 		return id;
 	}
+
+	public boolean isTempId()
+	{
+		return id==TEMP_ID;
+	}
 }
