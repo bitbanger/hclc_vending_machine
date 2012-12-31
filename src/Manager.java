@@ -56,4 +56,12 @@ public class Manager extends User
 	{
 		return password.equals(attempt);
 	}
+
+	/**
+	 * @return this manager's password
+	 **/
+	public String getPassword()
+	{
+		return password;
+	}
 }
