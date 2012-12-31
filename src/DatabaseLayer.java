@@ -191,7 +191,7 @@ public class DatabaseLayer
 		else
 		{
 			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Item SET name=\"%s\" price=%d freshLength=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.getId());
+			String query = String.format("UPDATE Item SET name=\"%s\", price=%d, freshLength=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.getId());
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
@@ -361,7 +361,7 @@ public class DatabaseLayer
 		else
 		{
 			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Location SET zipCode=%d state=\"%s\" WHERE locationId=%d", location.getZipCode(), location.getState(), location.getId());
+			String query = String.format("UPDATE Location SET zipCode=%d, state=\"%s\" WHERE locationId=%d", location.getZipCode(), location.getState(), location.getId());
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 
@@ -527,7 +527,7 @@ public class DatabaseLayer
 		else
 		{
 			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE VendingMachine SET active=%d currentLayoutId=%d nextLayoutId=%d locationId=%d WHERE machineId=%d", vm.isActive() ? 1 : 0, vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId(), vm.getId());
+			String query = String.format("UPDATE VendingMachine SET active=%d, currentLayoutId=%d, nextLayoutId=%d, locationId=%d WHERE machineId=%d", vm.isActive() ? 1 : 0, vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId(), vm.getId());
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
