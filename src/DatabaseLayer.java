@@ -586,19 +586,48 @@ public class DatabaseLayer
 	 * Fetches the manager with the given id.
 	 * @param id The id of the manager to fetch.
 	 * @return The manager with the given id or null if no such manager exists.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Manager getManagerById(int id)
+	public Manager getManagerById(int id) throws SQLException
 	{
-		return null;
+		Manager returnValue = null;
+		Statement stmt = db.createStatement();
+		String query = "SELECT managerId, password, name FROM Manager WHERE managerId=" + id;
+		ResultSet results = stmt.executeQuery(query);
+		if (results.next())
+		{
+			returnValue = new Manager(results.getString(3), results.getString(2));
+			returnValue.setId(results.getInt(1));
+		}
+		results.close();
+		return returnValue;
 	}
 
 	/**
 	 * Updates the given manager if it exists (determined by id) or creates it
 	 * if it does not exist.
 	 * @param manager The manager to update/create.
+	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateManager(Manager manager)
+	public void updateOrCreateManager(Manager manager) throws SQLException
 	{
+		if (manager.isTempId())
+		{
+			Statement insertStmt = db.createStatement();
+			String query = String.format("INSERT INTO Manager(password, name) VALUES(\"%s\", \"%s\")", manager.getPassword(), manager.getName());
+			insertStmt.executeUpdate(query);
+			ResultSet keys = insertStmt.getGeneratedKeys();
+			keys.next();
+			manager.setId(keys.getInt(1));
+			insertStmt.close();
+		}
+		else
+		{
+			Statement updateStmt = db.createStatement();
+			String query = String.format("UPDATE Manager SET password=\"%s\", name=\"%s\" WHERE managerId=%d", manager.getPassword(), manager.getName(), manager.getId());
+			updateStmt.executeUpdate(query);
+			updateStmt.close();
+		}
 	}
 
 	/**
