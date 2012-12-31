@@ -537,20 +537,49 @@ public class DatabaseLayer
 	 * Fetches the customer with the given id from the database.
 	 * @param id The id of the customer to fetch.
 	 * @return The customer with given id or null if the customer does not
+	 * @throws SQLException in case of a database error
 	 * exist.
 	 **/
-	public Customer getCustomerById(int id)
+	public Customer getCustomerById(int id) throws SQLException
 	{
-		return null;
+		Customer returnValue = null;
+		Statement stmt = db.createStatement();
+		String query = "SELECT customerId, money, name FROM Customer WHERE customerId=" + id;
+		ResultSet results = stmt.executeQuery(query);
+		if (results.next())
+		{
+			returnValue = new Customer(results.getString(3), results.getInt(2));
+			returnValue.setId(results.getInt(1));
+		}
+		results.close();
+		return returnValue;
 	}
 
 	/**
 	 * Updates the given customer if it exists (determined by id) or creates it
 	 * if it does not exist.
 	 * @param customer The Customer to update/create.
+	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateCustomer(Customer customer)
+	public void updateOrCreateCustomer(Customer customer) throws SQLException
 	{
+		if (customer.isTempId())
+		{
+			Statement insertStmt = db.createStatement();
+			String query = String.format("INSERT INTO Customer(money, name) VALUES(%d, \"%s\")", customer.getMoney(), customer.getName());
+			insertStmt.executeUpdate(query);
+			ResultSet keys = insertStmt.getGeneratedKeys();
+			keys.next();
+			customer.setId(keys.getInt(1));
+			insertStmt.close();
+		}
+		else
+		{
+			Statement updateStmt = db.createStatement();
+			String query = String.format("UPDATE Customer SET money=%d, name=\"%s\" WHERE customerId=%d", customer.getMoney(), customer.getName(), customer.getId());
+			updateStmt.executeUpdate(query);
+			updateStmt.close();
+		}
 	}
 
 	/**
