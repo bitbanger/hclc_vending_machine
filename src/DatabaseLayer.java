@@ -636,10 +636,28 @@ public class DatabaseLayer
 	 * @param id The id of the transaction to fetch
 	 * @return The transaction with the given id or null if no such transaction
 	 * exists.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Transaction getTransactionById(int id)
+	public Transaction getTransactionById(int id) throws SQLException
 	{
-		return null;
+		Transaction returnValue = null;
+		Statement stmt = db.createStatement();
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction WHERE transactionId=" + id;
+		ResultSet results = stmt.executeQuery(query);
+		if (results.next())
+		{
+			GregorianCalendar time = new GregorianCalendar();
+			time.setTimeInMillis(results.getInt(2));
+			VendingMachine machine = getVendingMachineById(results.getInt(3));
+			Customer customer = getCustomerById(results.getInt(4));
+			FoodItem product = getFoodItemById(results.getInt(5));
+			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
+			returnValue = new Transaction(time, machine, customer, product, row);
+			returnValue.setId(id);
+			
+		}
+		results.close();
+		return returnValue;
 	}
 
 	/**
@@ -649,10 +667,29 @@ public class DatabaseLayer
 	 * occurred.
 	 * @return A collection containing the transactions that occurred at the
 	 * given vending machine.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm)
+	public Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm) throws SQLException
 	{
-		return null;
+		Collection<Transaction> transactions = new LinkedList<Transaction>();
+		Statement stmt = db.createStatement();
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction WHERE machineId=" + vm.getId();
+		ResultSet results = stmt.executeQuery(query);
+		while (results.next())
+		{
+			int id = results.getInt(1);
+			GregorianCalendar time = new GregorianCalendar();
+			time.setTimeInMillis(results.getInt(2));
+			VendingMachine machine = getVendingMachineById(results.getInt(3));
+			Customer customer = getCustomerById(results.getInt(4));
+			FoodItem product = getFoodItemById(results.getInt(5));
+			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
+			Transaction transaction = new Transaction(time, machine, customer, product, row);
+			transaction.setId(id);
+			transactions.add(transaction);
+		}
+		results.close();
+		return transactions;
 	}
 
 	/**
@@ -660,27 +697,83 @@ public class DatabaseLayer
 	 * @param customer The customer that performed the transactions you desire.
 	 * @return A collection containing the transactions the given customer
 	 * performed.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByCustomer(Customer customer)
+	public Collection<Transaction> getTransactionsByCustomer(Customer customer) throws SQLException
 	{
-		return null;
+		Collection<Transaction> transactions = new LinkedList<Transaction>();
+		Statement stmt = db.createStatement();
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction WHERE customerId=" + customer.getId();
+		ResultSet results = stmt.executeQuery(query);
+		while (results.next())
+		{
+			int id = results.getInt(1);
+			GregorianCalendar time = new GregorianCalendar();
+			time.setTimeInMillis(results.getInt(2));
+			VendingMachine machine = getVendingMachineById(results.getInt(3));
+			Customer cust = getCustomerById(results.getInt(4));
+			FoodItem product = getFoodItemById(results.getInt(5));
+			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
+			Transaction transaction = new Transaction(time, machine, cust, product, row);
+			transaction.setId(id);
+			transactions.add(transaction);
+		}
+		results.close();
+		return transactions;
 	}
 
 	/**
 	 * Fetches all of the transactions that have ever occurred.
 	 * @return A collection of all of the transactions.
+	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsAll()
+	public Collection<Transaction> getTransactionsAll() throws SQLException
 	{
-		return null;
+		Collection<Transaction> transactions = new LinkedList<Transaction>();
+		Statement stmt = db.createStatement();
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction";
+		ResultSet results = stmt.executeQuery(query);
+		while (results.next())
+		{
+			int id = results.getInt(1);
+			GregorianCalendar time = new GregorianCalendar();
+			time.setTimeInMillis(results.getInt(2));
+			VendingMachine machine = getVendingMachineById(results.getInt(3));
+			Customer customer = getCustomerById(results.getInt(4));
+			FoodItem product = getFoodItemById(results.getInt(5));
+			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
+			Transaction transaction = new Transaction(time, machine, customer, product, row);
+			transaction.setId(id);
+			transactions.add(transaction);
+		}
+		results.close();
+		return transactions;
 	}
 
 	/**
 	 * Updates the given transaction if it exists (determined by id) or creates
 	 * it if it doesn't exist.
 	 * @param transaction The transaction to create/update.
+	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateTransaction(Transaction transaction)
+	public void updateOrCreateTransaction(Transaction transaction) throws SQLException
 	{
+		if (transaction.isTempId())
+		{
+			String query = String.format("INSERT INTO VMTransaction(timestamp, machineId, customerId, productId, rowX, rowY) VALUES(%d, %d, %d, %d, %d, %d)", transaction.getTimestamp().getTimeInMillis(), transaction.getMachine().getId(), transaction.getCustomer().getId(), transaction.getProduct().getId(), transaction.getRow().first, transaction.getRow().second);
+			Statement insertStmt = db.createStatement();
+			insertStmt.executeUpdate(query);
+			ResultSet keys = insertStmt.getGeneratedKeys();
+			keys.next();
+			transaction.setId(keys.getInt(1));
+			insertStmt.close();
+		}
+		else
+		{
+			String query = String.format("UPDATE VMTransaction SET timestamp=%d, machineId=%d, customerId=%d, productId=%d, rowX=%d, rowY=%d WHERE transactionId=%d", transaction.getTimestamp().getTimeInMillis(), transaction.getMachine().getId(), transaction.getCustomer().getId(), transaction.getProduct().getId(), transaction.getRow().first, transaction.getRow().second, transaction.getId());
+			Statement updateStmt = db.createStatement();
+			updateStmt.executeUpdate(query);
+			updateStmt.close();
+		}
 	}
 }
