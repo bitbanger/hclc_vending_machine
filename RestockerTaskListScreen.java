@@ -58,6 +58,7 @@ public class RestockerTaskListScreen {
 					+ " to location " + i + ", " + j);
 			}
 		}
+		return instructions.toArray();
 	}
 
 	/**
