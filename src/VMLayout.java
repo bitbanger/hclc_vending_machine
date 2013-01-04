@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 
 /**
@@ -7,7 +8,7 @@ import java.util.GregorianCalendar;
 public class VMLayout extends ModelBase
 {
 	/** The rows of products. */
-	private Row[][] rows;
+	private Row[][] rows; 
 
 	/** When the next restocking is due (<tt>null</tt> if unset). */
 	private GregorianCalendar nextVisit;
@@ -54,14 +55,38 @@ public class VMLayout extends ModelBase
 	}
 
 	/**
-	 * Copy constructor.
-	 * Creates a copy of the supplied instance.
+	 * (Shallow) copy constructor.
+	 * Creates a shallow copy of the supplied instance, such that the two instances always have the exact same set and arrangement of rows.
 	 * @param existing the instance to clone
 	 */
 	public VMLayout(VMLayout existing)
 	{
-		super(existing);
-		this.rows=existing.rows;
+		this(existing, false);
+	}
+
+	/**
+	 * (Optionally deep) copy constructor.
+	 * If asked to make a deep copy, the two instances' sets and arrangements of rows will be decoupled, although the rows themselves will initially be shared.
+	 * Additionally, a deep copy has a different storage ID so as not to be confused with the original.
+	 * @param existing the instance to clone
+	 * @param deep whether to make a deep copy
+	 */
+	public VMLayout(VMLayout existing, boolean deep)
+	{
+		super(); //NB: *no* ID is being set here...
+		
+		if(deep) //deep copy
+		{
+			this.rows=new Row[existing.rows.length][];
+			for(int index=0; index<rows.length; ++index)
+				this.rows[index]=Arrays.copyOf(existing.rows[index], existing.rows[index].length);
+		}
+		else //shallow copy
+		{
+			setId(existing.getId()); //this cannot fail, since there can be no ID
+			this.rows=existing.rows;
+		}
+		
 		this.nextVisit=existing.nextVisit;
 	}
 

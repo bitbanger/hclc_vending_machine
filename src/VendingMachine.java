@@ -43,7 +43,7 @@ public class VendingMachine extends ModelBase
 		this.location=location;
 		this.stockingInterval=stockingInterval;
 		this.currentLayout=currentLayout;
-		nextLayout=null;
+		nextLayout=new VMLayout(currentLayout, true); //deep copy
 	}
 
 	/**
@@ -159,15 +159,19 @@ public class VendingMachine extends ModelBase
 
 	/**
 	 * @param nextLayout a replacement future layout
+	 * @throws IllegalArgumentException if supplied with a <tt>null</tt> value
 	 */
 	public void setNextLayout(VMLayout nextLayout)
 	{
+		if(nextLayout==null)
+			throw new IllegalArgumentException("Next layout cannot be null");
+		
 		this.nextLayout=nextLayout;
 	}
 
 	/**
-	 * This retrieves the queued layout, which is guaranteed neither to have a defined next stocking visit nor to be defined itself.
-	 * @return the next layout, or <tt>null</tt> if none is defined
+	 * This retrieves the queued layout, which is not guaranteed to have a next restocking visit.
+	 * @return the next layout
 	 */
 	public VMLayout getNextLayout()
 	{
@@ -178,22 +182,12 @@ public class VendingMachine extends ModelBase
 	 * Swaps the next layout into the current layout.
 	 * This process automatically sets the layout's next stocking visit.
 	 * At the end of this process, there is no next layout left.
-	 * In order for this to work, there needs to be a next layout available.
-	 * @return whether the operation succeeded (i.e. a next layout existed)
 	 */
-	public boolean swapInNextLayout()
+	public void swapInNextLayout()
 	{
-		if(nextLayout!=null)
-		{
-			nextLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
-			
-			currentLayout=nextLayout;
-			nextLayout=null;
-			
-			return true;
-		}
-		else
-			return false;
+		currentLayout=nextLayout;
+		nextLayout=new VMLayout(currentLayout, true); //deep copy
+		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
 	}
 
 	/**
