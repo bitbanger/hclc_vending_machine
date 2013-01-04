@@ -24,6 +24,7 @@ rowY INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS VendingMachine(
 machineId INTEGER PRIMARY KEY AUTOINCREMENT,
 active INTEGER NOT NULL,
+stockingInterval INTEGER NOT NULL,
 currentLayoutId INTEGER REFERENCES VMLayout(layoutId),
 nextLayoutId INTEGER REFERENCES VMLayout(layoutId),
 locationId INTEGER REFERENCES Location(locationId));
