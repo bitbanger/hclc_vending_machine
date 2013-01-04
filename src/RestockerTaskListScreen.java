@@ -1,3 +1,6 @@
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
  *
  * 1/1/2013
@@ -37,7 +40,7 @@ public class RestockerTaskListScreen {
 		ArrayList<String> instructions = new ArrayList<String>();
 		if ( vm.getNextLayout() == null )
 			//Need to discuss what to do here
-			return;
+			return null; //TODO return something useful
 		Row[][] cur = vm.getCurrentLayout().getRows();
 		Row[][] next = vm.getNextLayout().getRows();
 		for ( int i = 0; i < cur.length; i++ ) {
@@ -46,11 +49,12 @@ public class RestockerTaskListScreen {
 				Row nextItems = next[i][j];
 				GregorianCalendar exp = items.getExpirationDate();
 				//TODO check if item expires before next visit
-				GregorianCalendar nextVisit = exp.roll(Calendar.MONTH, 1);
+				GregorianCalendar nextVisit = (GregorianCalendar)exp.clone();
+				exp.roll(GregorianCalendar.MONTH, 1);
 				//don't have any data for when that is, assuming 1 month
 				if ( exp.before( nextVisit ) || 
 					items.getProduct().getName().equals(
-					nextItems.getProduct.getName() ) )
+					nextItems.getProduct().getName() ) )
 					instructions.add("Remove all from " +
 						i + ", " + j);
 				instructions.add("Add " + nextItems.getRemainingQuantity()
@@ -58,14 +62,14 @@ public class RestockerTaskListScreen {
 					+ " to location " + i + ", " + j);
 			}
 		}
-		return instructions.toArray();
+		return instructions.toArray(new String[0]);
 	}
 
 	/**
 	 * updates the necessary machinery that the stocking is complete
 	 */
-	public void completeStocking() {
+	public void completeStocking() throws SQLException {
 		vm.swapInNextLayout();
-		db.updateOrCreateVendingMachine( vm.getId );
+		db.updateOrCreateVendingMachine( vm );
 	}
 }

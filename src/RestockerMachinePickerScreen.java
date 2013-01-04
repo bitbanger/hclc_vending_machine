@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 /**
  * 
  * Initial Restocker prompt
@@ -26,7 +28,8 @@ public class RestockerMachinePickerScreen {
 	 *	the specified VendingMachine or null if the 
 	 * 	machine does not exist
 	 */
-	public RestockerTaskListScreen tryMachine( int id ) {
+	public RestockerTaskListScreen tryMachine( int id ) throws SQLException
+	{
 		VendingMachine vm = db.getVendingMachineById(id);
 		if ( vm == null )
 			return null;
