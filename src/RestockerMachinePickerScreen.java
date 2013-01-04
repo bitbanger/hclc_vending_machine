@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class RestockerMachinePickerScreen {
 	
 	/** The DatabaseLayer object */
-	DatabaseLayer db;
+	private DatabaseLayer db;
 
 	/**
 	 *  Standard constructor for RestockerMachinePickerScreen

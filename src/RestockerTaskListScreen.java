@@ -15,10 +15,10 @@ import java.util.GregorianCalendar;
 public class RestockerTaskListScreen {
 
 	/** the vending machine the restocker is working on */
-	VendingMachine vm;
+	private VendingMachine vm;
 
 	/** The Database */
-	DatabaseLayer db;
+	private DatabaseLayer db;
 
 	/**
 	 * Constructor
