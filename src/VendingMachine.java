@@ -1,3 +1,5 @@
+import java.util.GregorianCalendar;
+
 /**
  * Represents a vending machine.
  * @author Sol Boucher <slb1566@rit.edu>
@@ -10,6 +12,9 @@ public class VendingMachine extends ModelBase
 	/** The machine's physical location. */
 	private Location location;
 
+	/** How often the machine is restocked, in days. */
+	private int stockingInterval;
+
 	/** The machine's current product layout. */
 	private VMLayout currentLayout;
 
@@ -21,20 +26,24 @@ public class VendingMachine extends ModelBase
 	 * Creates an instance with the specified <tt>location</tt> and layout.
 	 * Initially, the machine is considered to be active, but lacks any next layout.
 	 * @param location the <tt>VendingMachine</tt>'s abode
+	 * @param stockingInterval how many days between consecutive restockings
 	 * @param currentLayout the <tt>VendingMachine</tt>'s layout
-	 * @throws IllegalArgumentException if <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>
+	 * @throws IllegalArgumentException if <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>, or if <tt>stockingInterval</tt> is not positive
 	 */
-	public VendingMachine(Location location, VMLayout currentLayout) throws IllegalArgumentException
+	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout) throws IllegalArgumentException
 	{
 		if(location==null)
 			throw new IllegalArgumentException("Location cannot be null");
+		else if(stockingInterval<=0)
+			throw new IllegalArgumentException("Stocking interval must be positive");
 		else if(currentLayout==null)
 			throw new IllegalArgumentException("Current layout cannot be null");
 		
 		active=true;
 		this.location=location;
+		this.stockingInterval=stockingInterval;
 		this.currentLayout=currentLayout;
-		nextLayout=null;
+		nextLayout=new VMLayout(currentLayout, true); //deep copy
 	}
 
 	/**
@@ -42,14 +51,15 @@ public class VendingMachine extends ModelBase
 	 * Creates an instance with the specified <tt>location</tt> and layout.
 	 * Both the future layout and the machine's activity are also supplied.
 	 * @param location the <tt>VendingMachine</tt>'s abode
+	 * @param stockingInterval how many days between consecutive restockings
 	 * @param currentLayout the <tt>VendingMachine</tt>'s present layout
 	 * @param nextLayout the <tt>VendingMachine</tt>'s future layout
 	 * @param active whether the <tt>VendingMachine</tt> is currently activated
-	 * @throws IllegalArgumentException if anything is <tt>null</tt>
+	 * @throws IllegalArgumentException if an instance is <tt>null</tt> or <tt>stockingInterval</tt> is not positive
 	 */
-	public VendingMachine(Location location, VMLayout currentLayout, VMLayout nextLayout, boolean active)
+	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout, VMLayout nextLayout, boolean active) throws IllegalArgumentException
 	{
-		this(location, currentLayout);
+		this(location, stockingInterval, currentLayout);
 		
 		if(nextLayout==null)
 			throw new IllegalArgumentException("Next layout cannot be null");
@@ -68,6 +78,7 @@ public class VendingMachine extends ModelBase
 		super(existing);
 		this.active=existing.active;
 		this.location=existing.location;
+		this.stockingInterval=existing.stockingInterval;
 		this.currentLayout=existing.currentLayout;
 		this.nextLayout=existing.nextLayout;
 	}
@@ -109,6 +120,36 @@ public class VendingMachine extends ModelBase
 	}
 
 	/**
+	 * In addition to changing the stocking interval, this method conditionally updates the next restocking visit.
+	 * In the case where the newly-mandated visit is sooner than the already-scheduled one, the new schedule is applied immediately.
+	 * However, in all other cases, the next stocking takes place at the earlier proposed time to prevent items from expiring while in the machine.
+	 * @param stockingInterval replacement stocking interval, in days
+	 * @throws IllegalArgumentException if supplied with a nonpositive value
+	 */
+	public void setStockingInterval(int stockingInterval) throws IllegalArgumentException
+	{
+		if(stockingInterval<=0)
+			throw new IllegalArgumentException("Stocking interval must be positive");
+		
+		GregorianCalendar latestStocking=lastPossibleVisit(stockingInterval);
+		
+		if(currentLayout.getNextVisit().compareTo(latestStocking)>0) //we now want to visit sooner
+			currentLayout.setNextVisit(latestStocking);
+		//otherwise, we're trying to postpone a prescheduled visit, which could allow products to expire while in the machine!
+		
+		this.stockingInterval=stockingInterval;
+	}
+
+	/**
+	 * @return the restocking interval, in days
+	 */
+	public int getStockingInterval()
+	{
+		return stockingInterval;
+	}
+
+	/**
+	 * This retrieves the current layout, which is guaranteed to have its next restocking visit defined.
 	 * @return the current layout
 	 */
 	public VMLayout getCurrentLayout()
@@ -118,13 +159,18 @@ public class VendingMachine extends ModelBase
 
 	/**
 	 * @param nextLayout a replacement future layout
+	 * @throws IllegalArgumentException if supplied with a <tt>null</tt> value
 	 */
-	public void setNextLayout(VMLayout nextLayout)
+	public void setNextLayout(VMLayout nextLayout) throws IllegalArgumentException
 	{
+		if(nextLayout==null)
+			throw new IllegalArgumentException("Next layout cannot be null");
+		
 		this.nextLayout=nextLayout;
 	}
 
 	/**
+	 * This retrieves the queued layout, which is not guaranteed to have a next restocking visit.
 	 * @return the next layout
 	 */
 	public VMLayout getNextLayout()
@@ -134,20 +180,27 @@ public class VendingMachine extends ModelBase
 
 	/**
 	 * Swaps the next layout into the current layout.
+	 * This process automatically sets the layout's next stocking visit.
 	 * At the end of this process, there is no next layout left.
-	 * In order for this to work, there needs to be a next layout available.
-	 * @return whether the operation succeeded (i.e. a next layout existed)
 	 */
-	public boolean swapInNextLayout()
+	public void swapInNextLayout()
 	{
-		if(nextLayout!=null)
-		{
-			currentLayout=nextLayout;
-			nextLayout=null;
-			
-			return true;
-		}
-		else
-			return false;
+		currentLayout=nextLayout;
+		nextLayout=new VMLayout(currentLayout, true); //deep copy
+		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
+	}
+
+	/**
+	 * Determines when the next restocker visit should occur, according to the supplied offset from the current time.
+	 * @param offset the number of days from now to next restock
+	 * @return the resulting timestamp
+	 */
+	private GregorianCalendar lastPossibleVisit(int offset)
+	{
+		GregorianCalendar visitation=new GregorianCalendar(); //now
+		
+		visitation.add(visitation.DAY_OF_YEAR, offset);
+		
+		return visitation;
 	}
 }

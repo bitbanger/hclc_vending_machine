@@ -113,7 +113,7 @@ public class DatabaseLayer
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), layoutId INTEGER REFERENCES VMLayout(layoutId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL, rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS VendingMachine( machineId INTEGER PRIMARY KEY AUTOINCREMENT, active INTEGER NOT NULL, currentLayoutId INTEGER REFERENCES VMLayout(layoutId), nextLayoutId INTEGER REFERENCES VMLayout(layoutId), locationId INTEGER REFERENCES Location(locationId));");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VendingMachine( machineId INTEGER PRIMARY KEY AUTOINCREMENT, active INTEGER NOT NULL, stockingInterval INTEGER NOT NULL, currentLayoutId INTEGER REFERENCES VMLayout(layoutId), nextLayoutId INTEGER REFERENCES VMLayout(layoutId), locationId INTEGER REFERENCES Location(locationId));");
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS NearbyBusiness( locationId INTEGER REFERENCES Location(locationId), name TEXT NOT NULL);");
 
@@ -390,11 +390,12 @@ public class DatabaseLayer
 	{
 		VendingMachine returnValue = null;
 		Statement vmStmt = db.createStatement();
-		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId FROM VendingMachine WHERE machineId=" + id);
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId, stockingInterval FROM VendingMachine WHERE machineId=" + id);
 		if (vmResults.next())
 		{
 			id = vmResults.getInt(1);
 			boolean active = !(vmResults.getInt(2) == 0);
+			int interval = vmResults.getInt(6);
 			int curId = vmResults.getInt(3);
 			int nextId = vmResults.getInt(4);
 			int locationId = vmResults.getInt(5);
@@ -402,7 +403,7 @@ public class DatabaseLayer
 			VMLayout cur = getVMLayoutById(curId);
 			VMLayout next = getVMLayoutById(nextId);
 			Location loc = getLocationById(locationId);
-			returnValue = new VendingMachine(loc, cur, next, active);
+			returnValue = new VendingMachine(loc, interval, cur, next, active);
 			returnValue.setId(id);
 		}
 		vmResults.close();
@@ -418,11 +419,12 @@ public class DatabaseLayer
 	{
 		Collection<VendingMachine> returnSet = null;
 		Statement vmStmt = db.createStatement();
-		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId FROM VendingMachine");
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId, stockingInterval FROM VendingMachine");
 		while (vmResults.next())
 		{
 			int id = vmResults.getInt(1);
 			boolean active = !(vmResults.getInt(2) == 0);
+			int interval = vmResults.getInt(6);
 			int curId = vmResults.getInt(3);
 			int nextId = vmResults.getInt(4);
 			int locationId = vmResults.getInt(5);
@@ -430,7 +432,7 @@ public class DatabaseLayer
 			VMLayout cur = getVMLayoutById(curId);
 			VMLayout next = getVMLayoutById(nextId);
 			Location loc = getLocationById(locationId);
-			VendingMachine machine = new VendingMachine(loc, cur, next, active);
+			VendingMachine machine = new VendingMachine(loc, interval, cur, next, active);
 			machine.setId(id);
 			returnSet.add(machine);
 		}
@@ -448,7 +450,7 @@ public class DatabaseLayer
 	{
 		Collection<VendingMachine> returnSet = null;
 		Statement vmStmt = db.createStatement();
-		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.zipCode=" + zip);
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.zipCode=" + zip);
 		while (vmResults.next())
 		{
 			int id = vmResults.getInt(1);
@@ -456,11 +458,12 @@ public class DatabaseLayer
 			int curId = vmResults.getInt(3);
 			int nextId = vmResults.getInt(4);
 			int locationId = vmResults.getInt(5);
+			int interval = vmResults.getInt(6);
 			
 			VMLayout cur = getVMLayoutById(curId);
 			VMLayout next = getVMLayoutById(nextId);
 			Location loc = getLocationById(locationId);
-			VendingMachine machine = new VendingMachine(loc, cur, next, active);
+			VendingMachine machine = new VendingMachine(loc, interval, cur, next, active);
 			machine.setId(id);
 			returnSet.add(machine);
 		}
@@ -478,7 +481,7 @@ public class DatabaseLayer
 	{
 		Collection<VendingMachine> returnSet = null;
 		Statement vmStmt = db.createStatement();
-		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=" + state);
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=" + state);
 		while (vmResults.next())
 		{
 			int id = vmResults.getInt(1);
@@ -486,11 +489,12 @@ public class DatabaseLayer
 			int curId = vmResults.getInt(3);
 			int nextId = vmResults.getInt(4);
 			int locationId = vmResults.getInt(5);
+			int interval = vmResults.getInt(6);
 			
 			VMLayout cur = getVMLayoutById(curId);
 			VMLayout next = getVMLayoutById(nextId);
 			Location loc = getLocationById(locationId);
-			VendingMachine machine = new VendingMachine(loc, cur, next, active);
+			VendingMachine machine = new VendingMachine(loc, interval, cur, next, active);
 			machine.setId(id);
 			returnSet.add(machine);
 		}
@@ -516,7 +520,7 @@ public class DatabaseLayer
 		if (vm.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO VendingMachine(active, currentLayoutId, nextLayoutId, locationId) VALUES(%d, %d, %d, %d)", vm.isActive() ? 1 : 0, vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId());
+			String query = String.format("INSERT INTO VendingMachine(active, stockingInterval, currentLayoutId, nextLayoutId, locationId) VALUES(%d, %d, %d, %d)", vm.isActive() ? 1 : 0, vm.getStockingInterval(), vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId());
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
@@ -527,7 +531,7 @@ public class DatabaseLayer
 		else
 		{
 			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE VendingMachine SET active=%d, currentLayoutId=%d, nextLayoutId=%d, locationId=%d WHERE machineId=%d", vm.isActive() ? 1 : 0, vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId(), vm.getId());
+			String query = String.format("UPDATE VendingMachine SET active=%d, stockingInterval=%d, currentLayoutId=%d, nextLayoutId=%d, locationId=%d WHERE machineId=%d", vm.isActive() ? 1 : 0, vm.getStockingInterval(),vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId(), vm.getId());
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
