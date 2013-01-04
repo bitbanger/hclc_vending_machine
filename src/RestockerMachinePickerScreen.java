@@ -23,8 +23,8 @@ public class RestockerMachinePickerScreen {
 	
 	/**
  	 * attempts to find the specified machine in the database
-	 * @param id: the id of the vending machine
-	 * @return: the RestockerTaskListScreen based around
+	 * @param id the id of the vending machine
+	 * @return the RestockerTaskListScreen based around
 	 *	the specified VendingMachine or null if the 
 	 * 	machine does not exist
 	 */

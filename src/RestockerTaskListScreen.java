@@ -23,7 +23,7 @@ public class RestockerTaskListScreen {
 	/**
 	 * Constructor
 	 * Creates an instance with the specified VendingMachine
-	 * @param cur: the machine the restocker is using
+	 * @param cur the machine the restocker is using
 	 */	
 	public RestockerTaskListScreen ( VendingMachine cur ) throws SQLException {
 		vm = cur;
