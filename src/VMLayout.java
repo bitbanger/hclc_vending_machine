@@ -1,3 +1,5 @@
+import java.util.GregorianCalendar;
+
 /**
  * Encapsulates a vending machine's layout.
  * @author Sol Boucher <slb1566@rit.edu>
@@ -6,6 +8,9 @@ public class VMLayout extends ModelBase
 {
 	/** The rows of products. */
 	private Row[][] rows;
+
+	/** When the next restocking is due (<tt>null</tt> if unset). */
+	private GregorianCalendar nextVisit;
 
 	/**
 	 * Dimension specification constructor.
@@ -23,6 +28,7 @@ public class VMLayout extends ModelBase
 			throw new IllegalArgumentException("Width must be positive");
 		
 		rows=new Row[height][width];
+		nextVisit=null;
 	}
 
 	/**
@@ -44,6 +50,7 @@ public class VMLayout extends ModelBase
 		}
 		
 		this.rows = rows;
+		nextVisit=null;
 	}
 
 	/**
@@ -55,6 +62,7 @@ public class VMLayout extends ModelBase
 	{
 		super(existing);
 		this.rows=existing.rows;
+		this.nextVisit=existing.nextVisit;
 	}
 
 	/**
@@ -63,5 +71,21 @@ public class VMLayout extends ModelBase
 	public Row[][] getRows()
 	{
 		return rows;
+	}
+
+	/**
+	 * @param nextVisit the next restocking visit
+	 */
+	public void setNextVisit(GregorianCalendar nextVisit)
+	{
+		this.nextVisit=nextVisit;
+	}
+
+	/**
+	 * @return the next restocking visit, or <tt>null</tt> if none is defined
+	 */
+	public GregorianCalendar getNextVisit()
+	{
+		return nextVisit;
 	}
 }
