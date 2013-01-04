@@ -32,7 +32,6 @@ public class Transaction extends ModelBase {
 	 */
 	public Transaction(GregorianCalendar timestamp, VendingMachine machine, Customer customer, FoodItem product, Pair<Integer, Integer> whichRow) throws IllegalArgumentException
 	{
-		//if(whichRow.first < 0 || whichRow.second < 0) throw new IllegalArgumentException("Invalid row position");
 		if(timestamp==null)
 			throw new IllegalArgumentException("Timestamp cannot be null");
 		else if(machine==null)
