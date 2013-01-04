@@ -62,6 +62,10 @@ public abstract class ModelBase
 		return id;
 	}
 
+	/**
+	 * Determines whether no permanent ID has been manually assigned.
+	 * @return whether this is a new object, unbacked by the database
+	 */
 	public boolean isTempId()
 	{
 		return id==TEMP_ID;

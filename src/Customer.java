@@ -73,7 +73,7 @@ public class Customer extends User
 	 * @param money the new balance
 	 * @throws IllegalArgumentException if a negative value is supplied
 	 */
-	public void setMoney(int money)
+	public void setMoney(int money) throws IllegalArgumentException
 	{
 		if(money<0)
 			throw new IllegalArgumentException("Money must not be negative");

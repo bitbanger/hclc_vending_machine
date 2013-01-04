@@ -161,7 +161,7 @@ public class VendingMachine extends ModelBase
 	 * @param nextLayout a replacement future layout
 	 * @throws IllegalArgumentException if supplied with a <tt>null</tt> value
 	 */
-	public void setNextLayout(VMLayout nextLayout)
+	public void setNextLayout(VMLayout nextLayout) throws IllegalArgumentException
 	{
 		if(nextLayout==null)
 			throw new IllegalArgumentException("Next layout cannot be null");
