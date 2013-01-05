@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * initial screen for a customer's transaction
  */
 
-public class CustomerLoginSreen {
+public class CustomerLoginScreen {
 
 	/** the Database instance */
 	private static DatabaseLayer db = DatabaseLayer.getInstance();

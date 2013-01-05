@@ -8,8 +8,10 @@ public class CashCustomerPurchaseScreen extends CustomerPurchaseScreen {
 
 	/**
 	 * creates the cashcustomer screen
+	 * @param user the user
+	 * @param vm the vending machine
 	 */
-	public CashCustomerPurchaseScreen( user, vm ) {
+	public CashCustomerPurchaseScreen( Customer user, VendingMachine vm ) {
 		super( user, vm );
 	}
 	

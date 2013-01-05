@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -39,7 +40,7 @@ public class CustomerPurchaseScreen {
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
-				items = rows[i][j].getProduct();
+				items[i][j] = rows[i][j].getProduct();
 			}
 		}
 		return items;
@@ -50,15 +51,15 @@ public class CustomerPurchaseScreen {
 	 * @param product the location (as a Pair of Integers) of the product
 	 * @return whether the purchase succeeded
  	 */
-	public boolean tryPurchase( Pair<Integer, Integer> product ) throws IllegalArgumentException {
+	public boolean tryPurchase( Pair<Integer, Integer> product ) throws IllegalArgumentException, SQLException {
 		VMLayout locs = machine.getCurrentLayout();
 		Row[][] rows = locs.getRows();
-		if ( rows.length < product.first || rows[].length < product.second ||
-			product.first < 0 || product.second < 0 )
+		if ( product.first < 0 || rows.length < product.first ||
+			product.second < 0 || rows[product.first].length < product.second )
 			return false; //not a valid location
-		if ( rows[product.first][product.second].getRemainingQuantity <= 0 )
+		if ( rows[product.first][product.second].getRemainingQuantity() <= 0 )
 			return false; //check if there is some remaining
-		FoodItem item = rows[product.first][product.second];
+		FoodItem item = rows[product.first][product.second].getProduct();
 		int cash = this.getBalance();
 		int price = item.getPrice();
 		if ( cash < price )
