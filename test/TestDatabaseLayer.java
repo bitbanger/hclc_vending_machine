@@ -16,7 +16,7 @@ public class TestDatabaseLayer
 	private DatabaseLayer dbl;
 
 	/**
-	 * Set of items to use for tests
+	 * Set of items to use in tests
 	 **/
 	private ArrayList<FoodItem> items;
 
@@ -47,18 +47,19 @@ public class TestDatabaseLayer
 	 * Checks if two FoodItems are the same
 	 * @param item1 The first item
 	 * @param item2 The second item
-	 * @return True iff item1 is the same as item2
 	 **/
-	private boolean foodItemEquals(FoodItem item1, FoodItem item2)
+	private void foodItemEquals(FoodItem item1, FoodItem item2)
 	{
-		return item1.getId() == item2.getId() && 
-			item1.getName().equals(item2.getName()) &&
-			item1.getPrice() == item2.getPrice() &&
-			item1.getFreshLength() == item2.getFreshLength();
+		assertTrue(item1.getId() == item2.getId());
+		assertTrue(item1.getName().equals(item2.getName()));
+		assertTrue(item1.getPrice() == item2.getPrice());
+		assertTrue(item1.getFreshLength() == item2.getFreshLength());
 	}
 
 	/**
-	 * Tests adding FoodItems to the database
+	 * Tests adding FoodItems to the database.
+	 * Note: This only tests if the id was changed and SQL exceptions. getFoodItem() check if
+	 * FoodItems can be added correctly.
 	 **/
 	@Test
 	public void addFoodItem() throws SQLException
@@ -82,7 +83,7 @@ public class TestDatabaseLayer
 		{
 			int id = item.getId();
 			FoodItem test = dbl.getFoodItemById(id);
-			assertTrue(foodItemEquals(test, item));
+			foodItemEquals(test, item);
 		}
 		for (FoodItem test : dbl.getFoodItemsAll())
 		{
@@ -95,8 +96,13 @@ public class TestDatabaseLayer
 					break;
 				}
 			}
-			assertTrue(item != null);
-			assertTrue(foodItemEquals(test, item));
+			String failure = String.format("Item I tried to find:\n %5d %10s\nI found:\n", test.getId(), test.getName());
+			for (FoodItem check : items)
+			{
+				failure += String.format("%5d %10s\n", check.getId(), check.getName());
+			}
+			assertTrue(failure, item != null);
+			foodItemEquals(test, item);
 		}
 	}
 
@@ -112,18 +118,18 @@ public class TestDatabaseLayer
 		change.setName("Name change");
 		dbl.updateOrCreateFoodItem(change);
 		FoodItem test = dbl.getFoodItemById(change.getId());
-		assertTrue(foodItemEquals(test, change));
+		foodItemEquals(test, change);
 
 		change = items.get(1);
 		change.setPrice(300);
 		dbl.updateOrCreateFoodItem(change);
 		test = dbl.getFoodItemById(change.getId());
-		assertTrue(foodItemEquals(test, change));
+		foodItemEquals(test, change);
 
 		change = items.get(2);
 		change.setFreshLength(12345);
 		dbl.updateOrCreateFoodItem(change);
 		test = dbl.getFoodItemById(change.getId());
-		assertTrue(foodItemEquals(test,change));
+		foodItemEquals(test,change);
 	}
 }
