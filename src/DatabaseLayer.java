@@ -532,7 +532,7 @@ public class DatabaseLayer
 		if (vm.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO VendingMachine(active, stockingInterval, currentLayoutId, nextLayoutId, locationId) VALUES(%d, %d, %d, %d)", vm.isActive() ? 1 : 0, vm.getStockingInterval(), vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId());
+			String query = String.format("INSERT INTO VendingMachine(active, stockingInterval, currentLayoutId, nextLayoutId, locationId) VALUES(%d, %d, %d, %d, %d)", vm.isActive() ? 1 : 0, vm.getStockingInterval(), vm.getCurrentLayout().getId(), vm.getNextLayout().getId(), vm.getLocation().getId());
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
