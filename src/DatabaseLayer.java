@@ -128,6 +128,19 @@ public class DatabaseLayer
 	}
 
 	/**
+	 * Deletes all data from database. Meant for testing purposes only!
+	 * DO NOT USE THIS METHOD UNLESS YOU ARE WRITING A TEST!!!
+	 *@throws SQLException in case of a database error
+	 **/
+	public void nuke() throws SQLException
+	{
+		Statement stmt = db.createStatement();
+		stmt.executeUpdate("PRAGMA writable_schema = 1; delete from sqlite_master where type = 'table'; PRAGMA writable_schema = 0;");
+		stmt.close();
+		initializeDatabase();
+	}
+
+	/**
 	 * Fetches the item with a given id from the database.
 	 * @param id The id of the item to fetch.
 	 * @return The item in the database with the given id or null if no item
