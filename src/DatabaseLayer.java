@@ -135,9 +135,8 @@ public class DatabaseLayer
 	public void nuke() throws SQLException
 	{
 		Statement stmt = db.createStatement();
-		stmt.executeUpdate("PRAGMA writable_schema = 1; delete from sqlite_master where type = 'table'; PRAGMA writable_schema = 0;");
+		stmt.executeUpdate("DELETE FROM Item; DELETE FROM Location; DELETE FROM VMLayout; DELETE FROM VMRow; DELETE FROM VendingMachine; DELETE FROM NearbyBusiness; DELETE FROM Customer; DELETE FROM Manager; DELETE FROM VMTransaction");
 		stmt.close();
-		initializeDatabase();
 	}
 
 	/**
