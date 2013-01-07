@@ -111,7 +111,9 @@ public class DatabaseLayer
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), layoutId INTEGER REFERENCES VMLayout(layoutId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL, rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL, rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
+
+		stmt.addBatch(" CREATE TABLE IF NOT EXISTS VMLayoutVMRowLink( layoutId INTEGER REFERENCES VMLayout(layoutId), vmRowId INTEGER REFERENCES VMRow(vmRowId));");
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VendingMachine( machineId INTEGER PRIMARY KEY AUTOINCREMENT, active INTEGER NOT NULL, stockingInterval INTEGER NOT NULL, currentLayoutId INTEGER REFERENCES VMLayout(layoutId), nextLayoutId INTEGER REFERENCES VMLayout(layoutId), locationId INTEGER REFERENCES Location(locationId));");
 
@@ -220,33 +222,15 @@ public class DatabaseLayer
 	 **/
 	private VMLayout getVMLayoutById(int id) throws SQLException
 	{
-		Statement rowStmt = db.createStatement();
-		ResultSet rowResults = rowStmt.executeQuery("SELECT vmRowId, productId, expirationDate, remainingQuant, rowX, rowY FROM VMRow WHERE layoutId=" + id);
 		int maxX = -1;
 		int maxY = -1;
-		LinkedList<Pair<Row,Pair<Integer,Integer>>> raw = new LinkedList<Pair<Row,Pair<Integer,Integer>>>();
-		while (rowResults.next())
+		LinkedList<Pair<Row,Pair<Integer,Integer>>> raw = getRowsByVMLayoutId(id);
+
+		for (Pair<Row,Pair<Integer,Integer>> entry : raw)
 		{
-			int productId = rowResults.getInt(2);
-			long dateInt = rowResults.getLong(3);
-			int rowX = rowResults.getInt(5);
-			int rowY = rowResults.getInt(6);
-
-			maxX = Math.max(maxX, rowX);
-			maxY = Math.max(maxY, rowY);
-
-			FoodItem item = getFoodItemById(productId);
-			
-			GregorianCalendar date = new GregorianCalendar();
-			date.setTimeInMillis(dateInt);
-
-			Row row = new Row(item, rowResults.getInt(4), date);
-			row.setId(rowResults.getInt(1));
-
-			raw.add(new Pair<Row,Pair<Integer,Integer>>(row, new Pair<Integer, Integer>(rowX, rowY)));
+			maxX = Math.max(maxX, entry.second.first);
+			maxY = Math.max(maxY, entry.second.second);
 		}
-
-		rowStmt.close();
 
 		if (maxX == -1 || maxY == -1)
 			return null;
@@ -276,44 +260,96 @@ public class DatabaseLayer
 			int id = keys.getInt(1);
 			layout.setId(id);
 			insertStmt.close();
+		}
+
+		Statement delStatement = db.createStatement();
+		delStatement.executeUpdate("DELETE FROM VMLayoutVMRowLink WHERE layoutId=" + layout.getId());
+		delStatement.close();
 			
-			Row[][] grid = layout.getRows();
-			for (int y=0;y<grid.length;++y)
+		Row[][] grid = layout.getRows();
+		for (int y=0;y<grid.length;++y)
+		{
+			for (int x=0;x<grid[y].length;++x)
 			{
-				for (int x=0;x<grid[y].length;++x)
-				{
-					Row row = grid[y][x];
-					Statement rowStmt = db.createStatement();
-					String rowQuery = String.format("INSERT INTO VMRow(productId, layoutId, expirationDate, remainingQuant, rowX, rowY) VALUES(%d, %d, %d, %d, %d, %d)", row.getProduct().getId(), layout.getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y);
-					rowStmt.executeUpdate(rowQuery);
-					ResultSet rowKeys = rowStmt.getGeneratedKeys();
-					rowKeys.next();
-					row.setId(rowKeys.getInt(1));
-					rowStmt.close();
-				}
+				Row row = grid[y][x];
+				updateOrCreateRow(row, x, y, layout.getId());
 			}
+		}
+	}
+
+	/**
+	 * Gets the rows associated with the given layout id
+	 * @param layoutId The id of the VMLayout
+	 * @return A LinkedList of pairs of rows and pairs of integers. The rows
+	 * are the rows (duh) and the pairs of integers are the x and y coordinates
+	 * of the row in its parent VMLayout
+	 **/
+	private LinkedList<Pair<Row,Pair<Integer,Integer>>> getRowsByVMLayoutId(int layoutId) throws SQLException
+	{
+		LinkedList<Pair<Row,Pair<Integer,Integer>>> returnSet = new LinkedList<Pair<Row,Pair<Integer,Integer>>>();
+		Statement rowStmt = db.createStatement();
+		ResultSet rowResults = rowStmt.executeQuery("SELECT VMRow.vmRowId, productId, expirationDate, remainingQuant, rowX, rowY FROM VMRow JOIN VMLayoutVMRowLink ON VMRow.vmRowId=VMLayoutVMRowLink.vmRowId WHERE layoutId=" + layoutId);
+
+		while (rowResults.next())
+		{
+			int productId = rowResults.getInt(2);
+			long dateInt = rowResults.getLong(3);
+			int rowX = rowResults.getInt(5);
+			int rowY = rowResults.getInt(6);
+
+			FoodItem item = getFoodItemById(productId);
+			
+			GregorianCalendar date = new GregorianCalendar();
+			date.setTimeInMillis(dateInt);
+
+			Row returnValue = new Row(item, rowResults.getInt(4), date);
+			returnValue.setId(rowResults.getInt(1));
+
+			returnSet.add(new Pair<Row, Pair<Integer, Integer>>(returnValue, new Pair<Integer, Integer>(rowX, rowY)));
+		}
+		rowStmt.close();
+		return returnSet;
+	}
+
+	/**
+	 * Updates a row if it exists in the datbase (determined by id) or creates it
+	 * if it does not exist. Also creates a link between the row and the parent
+	 * layout.
+	 * @param row The row to update/create
+	 * @param x The x value of the row in the grid of the parent layout
+	 * @param y The y value of the row in the grid of the parent layout
+	 * @param parentLayoutId The id of the parent layout
+	 **/
+	private void updateOrCreateRow(Row row, int x, int y, int parentLayoutId) throws SQLException
+	{
+		Statement qStmt = db.createStatement();
+		if (row.isTempId())
+		{
+			Statement rowStmt = db.createStatement();
+			String rowQuery = String.format("INSERT INTO VMRow(productId, expirationDate, remainingQuant, rowX, rowY) VALUES(%d, %d, %d, %d, %d)", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y);
+			rowStmt.executeUpdate(rowQuery);
+			ResultSet rowKeys = rowStmt.getGeneratedKeys();
+			rowKeys.next();
+			row.setId(rowKeys.getInt(1));
+			rowStmt.close();
 		}
 		else
 		{
-			Statement deleteStmt = db.createStatement();
-			deleteStmt.executeUpdate("DELETE FROM VMRow WHERE layoutId=" + layout.getId());
-			deleteStmt.close();
-			Row[][] grid = layout.getRows();
-			for (int y=0;y<grid.length;++y)
-			{
-				for (int x=0;x<grid[y].length;++x)
-				{
-					Row row = grid[y][x];
-					Statement rowStmt = db.createStatement();
-					String query = String.format("INSERT INTO VMRow(productId, layoutId, expirationDate, remainingQuant, rowX, rowY) VALUES(%d, %d, %d, %d, %d, %d)", row.getProduct().getId(), layout.getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y);
-					rowStmt.executeUpdate(query);
-					ResultSet rowKeys = rowStmt.getGeneratedKeys();
-					rowKeys.next();
-					row.setId(rowKeys.getInt(1));
-					rowStmt.close();
-				}
-			}
+
+			Statement rowStmt = db.createStatement();
+			String rowQuery = String.format("UPDATE VMRow SET productId=%d, expirationDate=%d, remainingQuant=%d, rowX=%d, rowY=%d WHERE vmRowId=%d", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y, row.getId());
+			rowStmt.executeUpdate(rowQuery);
+			rowStmt.close();
 		}
+		Statement qLink = db.createStatement();
+		ResultSet linkSet = qLink.executeQuery("SELECT vmRowId FROM VMLayoutVMRowLink WHERE layoutId=" + parentLayoutId + " AND vmRowId=" + row.getId());
+		if (!linkSet.next())
+		{
+			Statement iLink = db.createStatement();
+			iLink.executeUpdate("INSERT INTO VMLayoutVMRowLink(layoutId, vmRowId) VALUES(" + parentLayoutId + "," + row.getId() + ")");
+			iLink.close();
+		}
+		qLink.close();
 	}
 
 	/**
