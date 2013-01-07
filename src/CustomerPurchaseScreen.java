@@ -31,7 +31,8 @@ public class CustomerPurchaseScreen {
 	}
 
 	/** 
-	 * lists the layout of all the items
+	 * lists the layout of all the items still available for sale.
+	 * Those items that have sold out are delivered as <tt>null</tt>s.
 	 * @return the layout of items
  	 */
 	public FoodItem[][] listLayout() {
@@ -40,7 +41,8 @@ public class CustomerPurchaseScreen {
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
-				items[i][j] = rows[i][j].getProduct();
+				if(rows[i][j]!=null && rows[i][j].getRemainingQuantity()>0)
+					items[i][j] = rows[i][j].getProduct();
 			}
 		}
 		return items;
@@ -57,8 +59,8 @@ public class CustomerPurchaseScreen {
 		if ( product.first < 0 || rows.length < product.first ||
 			product.second < 0 || rows[product.first].length < product.second )
 			return false; //not a valid location
-		if ( rows[product.first][product.second].getRemainingQuantity() <= 0 )
-			return false; //check if there is some remaining
+		if ( rows[product.first][product.second] == null)
+			return false; //nothing to see here
 		FoodItem item = rows[product.first][product.second].getProduct();
 		int cash = this.getBalance();
 		int price = item.getPrice();
