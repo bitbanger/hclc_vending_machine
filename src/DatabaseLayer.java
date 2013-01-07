@@ -625,13 +625,14 @@ public class DatabaseLayer
 			customer.setId(keys.getInt(1));
 			insertStmt.close();
 		}
-		else
+		else if(!customer.isCashCustomer())
 		{
 			Statement updateStmt = db.createStatement();
 			String query = String.format("UPDATE Customer SET money=%d, name=\"%s\" WHERE customerId=%d", customer.getMoney(), customer.getName(), customer.getId());
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
+		//do NOT store cash customers under any circumstances
 	}
 
 	/**
