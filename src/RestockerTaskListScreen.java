@@ -14,11 +14,11 @@ import java.util.GregorianCalendar;
 
 public class RestockerTaskListScreen {
 
+	/** The Database */
+	private static DatabaseLayer db=DatabaseLayer.getInstance();
+
 	/** the vending machine the restocker is working on */
 	private VendingMachine vm;
-
-	/** The Database */
-	private DatabaseLayer db;
 
 	/**
 	 * Constructor
@@ -27,7 +27,6 @@ public class RestockerTaskListScreen {
 	 */	
 	public RestockerTaskListScreen ( VendingMachine cur ) throws SQLException {
 		vm = cur;
-		db = DatabaseLayer.getInstance();
 	}
 
 	/**

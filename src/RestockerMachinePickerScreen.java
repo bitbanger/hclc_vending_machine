@@ -12,15 +12,8 @@ import java.sql.SQLException;
 public class RestockerMachinePickerScreen {
 	
 	/** The DatabaseLayer object */
-	private DatabaseLayer db;
+	private static DatabaseLayer db=DatabaseLayer.getInstance();
 
-	/**
-	 *  Standard constructor for RestockerMachinePickerScreen
-	 */
-	public RestockerMachinePickerScreen () {
-		db = DatabaseLayer.getInstance();
-	}
-	
 	/**
  	 * attempts to find the specified machine in the database
 	 * @param id the id of the vending machine
