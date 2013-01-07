@@ -228,7 +228,7 @@ public class DatabaseLayer
 		while (rowResults.next())
 		{
 			int productId = rowResults.getInt(2);
-			long dateInt = rowResults.getInt(3);
+			long dateInt = rowResults.getLong(3);
 			int rowX = rowResults.getInt(5);
 			int rowY = rowResults.getInt(6);
 
@@ -663,7 +663,7 @@ public class DatabaseLayer
 		if (results.next())
 		{
 			GregorianCalendar time = new GregorianCalendar();
-			time.setTimeInMillis(results.getInt(2));
+			time.setTimeInMillis(results.getLong(2));
 			VendingMachine machine = getVendingMachineById(results.getInt(3));
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
@@ -695,7 +695,7 @@ public class DatabaseLayer
 		{
 			int id = results.getInt(1);
 			GregorianCalendar time = new GregorianCalendar();
-			time.setTimeInMillis(results.getInt(2));
+			time.setTimeInMillis(results.getLong(2));
 			VendingMachine machine = getVendingMachineById(results.getInt(3));
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
@@ -725,7 +725,7 @@ public class DatabaseLayer
 		{
 			int id = results.getInt(1);
 			GregorianCalendar time = new GregorianCalendar();
-			time.setTimeInMillis(results.getInt(2));
+			time.setTimeInMillis(results.getLong(2));
 			VendingMachine machine = getVendingMachineById(results.getInt(3));
 			Customer cust = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
@@ -753,7 +753,7 @@ public class DatabaseLayer
 		{
 			int id = results.getInt(1);
 			GregorianCalendar time = new GregorianCalendar();
-			time.setTimeInMillis(results.getInt(2));
+			time.setTimeInMillis(results.getLong(2));
 			VendingMachine machine = getVendingMachineById(results.getInt(3));
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
