@@ -277,4 +277,52 @@ public class TestDatabaseLayer
 			vendingMachineEquals(machine, test);
 		}
 	 }
+
+	/**
+	 * Tests updating vending machines from the database.
+	 **/
+	 @Test
+	 public void changeVendingMachine() throws SQLException
+	 {
+		noTestAddFoodItems();
+		for (VendingMachine machine : machines)
+			dbl.updateOrCreateVendingMachine(machine);
+
+		VMLayout testLayout = new VMLayout(machines.get(1).getCurrentLayout());
+		machines.get(0).setNextLayout(testLayout);
+		dbl.updateOrCreateVendingMachine(machines.get(0));
+		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
+		vendingMachineEquals(test, machines.get(0));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
+
+		machines.get(1).makeActive(true);
+		dbl.updateOrCreateVendingMachine(machines.get(1));
+		test = dbl.getVendingMachineById(machines.get(1).getId());
+		vendingMachineEquals(test, machines.get(1));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+
+		machines.get(1).swapInNextLayout();
+		dbl.updateOrCreateVendingMachine(machines.get(1));
+		test = dbl.getVendingMachineById(machines.get(1).getId());
+		vendingMachineEquals(test, machines.get(1));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+
+		machines.get(0).setStockingInterval(10);
+		dbl.updateOrCreateVendingMachine(machines.get(0));
+		test = dbl.getVendingMachineById(machines.get(0).getId());
+		vendingMachineEquals(test, machines.get(0));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
+
+		machines.get(1).getLocation().setZipCode(11111);
+		dbl.updateOrCreateVendingMachine(machines.get(1));
+		test = dbl.getVendingMachineById(machines.get(1).getId());
+		vendingMachineEquals(test, machines.get(1));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+
+		machines.get(1).getLocation().setState("Hawaii");
+		dbl.updateOrCreateVendingMachine(machines.get(1));
+		test = dbl.getVendingMachineById(machines.get(1).getId());
+		vendingMachineEquals(test, machines.get(1));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	 }
 }
