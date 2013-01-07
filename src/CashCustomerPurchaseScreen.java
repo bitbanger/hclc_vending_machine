@@ -20,6 +20,6 @@ public class CashCustomerPurchaseScreen extends CustomerPurchaseScreen {
 	 * @param cash the amount of money to add
 	 */
 	public void addCash ( int cash ) {
-		user.setMoney(user.getMoney() + cash);		
+		getUser().deductMoney(-cash);
 	}
 }

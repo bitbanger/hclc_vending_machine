@@ -15,7 +15,7 @@ public class CustomerPurchaseScreen {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	/** The current Customer */
-	protected Customer user;
+	private Customer user;
 
  	/** The current VendingMachine */
 	private VendingMachine machine;
@@ -80,6 +80,15 @@ public class CustomerPurchaseScreen {
 	 */
 	public void cancel() {
 		//TODO determine what this should do
+	}
+
+	/**
+	 * This method is <i>not</i> intended for use by the view.
+	 * @return the customer logged into the vending machine
+	 */
+	public Customer getUser()
+	{
+		return user;
 	}
 
 	/**
