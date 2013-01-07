@@ -224,18 +224,24 @@ public class TestDatabaseLayer
 		dbl.updateOrCreateFoodItem(change);
 		FoodItem test = dbl.getFoodItemById(change.getId());
 		foodItemEquals(test, change);
+		for (int i=1;i<items.size();++i)
+			foodItemEquals(dbl.getFoodItemById(items.get(i).getId()), items.get(i));
 
 		change = items.get(1);
 		change.setPrice(300);
 		dbl.updateOrCreateFoodItem(change);
 		test = dbl.getFoodItemById(change.getId());
 		foodItemEquals(test, change);
+		for (int i=2;i<items.size();++i)
+			foodItemEquals(dbl.getFoodItemById(items.get(i).getId()), items.get(i));
 
 		change = items.get(2);
 		change.setFreshLength(12345);
 		dbl.updateOrCreateFoodItem(change);
 		test = dbl.getFoodItemById(change.getId());
 		foodItemEquals(test,change);
+		for (int i=3;i<items.size();++i)
+			foodItemEquals(dbl.getFoodItemById(items.get(i).getId()), items.get(i));
 	}
 
 	/**
