@@ -37,9 +37,6 @@ public class RestockerTaskListScreen {
 	 */
 	public String[] assembleStockingList() {
 		ArrayList<String> instructions = new ArrayList<String>();
-		if ( vm.getNextLayout() == null )
-			//Need to discuss what to do here
-			return null; //TODO return something useful
 		Row[][] cur = vm.getCurrentLayout().getRows();
 		Row[][] next = vm.getNextLayout().getRows();
 		for ( int i = 0; i < cur.length; i++ ) {
