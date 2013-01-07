@@ -131,7 +131,7 @@ public class TestDatabaseLayer
 
 		Row[][] rows1 = layout1.getRows();
 		Row[][] rows2 = layout2.getRows();
-		assertTrue(rows1.length == rows2.length);
+		assertTrue(rows1.length + ", " + rows2.length, rows1.length == rows2.length);
 		
 		for (int i=0;i<rows1.length;++i)
 		{
@@ -143,7 +143,7 @@ public class TestDatabaseLayer
 				Row row1 = rowx1[j];
 				Row row2 = rowx2[j];
 				foodItemEquals(row1.getProduct(), row2.getProduct());
-				assertTrue(row1.getExpirationDate().equals(row2.getExpirationDate()));
+				assertTrue(row1.getExpirationDate() + "\n" + row2.getExpirationDate(), row1.getExpirationDate().equals(row2.getExpirationDate()));
 				assertTrue(row1.getRemainingQuantity() == row2.getRemainingQuantity());
 			}
 		}
