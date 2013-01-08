@@ -51,21 +51,24 @@ public class CustomerPurchaseScreen {
 	/**
 	 * attempts to purchase the item at the specified location
 	 * @param product the location (as a Pair of Integers) of the product
-	 * @return whether the purchase succeeded
+	 * @return a reason why it either succeded or failed.  If success, returns "GOOD"
  	 */
-	public boolean tryPurchase( Pair<Integer, Integer> product ) throws IllegalArgumentException, SQLException {
+	public String tryPurchase( Pair<Integer, Integer> product ) throws IllegalArgumentException, SQLException {
 		VMLayout locs = machine.getCurrentLayout();
 		Row[][] rows = locs.getRows();
 		if ( product.first < 0 || rows.length < product.first ||
 			product.second < 0 || rows[product.first].length < product.second )
-			return false; //not a valid location
+			return "INVALID LOCATION"; //not a valid location
 		if ( rows[product.first][product.second] == null)
-			return false; //nothing to see here
+			return "NO PRODUCT"; //nothing to see here
+		if ( rows[product.first][product.second].getRemainingQuantity() <= 0 )
+			return "ITEM SOLD OUT"; //check if there is some remaining
+		CustomerPurchaseScreen.java's tryPurchase to returning string with reason for failure
 		FoodItem item = rows[product.first][product.second].getProduct();
 		int cash = this.getBalance();
 		int price = item.getPrice();
 		if ( cash < price )
-			return false; //insufficient funds
+			return "INSUFFICIENT FUNDS"; //insufficient funds
 		// otherwise we're good
 		Transaction trans = new Transaction(new GregorianCalendar(), 
 			machine, user, item, product);
@@ -74,7 +77,7 @@ public class CustomerPurchaseScreen {
 		db.updateOrCreateCustomer(user);
 		rows[product.first][product.second].decrementRemainingQuantity();
 		db.updateOrCreateVendingMachine(machine);
-		return true;
+		return "GOOD";
 	}
 
 	/**
