@@ -305,14 +305,14 @@ public class TestDatabaseLayer
 	 }
 
 	/**
-	 * Tests updating vending machines from the database.
+	 * Tests changing a vending machine's next layout to a layout already in
+	 * the database.
 	 **/
 	 @Test
-	 public void changeVendingMachine() throws SQLException
+	 public void changeVendingMachine1() throws SQLException
 	 {
 		noTestAddFoodItems();
-		for (VendingMachine machine : machines)
-			dbl.updateOrCreateVendingMachine(machine);
+		noTestAddVendingMachines();
 
 		VMLayout testLayout = new VMLayout(machines.get(1).getCurrentLayout());
 		machines.get(0).setNextLayout(testLayout);
@@ -320,35 +320,179 @@ public class TestDatabaseLayer
 		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
 		vendingMachineEquals(test, machines.get(0));
 		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
+	}
+
+	/**
+	 * Tests changing the active flag on a vending machine.
+	 **/
+	@Test
+	public void changeVendingMachine2() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
 
 		machines.get(1).makeActive(true);
 		dbl.updateOrCreateVendingMachine(machines.get(1));
-		test = dbl.getVendingMachineById(machines.get(1).getId());
+		VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
 		vendingMachineEquals(test, machines.get(1));
 		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	}
+
+	/**
+	 * Tests changing current layout to next layout in a vending machine.
+	 **/
+	@Test
+	public void changeVendingMachine3() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
 
 		machines.get(1).swapInNextLayout();
 		dbl.updateOrCreateVendingMachine(machines.get(1));
-		test = dbl.getVendingMachineById(machines.get(1).getId());
+		VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
 		vendingMachineEquals(test, machines.get(1));
 		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	}
+
+	/**
+	 * Tests changing the stocking interval of a vending machine.
+	 **/
+	@Test
+	public void changeVendingMachine4() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
 
 		machines.get(0).setStockingInterval(10);
 		dbl.updateOrCreateVendingMachine(machines.get(0));
-		test = dbl.getVendingMachineById(machines.get(0).getId());
+		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
 		vendingMachineEquals(test, machines.get(0));
 		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
+	}
+
+	/**
+	 * Tests changing the zip code of the location of a vending machine.
+	 **/
+	@Test
+	public void changeVendingMachine5() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
 
 		machines.get(1).getLocation().setZipCode(11111);
 		dbl.updateOrCreateVendingMachine(machines.get(1));
-		test = dbl.getVendingMachineById(machines.get(1).getId());
+		VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
 		vendingMachineEquals(test, machines.get(1));
 		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	}
+
+	/**
+	 * Tests changing the state of the location of a vending machine.
+	 **/
+	@Test
+	public void changeVendingMachine6() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
 
 		machines.get(1).getLocation().setState("Hawaii");
 		dbl.updateOrCreateVendingMachine(machines.get(1));
-		test = dbl.getVendingMachineById(machines.get(1).getId());
+		VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
 		vendingMachineEquals(test, machines.get(1));
 		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	 }
+
+	 /**
+	  * Tests changing the next layout of a vending machine to one that does
+	  * not exist in the database and that has rows which also do not exist.
+	  **/
+	 @Test
+	 public void changeVendingMachine7() throws SQLException
+	 {
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		Row[][] testRows = new Row[3][3];
+		for (int i=0;i<3;++i)
+		{
+			for (int j=0;j<3;++j)
+			{
+				testRows[i][j] = new Row(items.get(i%items.size()), 5, new GregorianCalendar());
+			}
+		}
+
+		VMLayout testLayout = new VMLayout(testRows);
+		machines.get(0).setNextLayout(testLayout);
+		dbl.updateOrCreateVendingMachine(machines.get(0));
+		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
+		vendingMachineEquals(test, machines.get(0));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
+	 }
+
+	 /**
+	  * Tests changing the next layout of a vending machine to one that does
+	  * not exist in the database and that has rows which do not exist and
+	  * rows that do exist.
+	  **/
+	 @Test
+	 public void changeVendingMachine8() throws SQLException
+	 {
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		Row[][] testRows = new Row[3][3];
+		for (int i=0;i<3;++i)
+		{
+			for (int j=0;j<3;++j)
+			{
+				testRows[i][j] = new Row(items.get(i%items.size()), 5, new GregorianCalendar());
+			}
+		}
+
+		testRows[2][1] = machines.get(1).getNextLayout().getRows()[0][1];
+
+		VMLayout testLayout = new VMLayout(testRows);
+		machines.get(0).setNextLayout(testLayout);
+		dbl.updateOrCreateVendingMachine(machines.get(0));
+		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
+		vendingMachineEquals(test, machines.get(0));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
+	 }
+
+	 /**
+	  * Tests changing the location of a vending machine.
+	  **/
+	 @Test
+	 public void changeVendingMachine9() throws SQLException
+	 {
+		 noTestAddFoodItems();
+		 noTestAddVendingMachines();
+
+		 Location newPlace = new Location(12121, "Kentucky", new String[] {"A Farm"});
+		 machines.get(1).setLocation(newPlace);
+		 dbl.updateOrCreateVendingMachine(machines.get(1));
+		 VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
+		 vendingMachineEquals(test, machines.get(1));
+		 vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	 }
+
+	 /**
+	  * Tests running changeVendingMachine* in succession.
+	  **/
+	 @Test
+	 public void changeVendingMachineAll() throws SQLException
+	 {
+		 noTestAddFoodItems();
+		 noTestAddVendingMachines();
+
+		 changeVendingMachine1();
+		 changeVendingMachine2();
+		 changeVendingMachine3();
+		 changeVendingMachine4();
+		 changeVendingMachine5();
+		 changeVendingMachine6();
+		 changeVendingMachine7();
+		 changeVendingMachine8();
+		 changeVendingMachine9();
 	 }
 }
