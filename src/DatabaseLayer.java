@@ -111,9 +111,9 @@ public class DatabaseLayer
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL, rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
+		stmt.addBatch(" CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL);");
 
-		stmt.addBatch(" CREATE TABLE IF NOT EXISTS VMLayoutVMRowLink( layoutId INTEGER REFERENCES VMLayout(layoutId), vmRowId INTEGER REFERENCES VMRow(vmRowId));");
+		stmt.addBatch(" CREATE TABLE IF NOT EXISTS VMLayoutVMRowLink( layoutId INTEGER REFERENCES VMLayout(layoutId), vmRowId INTEGER REFERENCES VMRow(vmRowId), rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VendingMachine( machineId INTEGER PRIMARY KEY AUTOINCREMENT, active INTEGER NOT NULL, stockingInterval INTEGER NOT NULL, currentLayoutId INTEGER REFERENCES VMLayout(layoutId), nextLayoutId INTEGER REFERENCES VMLayout(layoutId), locationId INTEGER REFERENCES Location(locationId));");
 
@@ -326,7 +326,7 @@ public class DatabaseLayer
 		if (row.isTempId())
 		{
 			Statement rowStmt = db.createStatement();
-			String rowQuery = String.format("INSERT INTO VMRow(productId, expirationDate, remainingQuant, rowX, rowY) VALUES(%d, %d, %d, %d, %d)", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y);
+			String rowQuery = String.format("INSERT INTO VMRow(productId, expirationDate, remainingQuant) VALUES(%d, %d, %d)", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity());
 			rowStmt.executeUpdate(rowQuery);
 			ResultSet rowKeys = rowStmt.getGeneratedKeys();
 			rowKeys.next();
@@ -337,7 +337,7 @@ public class DatabaseLayer
 		{
 
 			Statement rowStmt = db.createStatement();
-			String rowQuery = String.format("UPDATE VMRow SET productId=%d, expirationDate=%d, remainingQuant=%d, rowX=%d, rowY=%d WHERE vmRowId=%d", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), x, y, row.getId());
+			String rowQuery = String.format("UPDATE VMRow SET productId=%d, expirationDate=%d, remainingQuant=%d WHERE vmRowId=%d", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), row.getId());
 			rowStmt.executeUpdate(rowQuery);
 			rowStmt.close();
 		}
@@ -346,7 +346,8 @@ public class DatabaseLayer
 		if (!linkSet.next())
 		{
 			Statement iLink = db.createStatement();
-			iLink.executeUpdate("INSERT INTO VMLayoutVMRowLink(layoutId, vmRowId) VALUES(" + parentLayoutId + "," + row.getId() + ")");
+			String query = String.format("INSERT INTO VMLayoutVMRowLink(layoutId, vmRowId, rowX, rowY) VALUES(%d, %d, %d, %d)", parentLayoutId, row.getId(), x, y);
+			iLink.executeUpdate(query);
 			iLink.close();
 		}
 		qLink.close();
