@@ -27,6 +27,16 @@ public class TestDatabaseLayer
 	private ArrayList<VendingMachine> machines;
 
 	/**
+	 * Flag to see if food items have already been added by noTestAddFoodItems()
+	 **/
+	private boolean addedFoodItems;
+
+	/**
+	 * Flag to see if vending machine have already been added by noTestAddVendingMachines()
+	 **/
+	private boolean addedVendingMachines;
+
+	/**
 	 * Clears the database and initializes test objects for each test
 	 **/
 	@Before
@@ -36,6 +46,8 @@ public class TestDatabaseLayer
 		dbl.nuke();
 		initFoodItems();
 		initVendingMachines();
+		addedFoodItems = false;
+		addedVendingMachines = false;
 	}
 
 	/**
@@ -150,15 +162,29 @@ public class TestDatabaseLayer
 	}
 
 	/**
-	 * Adds FoodItems to the database without testing. Used in several tests.
+	 * Adds FoodItems to the database without testing iff they have not already
+	 * been added. Used in several tests.
 	 **/
 	private void noTestAddFoodItems() throws SQLException
 	{
+		if (addedFoodItems)
+			return;
+		addedFoodItems = true;
 		for (FoodItem item : items)
-		{
 			dbl.updateOrCreateFoodItem(item);
-			assertTrue(!item.isTempId());
-		}
+	}
+
+	/**
+	 * Adds vending machines to the database without testing iff they have not
+	 * already been added. Used in several tests.
+	 **/
+	private void noTestAddVendingMachines() throws SQLException
+	{
+		if (addedVendingMachines)
+			return;
+		addedVendingMachines = true;
+		for (VendingMachine machine : machines)
+			dbl.updateOrCreateVendingMachine(machine);
 	}
 
 	/**
