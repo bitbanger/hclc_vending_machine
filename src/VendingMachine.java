@@ -44,6 +44,7 @@ public class VendingMachine extends ModelBase
 		this.stockingInterval=stockingInterval;
 		this.currentLayout=currentLayout;
 		nextLayout=new VMLayout(currentLayout, true); //deep copy
+		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
 	}
 
 	/**
