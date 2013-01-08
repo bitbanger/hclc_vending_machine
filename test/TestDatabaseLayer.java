@@ -27,6 +27,11 @@ public class TestDatabaseLayer
 	private ArrayList<VendingMachine> machines;
 
 	/**
+	 * Set of customers to use in tests
+	 **/
+	private ArrayList<Customer> customers;
+
+	/**
 	 * Flag to see if food items have already been added by noTestAddFoodItems()
 	 **/
 	private boolean addedFoodItems;
@@ -35,6 +40,11 @@ public class TestDatabaseLayer
 	 * Flag to see if vending machine have already been added by noTestAddVendingMachines()
 	 **/
 	private boolean addedVendingMachines;
+
+	/**
+	 * Flag to see if customers have already been added by noTestAddCustomers()
+	 **/
+	 private boolean addedCustomers;
 
 	/**
 	 * Clears the database and initializes test objects for each test
@@ -46,8 +56,10 @@ public class TestDatabaseLayer
 		dbl.nuke();
 		initFoodItems();
 		initVendingMachines();
+		initCustomers();
 		addedFoodItems = false;
 		addedVendingMachines = false;
+		addedCustomers = false;
 	}
 
 	/**
@@ -89,6 +101,18 @@ public class TestDatabaseLayer
 		VMLayout cur2 = new VMLayout(testRows[2]);
 		VMLayout next2 = new VMLayout(testRows[3]);
 		machines.add(new VendingMachine(loc2, 500000, cur2, next2, false));
+	}
+
+	/**
+	 * Initializes a set of customers to use in tests.
+	 **/
+	private void initCustomers()
+	{
+		customers = new ArrayList<Customer>();
+		customers.add(new Customer("Carlton", 2000));
+		customers.add(new Customer("President Bush", 50000000));
+		customers.add(new Customer("Hank", 100000));
+		customers.add(new Customer("Phillips", 10000));
 	}
 
 	/**
@@ -162,6 +186,19 @@ public class TestDatabaseLayer
 	}
 
 	/**
+	 * Checks if two customers are equal
+	 * @param customer1 The first customer
+	 * @param customer2 The second customer
+	 **/
+	private void customerEquals(Customer customer1, Customer customer2)
+	{
+		assertTrue(customer1.getId() == customer2.getId());
+		assertTrue(customer1.getName() + ", " + customer2.getName() + "\n",
+			customer1.getName().equals(customer2.getName()));
+		assertTrue(customer1.getMoney() == customer2.getMoney());
+	}
+
+	/**
 	 * Adds FoodItems to the database without testing iff they have not already
 	 * been added. Used in several tests.
 	 **/
@@ -185,6 +222,19 @@ public class TestDatabaseLayer
 		addedVendingMachines = true;
 		for (VendingMachine machine : machines)
 			dbl.updateOrCreateVendingMachine(machine);
+	}
+
+	/**
+	 * Adds customers to the database without testing iff they have not already
+	 * been added. Used in several tests.
+	 **/
+	private void noTestAddCustomers() throws SQLException
+	{
+		if (addedCustomers)
+			return;
+		addedCustomers = true;
+		for (Customer customer : customers)
+			dbl.updateOrCreateCustomer(customer);
 	}
 
 	/**
@@ -459,11 +509,11 @@ public class TestDatabaseLayer
 		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
 	 }
 
-	 /**
-	  * Tests changing the location of a vending machine.
-	  **/
-	 @Test
-	 public void changeVendingMachine9() throws SQLException
+	/**
+	 * Tests changing the location of a vending machine.
+	 **/
+	@Test
+	public void changeVendingMachine9() throws SQLException
 	 {
 		 noTestAddFoodItems();
 		 noTestAddVendingMachines();
@@ -476,11 +526,11 @@ public class TestDatabaseLayer
 		 vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
 	 }
 
-	 /**
-	  * Tests running changeVendingMachine* in succession.
-	  **/
-	 @Test
-	 public void changeVendingMachineAll() throws SQLException
+	/**
+	 * Tests running changeVendingMachine* in succession.
+	 **/
+	@Test
+	public void changeVendingMachineAll() throws SQLException
 	 {
 		 noTestAddFoodItems();
 		 noTestAddVendingMachines();
@@ -495,4 +545,51 @@ public class TestDatabaseLayer
 		 changeVendingMachine8();
 		 changeVendingMachine9();
 	 }
+
+	/**
+	 * Tests adding customers to the database.
+	 * Note: This test only ensures there are no SQL errors and the id is
+	 * changed. Testing to ensure correct data was added is done in the
+	 * getCustomer() test.
+	 **/
+	@Test
+	public void addCustomer() throws SQLException
+	{
+	    for (Customer customer : customers)
+	    {
+			dbl.updateOrCreateCustomer(customer);
+	   		assertTrue(!customer.isTempId());
+	    }
+	}
+
+	/**
+	 * Tests fetching customers from the database.
+	 **/
+	@Test
+	public void getCustomer() throws SQLException
+	{
+		noTestAddCustomers();
+		for (Customer customer : customers)
+			customerEquals(dbl.getCustomerById(customer.getId()), customer);
+	}
+
+
+	/**
+	 * Tests changing customers in the database.
+	 **/
+	@Test
+	public void changeCustomer() throws SQLException
+	{
+		noTestAddCustomers();
+
+		customers.get(0).setName("Beaenkes");
+		dbl.updateOrCreateCustomer(customers.get(0));
+		for (int i=0;i<customers.size();i++)
+			customerEquals(dbl.getCustomerById(customers.get(i).getId()), customers.get(i));
+
+		customers.get(1).setMoney(customers.get(1).getMoney() - 150);
+		dbl.updateOrCreateCustomer(customers.get(1));
+		for (int i=0;i<customers.size();i++)
+			customerEquals(dbl.getCustomerById(customers.get(i).getId()), customers.get(i));
+	}
 }
