@@ -44,6 +44,7 @@ public class VendingMachine extends ModelBase
 		this.stockingInterval=stockingInterval;
 		this.currentLayout=currentLayout;
 		nextLayout=new VMLayout(currentLayout, true); //deep copy
+		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
 	}
 
 	/**
@@ -181,7 +182,7 @@ public class VendingMachine extends ModelBase
 	/**
 	 * Swaps the next layout into the current layout.
 	 * This process automatically sets the layout's next stocking visit.
-	 * At the end of this process, there is no next layout left.
+	 * At the end of this process, there is guaranteed to be an appropriate next layout.
 	 */
 	public void swapInNextLayout()
 	{

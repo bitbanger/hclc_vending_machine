@@ -47,7 +47,7 @@ distribution: classes
 
 documents:
 	- mkdir ${DOCDIR}
-	${JAVADOC} -d ${DOCDIR} ${SRCDIR}/*.java
+	${JAVADOC} -d ${DOCDIR} -classpath ${SRCDIR} ${SRCDIR}/*.java
 
 launchers:
 	echo "export CLASSPATH=${BINDIR}$(foreach library,${LIBS},:${LIBDIR}/${library})" > vars${INCPOSTFIX}
