@@ -604,7 +604,7 @@ public class DatabaseLayer
 			returnValue = new Customer(results.getString(3), results.getInt(2));
 			returnValue.setId(results.getInt(1));
 		}
-		results.close();
+		stmt.close();
 		return returnValue;
 	}
 
