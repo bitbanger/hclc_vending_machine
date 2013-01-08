@@ -41,7 +41,8 @@ public class CustomerPurchaseScreen {
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
-				if(rows[i][j]!=null && rows[i][j].getRemainingQuantity()>0)
+				if(rows[i][j].getProduct()!=null && 
+					rows[i][j].getRemainingQuantity()>0)
 					items[i][j] = rows[i][j].getProduct();
 			}
 		}
@@ -59,7 +60,7 @@ public class CustomerPurchaseScreen {
 		if ( product.first < 0 || rows.length < product.first ||
 			product.second < 0 || rows[product.first].length < product.second )
 			return "INVALID LOCATION"; //not a valid location
-		if ( rows[product.first][product.second] == null)
+		if ( rows[product.first][product.second].getProduct() == null)
 			return "NO PRODUCT"; //nothing to see here
 		if ( rows[product.first][product.second].getRemainingQuantity() <= 0 )
 			return "ITEM SOLD OUT"; //check if there is some remaining
