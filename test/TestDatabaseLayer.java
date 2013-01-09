@@ -456,6 +456,150 @@ public class TestDatabaseLayer
 		}
 	 }
 
+	 /**
+	  * Tests fetching vending machines from the database by state
+	  **/
+	 @Test
+	 public void getVendingMachineState() throws SQLException
+	 {
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		Collection<VendingMachine> test = dbl.getVendingMachinesByState("Maryland");
+		
+		LinkedList<VendingMachine> sameSet = new LinkedList<VendingMachine>();
+		for (VendingMachine machine : machines)
+		{
+			if (machine.getLocation().getState().equals("Maryland"))
+				sameSet.add(machine);
+		}
+
+		for (VendingMachine t : test)
+		{
+			VendingMachine same = null;
+			for (VendingMachine attempt : sameSet)
+			{
+				if (attempt.getId() == t.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			vendingMachineEquals(t, same);
+		}
+
+		test = dbl.getVendingMachinesByState("Pandora");
+		
+		sameSet = new LinkedList<VendingMachine>();
+		for (VendingMachine machine : machines)
+		{
+			if (machine.getLocation().getState().equals("Pandora"))
+				sameSet.add(machine);
+		}
+
+		for (VendingMachine t : test)
+		{
+			VendingMachine same = null;
+			for (VendingMachine attempt : sameSet)
+			{
+				if (attempt.getId() == t.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			vendingMachineEquals(t, same);
+		}
+	 }
+
+	 /**
+	  * Tests fetching vending machines from the database by zip code
+	  **/
+	 @Test
+	 public void getVendingMachineZipCode() throws SQLException
+	 {
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		Collection<VendingMachine> test = dbl.getVendingMachinesByZip(20622);
+		
+		LinkedList<VendingMachine> sameSet = new LinkedList<VendingMachine>();
+		for (VendingMachine machine : machines)
+		{
+			if (machine.getLocation().getZipCode() == 20622)
+				sameSet.add(machine);
+		}
+
+		for (VendingMachine t : test)
+		{
+			VendingMachine same = null;
+			for (VendingMachine attempt : sameSet)
+			{
+				if (attempt.getId() == t.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			vendingMachineEquals(t, same);
+		}
+
+		test = dbl.getVendingMachinesByZip(99999);
+		
+		sameSet = new LinkedList<VendingMachine>();
+		for (VendingMachine machine : machines)
+		{
+			if (machine.getLocation().getZipCode() == 99999)
+				sameSet.add(machine);
+		}
+
+		for (VendingMachine t : test)
+		{
+			VendingMachine same = null;
+			for (VendingMachine attempt : sameSet)
+			{
+				if (attempt.getId() == t.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			vendingMachineEquals(t, same);
+		}
+
+	 }
+
+	/**
+	 * Tests fetching all vending machines from the database
+	 **/
+	@Test
+	public void getVendingMachineAll() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		Collection<VendingMachine> test = dbl.getVendingMachinesAll();
+
+		for (VendingMachine t : test)
+		{
+			VendingMachine same = null;
+			for (VendingMachine attempt : machines)
+			{
+				if (attempt.getId() == t.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			vendingMachineEquals(t, same);
+		}
+	}
+
 	/**
 	 * Tests changing a vending machine's next layout to a layout already in
 	 * the database.
@@ -846,7 +990,7 @@ public class TestDatabaseLayer
 	 * Tests fetching transactions by state
 	 **/
 	@Test
-	public void getVendingMachineState() throws SQLException
+	public void getTransactionState() throws SQLException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
