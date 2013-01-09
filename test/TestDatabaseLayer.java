@@ -32,6 +32,11 @@ public class TestDatabaseLayer
 	private ArrayList<Customer> customers;
 
 	/**
+	 * Set of managers to use in tests
+	 **/
+	private ArrayList<Manager> managers;
+
+	/**
 	 * Flag to see if food items have already been added by noTestAddFoodItems()
 	 **/
 	private boolean addedFoodItems;
@@ -44,7 +49,12 @@ public class TestDatabaseLayer
 	/**
 	 * Flag to see if customers have already been added by noTestAddCustomers()
 	 **/
-	 private boolean addedCustomers;
+	private boolean addedCustomers;
+
+	 /**
+	  * Flag to see if managers have already been added by noTestAddManagers()
+	  **/
+	private boolean addedManagers;
 
 	/**
 	 * Clears the database and initializes test objects for each test
@@ -57,9 +67,11 @@ public class TestDatabaseLayer
 		initFoodItems();
 		initVendingMachines();
 		initCustomers();
+		initManagers();
 		addedFoodItems = false;
 		addedVendingMachines = false;
 		addedCustomers = false;
+		addedManagers = false;
 	}
 
 	/**
@@ -113,6 +125,17 @@ public class TestDatabaseLayer
 		customers.add(new Customer("President Bush", 50000000));
 		customers.add(new Customer("Hank", 100000));
 		customers.add(new Customer("Phillips", 10000));
+	}
+
+	/**
+	 * Initializes a set of managers to use in tests.
+	 **/
+	private void initManagers()
+	{
+		managers = new ArrayList<Manager>();
+		managers.add(new Manager("Superman", "kypto"));
+		managers.add(new Manager("Batman", "robin"));
+		managers.add(new Manager("Green Lantern", "powerring"));
 	}
 
 	/**
@@ -199,7 +222,20 @@ public class TestDatabaseLayer
 	}
 
 	/**
-	 * Adds FoodItems to the database without testing iff they have not already
+	 * Checks if two managers are equal
+	 * @param manager1 The first manager
+	 * @param manager2 The second manager
+	 **/
+	private void managerEquals(Manager manager1, Manager manager2)
+	{
+		assertTrue(manager1.getId() == manager2.getId());
+		assertTrue(manager1.getName() + "|" + manager2.getName(),
+			manager1.getName().equals(manager2.getName()));
+		assertTrue(manager1.getPassword().equals(manager2.getPassword()));
+	}
+
+	/**
+	 * Adds FoodItems to the database iff they have not already
 	 * been added. Used in several tests.
 	 **/
 	private void noTestAddFoodItems() throws SQLException
@@ -212,7 +248,7 @@ public class TestDatabaseLayer
 	}
 
 	/**
-	 * Adds vending machines to the database without testing iff they have not
+	 * Adds vending machines to the database iff they have not
 	 * already been added. Used in several tests.
 	 **/
 	private void noTestAddVendingMachines() throws SQLException
@@ -225,7 +261,7 @@ public class TestDatabaseLayer
 	}
 
 	/**
-	 * Adds customers to the database without testing iff they have not already
+	 * Adds customers to the database iff they have not already
 	 * been added. Used in several tests.
 	 **/
 	private void noTestAddCustomers() throws SQLException
@@ -235,6 +271,19 @@ public class TestDatabaseLayer
 		addedCustomers = true;
 		for (Customer customer : customers)
 			dbl.updateOrCreateCustomer(customer);
+	}
+
+	/**
+	 * Adds managers to the database iff they have not already been added. Used
+	 * in several tests.
+	 **/
+	private void noTestAddManagers() throws SQLException
+	{
+		if (addedManagers)
+			return;
+		addedManagers = true;
+		for (Manager manager : managers)
+			dbl.updateOrCreateManager(manager);
 	}
 
 	/**
@@ -591,5 +640,57 @@ public class TestDatabaseLayer
 		dbl.updateOrCreateCustomer(customers.get(1));
 		for (int i=0;i<customers.size();i++)
 			customerEquals(dbl.getCustomerById(customers.get(i).getId()), customers.get(i));
+	}
+
+	/**
+	 * Tests adding managers to the database.
+	 * Note: This test only ensures there are no SQL erros and the id is
+	 * changed. Testing to ensure correct data was added is done in
+	 * the getManager() test.
+	 **/
+	@Test
+	public void addManager() throws SQLException
+	{
+		for (Manager manager : managers)
+		{
+			dbl.updateOrCreateManager(manager);
+			assertTrue(!manager.isTempId());
+		}
+	}
+
+	/**
+	 * Tests fetching managers from the database.
+	 **/
+	@Test
+	public void getManager() throws SQLException
+	{
+		noTestAddManagers();
+		for (Manager manager : managers)
+			managerEquals(dbl.getManagerById(manager.getId()), manager);
+	}
+
+	/**
+	 * Tests changing managers in the database.
+	 **/
+	@Test
+	public void changeManager() throws SQLException
+	{
+		noTestAddManagers();
+
+		managers.get(0).setName("Wonder Woman");
+		dbl.updateOrCreateManager(managers.get(0));
+		for (Manager manager : managers)
+			managerEquals(dbl.getManagerById(manager.getId()), manager);
+
+		managers.get(1).setPassword("invisibleplane");
+		dbl.updateOrCreateManager(managers.get(1));
+		for (Manager manager : managers)
+			managerEquals(dbl.getManagerById(manager.getId()), manager);
+
+		managers.get(0).setName("Hulk");
+		managers.get(0).setPassword("banner");
+		dbl.updateOrCreateManager(managers.get(0));
+		for (Manager manager : managers)
+			managerEquals(dbl.getManagerById(manager.getId()), manager);
 	}
 }
