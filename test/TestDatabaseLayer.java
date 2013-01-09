@@ -4,6 +4,8 @@ import org.junit.Before;
 import java.util.ArrayList;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Runs tests on the DatabaseLayer
@@ -37,6 +39,11 @@ public class TestDatabaseLayer
 	private ArrayList<Manager> managers;
 
 	/**
+	 * Set of transactions to use in tests
+	 **/
+	private ArrayList<Transaction> transactions;
+
+	/**
 	 * Flag to see if food items have already been added by noTestAddFoodItems()
 	 **/
 	private boolean addedFoodItems;
@@ -57,6 +64,11 @@ public class TestDatabaseLayer
 	private boolean addedManagers;
 
 	/**
+	 * Flags to see if transactions have already been added by noTestAddTransactions()
+	 **/
+	private boolean addedTransactions;
+
+	/**
 	 * Clears the database and initializes test objects for each test
 	 **/
 	@Before
@@ -68,10 +80,12 @@ public class TestDatabaseLayer
 		initVendingMachines();
 		initCustomers();
 		initManagers();
+		initTransactions();
 		addedFoodItems = false;
 		addedVendingMachines = false;
 		addedCustomers = false;
 		addedManagers = false;
+		addedTransactions = false;
 	}
 
 	/**
@@ -136,6 +150,17 @@ public class TestDatabaseLayer
 		managers.add(new Manager("Superman", "kypto"));
 		managers.add(new Manager("Batman", "robin"));
 		managers.add(new Manager("Green Lantern", "powerring"));
+	}
+
+	/**
+	 * Initializes a set of transactions to use in tests.
+	 **/
+	private void initTransactions()
+	{
+		transactions = new ArrayList<Transaction>();
+		transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), machines.get(0), customers.get(0), items.get(0), new Pair<Integer, Integer>(0,0)));
+		transactions.add(new Transaction(new GregorianCalendar(2012, 12, 21, 23, 59, 59), machines.get(1), customers.get(1), items.get(1), new Pair<Integer, Integer>(1,1)));
+		transactions.add(new Transaction(new GregorianCalendar(2013, 1,7,11,31,15), machines.get(0), customers.get(3), items.get(3), new Pair<Integer, Integer>(2,1)));
 	}
 
 	/**
@@ -235,6 +260,21 @@ public class TestDatabaseLayer
 	}
 
 	/**
+	 * Checks if two transactions are equal
+	 * @param trans1 The first transaction
+	 * @param trans2 The second transaction
+	 **/
+	private void transactionEquals(Transaction trans1, Transaction trans2)
+	{
+		assertTrue(trans1.getTimestamp().equals(trans2.getTimestamp()));
+		vendingMachineEquals(trans1.getMachine(), trans2.getMachine());
+		customerEquals(trans1.getCustomer(), trans2.getCustomer());
+		foodItemEquals(trans1.getProduct(), trans2.getProduct());
+		assertTrue(trans1.getRow().first == trans2.getRow().first &&
+			trans1.getRow().second == trans2.getRow().second);
+	}
+
+	/**
 	 * Adds FoodItems to the database iff they have not already
 	 * been added. Used in several tests.
 	 **/
@@ -284,6 +324,19 @@ public class TestDatabaseLayer
 		addedManagers = true;
 		for (Manager manager : managers)
 			dbl.updateOrCreateManager(manager);
+	}
+
+	/**
+	 * Adds transactions to the database iff they have not already been added.
+	 * Used in several tests.
+	 **/
+	private void noTestAddTransactions() throws SQLException
+	{
+		if (addedTransactions)
+			return;
+		addedTransactions = true;
+		for (Transaction trans : transactions)
+			dbl.updateOrCreateTransaction(trans);
 	}
 
 	/**
@@ -644,7 +697,7 @@ public class TestDatabaseLayer
 
 	/**
 	 * Tests adding managers to the database.
-	 * Note: This test only ensures there are no SQL erros and the id is
+	 * Note: This test only ensures there are no SQL errors and the id is
 	 * changed. Testing to ensure correct data was added is done in
 	 * the getManager() test.
 	 **/
@@ -692,5 +745,279 @@ public class TestDatabaseLayer
 		dbl.updateOrCreateManager(managers.get(0));
 		for (Manager manager : managers)
 			managerEquals(dbl.getManagerById(manager.getId()), manager);
+	}
+
+	/**
+	 * Tests adding transactions to the database.
+	 * Note: This test only ensures there are no SQL errors and the id is
+	 * changed. Testing to ensure correct data was added is performed in
+	 * the getTransaction() test.
+	 **/
+	@Test
+	public void addTransactions() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+
+		for (Transaction trans : transactions)
+		{
+			dbl.updateOrCreateTransaction(trans);
+			assertTrue(!trans.isTempId());
+		}
+	}
+
+	/**
+	 * Tests fetching transactions from the database by id
+	 **/
+	@Test
+	public void getTransaction() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		for (Transaction trans : transactions)
+			transactionEquals(dbl.getTransactionById(trans.getId()), trans);
+	}
+
+	/**
+	 * Tests fetching transactions from the database by zip code
+	 **/
+	@Test
+	public void getTransactionZip() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		Collection<Transaction> test = dbl.getTransactionsByZipCode(20622);
+		LinkedList<Transaction> compare = new LinkedList<Transaction>();
+		for (Transaction trans : transactions)
+		{
+			if (trans.getMachine().getLocation().getZipCode() == 20622)
+				compare.add(trans);
+		}
+		assertTrue(test.size() == compare.size());
+		for (Transaction trans : test)
+		{
+			Transaction same = null;
+			for (Transaction attempt : compare)
+			{
+				if (attempt.getId() == trans.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			transactionEquals(trans, same);
+		}
+
+		test = dbl.getTransactionsByZipCode(99999);
+		compare = new LinkedList<Transaction>();
+		for (Transaction trans : transactions)
+		{
+			if (trans.getMachine().getLocation().getZipCode() == 99999)
+				compare.add(trans);
+		}
+		assertTrue(test.size() == compare.size());
+		for (Transaction trans : test)
+		{
+			Transaction same = null;
+			for (Transaction attempt : compare)
+			{
+				if (attempt.getId() == trans.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			transactionEquals(trans, same);
+		}
+	}
+
+	/**
+	 * Tests fetching transactions by state
+	 **/
+	@Test
+	public void getVendingMachineState() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		Collection<Transaction> test = dbl.getTransactionsByState("Pandora");
+		LinkedList<Transaction> compare = new LinkedList<Transaction>();
+		for (Transaction trans : transactions)
+		{
+			if (trans.getMachine().getLocation().getState().equals("Pandora"))
+				compare.add(trans);
+		}
+		assertTrue(test.size() == compare.size());
+		for (Transaction trans : test)
+		{
+			Transaction same = null;
+			for (Transaction attempt : compare)
+			{
+				if (attempt.getId() == trans.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			transactionEquals(trans, same);
+		}
+
+		test = dbl.getTransactionsByState("Maryland");
+		compare = new LinkedList<Transaction>();
+		for (Transaction trans : transactions)
+		{
+			if (trans.getMachine().getLocation().getState().equals("Maryland"))
+				compare.add(trans);
+		}
+		assertTrue(test.size() == compare.size());
+		for (Transaction trans : test)
+		{
+			Transaction same = null;
+			for (Transaction attempt : compare)
+			{
+				if (attempt.getId() == trans.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			transactionEquals(trans, same);
+		}
+	}
+
+	/**
+	 * Tests fetching all transactions
+	 **/
+	@Test
+	public void getTransactionAll() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		Collection<Transaction> test = dbl.getTransactionsAll();
+		assertTrue(test.size() == transactions.size());
+		for (Transaction trans : test)
+		{
+			Transaction same = null;
+			for (Transaction attempt : transactions)
+			{
+				if (attempt.getId() == trans.getId())
+				{
+					same = attempt;
+					break;
+				}
+			}
+			assertTrue(same != null);
+			transactionEquals(trans, same);
+		}
+	}
+
+	/**
+	 * Tests changing the timestamp of a transaction
+	 **/
+	@Test
+	public void changeTransaction1() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		transactions.get(0).setTimestamp(new GregorianCalendar(2011, 10, 11, 5, 3, 2));
+		dbl.updateOrCreateTransaction(transactions.get(0));
+		for (Transaction trans : transactions)
+			transactionEquals(dbl.getTransactionById(trans.getId()), trans);
+	}
+
+	/**
+	 * Tests changing the vending machine of a transaction
+	 **/
+	@Test
+	public void changeTransaction2() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		transactions.get(0).setMachine(machines.get(1));
+		dbl.updateOrCreateTransaction(transactions.get(0));
+		for (Transaction trans : transactions)
+			transactionEquals(dbl.getTransactionById(trans.getId()), trans);
+	}
+
+	/**
+	 * Tests changing the customer of a transaction
+	 **/
+	@Test
+	public void changeTransaction3() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		transactions.get(1).setProduct(items.get(0));
+		dbl.updateOrCreateTransaction(transactions.get(1));
+		for (Transaction trans : transactions)
+			transactionEquals(dbl.getTransactionById(trans.getId()), trans);
+	}
+
+	/**
+	 * Tests changing the row of a transaction
+	 **/
+	@Test
+	public void changeTransaction4() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		transactions.get(1).setRow(new Pair<Integer, Integer>(1,3));
+		dbl.updateOrCreateTransaction(transactions.get(1));
+		for (Transaction trans : transactions)
+			transactionEquals(dbl.getTransactionById(trans.getId()), trans);
+	}
+
+	/**
+	 * Runs all of the changeTransaction* tests consecutively 
+	 **/
+	@Test
+	public void changeTransactionAll() throws SQLException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		noTestAddCustomers();
+		noTestAddVendingMachines();
+		noTestAddTransactions();
+
+		changeTransaction1();
+		changeTransaction2();
+		changeTransaction3();
+		changeTransaction4();
 	}
 }
