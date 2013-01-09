@@ -530,7 +530,7 @@ public class DatabaseLayer
 	{
 		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
-		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=" + state);
+		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=\"" + state + "\"");
 		while (vmResults.next())
 		{
 			int id = vmResults.getInt(1);
