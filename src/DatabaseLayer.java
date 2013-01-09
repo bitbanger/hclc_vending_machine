@@ -466,7 +466,7 @@ public class DatabaseLayer
 	 **/
 	public Collection<VendingMachine> getVendingMachinesAll() throws SQLException
 	{
-		Collection<VendingMachine> returnSet = null;
+		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
 		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId, stockingInterval FROM VendingMachine");
 		while (vmResults.next())
@@ -497,7 +497,7 @@ public class DatabaseLayer
 	 **/
 	public Collection<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException
 	{
-		Collection<VendingMachine> returnSet = null;
+		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
 		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.zipCode=" + zip);
 		while (vmResults.next())
@@ -528,7 +528,7 @@ public class DatabaseLayer
 	 **/
 	public Collection<VendingMachine> getVendingMachinesByState(String state) throws SQLException
 	{
-		Collection<VendingMachine> returnSet = null;
+		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
 		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=" + state);
 		while (vmResults.next())
