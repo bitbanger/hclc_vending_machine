@@ -12,11 +12,11 @@ import java.util.GregorianCalendar;
 @RunWith(JUnit4.class)
 public class TransactionTest {
 	@Test
-	public void testNormalConstruction() {
+	public void testNormalConstruction() throws BadArgumentException {
 		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(4, 2);
 		Transaction t = new Transaction(
-			123,
 			new GregorianCalendar(),
+			123,
 			null,
 			null,
 			null,
@@ -29,8 +29,8 @@ public class TransactionTest {
 	}
 
 	@Test
-	public void testCopyConstruction() {
-		Transaction t = new Transaction(42, new GregorianCalendar(), null, null, null, new Pair<Integer, Integer>(4, 2));
+	public void testCopyConstruction() throws BadArgumentException {
+		Transaction t = new Transaction(new GregorianCalendar(), 42, null, null, null, new Pair<Integer, Integer>(4, 2));
 
 		Transaction tCopy = new Transaction(t);
 
@@ -45,8 +45,8 @@ public class TransactionTest {
 		boolean testFailed = false;
 
 		try {
-			Transaction t = new Transaction(123, new GregorianCalendar(), null, null, null, badRow);
-		} catch(IllegalArgumentException e) {
+			Transaction t = new Transaction(new GregorianCalendar(), 123, null, null, null, badRow);
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);

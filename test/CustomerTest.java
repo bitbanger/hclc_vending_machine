@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 @RunWith(JUnit4.class)
 public class CustomerTest {
 	@Test
-	public void testNormalConstruction() {
+	public void testNormalConstruction() throws BadArgumentException {
 		Customer krutz = new Customer("Krutz", 512);
 
 		Assert.assertTrue(krutz.getName().equals("Krutz"));
@@ -20,7 +20,7 @@ public class CustomerTest {
 	}
 
 	@Test
-	public void testCopyConstruction() {
+	public void testCopyConstruction() throws BadArgumentException {
 		Customer krutz = new Customer("Krutz", 512);
 		Customer kCopy = new Customer(krutz);
 
@@ -34,7 +34,7 @@ public class CustomerTest {
 
 		try {
 			Customer c = new Customer(null, 512);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
@@ -47,7 +47,7 @@ public class CustomerTest {
 
 		try {
 			Customer c = new Customer("Krutz", -5);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);

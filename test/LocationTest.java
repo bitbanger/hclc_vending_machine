@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 @RunWith(JUnit4.class)
 public class LocationTest {
 	@Test
-	public void testNormalConstruction() {
+	public void testNormalConstruction() throws BadArgumentException {
 		String[] nearby = {"Dave's", "Joe's", "Jack's"};
 
 		Location loc = new Location(
@@ -27,7 +27,7 @@ public class LocationTest {
 	}
 
 	@Test
-	public void testCopyConstruction() {
+	public void testCopyConstruction() throws BadArgumentException {
 		String[] nearby = {"Dave's", "Joe's", "Jack's"};
 
 		Location loc = new Location(14586, "New York", nearby);
@@ -46,7 +46,7 @@ public class LocationTest {
 
 		try {
 			Location t = new Location(-6, "New York", nearby);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
@@ -61,7 +61,7 @@ public class LocationTest {
 
 		try {
 			Location t = new Location(14586, null, nearby);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
@@ -74,7 +74,7 @@ public class LocationTest {
 
 		try {
 			Location t = new Location(14586, "New York", null);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
