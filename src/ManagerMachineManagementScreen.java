@@ -35,7 +35,7 @@ public class ManagerMachineManagementScreen {
 	 * @return lists the machines
 	 */
 	public Collection<VendingMachine> listMachinesByLocation() {
-		
+		return null; //TODO remove this!
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ManagerMachineManagementScreen {
 	 * @return whether it succeeded
 	 */
 	public boolean changeMachineLocation( int id, Location location ) {
-
+		return false; //TODO remove this!
 	}
 
 	/**

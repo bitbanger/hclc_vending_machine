@@ -24,7 +24,7 @@ public class ManagerHomeScreen {
 	 * create a screen to view stats
 	 */
 	public ManagerReportStatsScreen viewStats() {
-		
+		return null; //TODO remove this!
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class ManagerHomeScreen {
 	 * @return the alter layout screen for the machine
 	 */
 	public ManagerAlterLayoutScreen alterLayout( int id ) {
-
+		return null; //TODO remove this!
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class ManagerHomeScreen {
 	 * @return the stocked item screen
 	 */
 	public ManagerStockedItemsScreen manageItems() {
-
+		return null; //TODO remove this!
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ManagerHomeScreen {
 	 * @return the machine management screen
 	 */
 	public ManagerMachineManagementScreen manageMachines() {
-
+		return null; //TODO remove this!
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class ManagerHomeScreen {
 	 * @return the user management screen
 	 */
 	public ManagerUserAccountsScreen manageUsers() {
-
+		return null; //TODO remove this!
 	}
 	
 	/**

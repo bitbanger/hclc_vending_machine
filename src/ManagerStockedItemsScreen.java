@@ -56,7 +56,7 @@ public class ManagerStockedItemsScreen {
 	 * @return boolean whether it succeeded
 	 */
 	public boolean changeItemName( int id, String name ) {
-
+		return false; //TODO remove this!
 	}
 
 	/** 
@@ -66,7 +66,7 @@ public class ManagerStockedItemsScreen {
 	 * @return boolean whether it succeeded
 	 */
 	public boolean changeItemPrice( int id, int price ) {
-
+		return false; //TODO remove this!
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class ManagerStockedItemsScreen {
 	 * @return boolean whether it succeeded
 	 */
 	public boolean changeItemFreshLength( int id, long freshLength ) {
-
+		return false; //TODO remove this!
 	}
 
 	/** 

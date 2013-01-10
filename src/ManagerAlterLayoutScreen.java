@@ -46,7 +46,7 @@ public class ManagerAlterLayoutScreen {
 	 * @return whether the changes succeeded
 	 */
 	public boolean commitRowChanges() {
-
+		return false; //TODO remove this!
 	}
 
 	/**
