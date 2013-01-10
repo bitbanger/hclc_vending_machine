@@ -827,6 +827,29 @@ public class TestDatabaseLayer
 			customerEquals(dbl.getCustomerById(customer.getId()), customer);
 	}
 
+	/**
+	 * Tests fetching all of the customers from the database
+	 **/
+	@Test
+	public void getCustomerAll() throws SQLException, BadStateException, BadArgumentException
+	{
+		noTestAddCustomers();
+		Collection<Customer> testSet = dbl.getCustomersAll();
+		for (Customer test : testSet)
+		{
+			Customer same = null;
+			for (Customer customer : customers)
+			{
+				if (customer.getId() == test.getId())
+				{
+					same = customer;
+				}
+			}
+			assertTrue(same != null);
+			customerEquals(test, same);
+		}
+	}
+
 
 	/**
 	 * Tests changing customers in the database.
@@ -872,6 +895,29 @@ public class TestDatabaseLayer
 		noTestAddManagers();
 		for (Manager manager : managers)
 			managerEquals(dbl.getManagerById(manager.getId()), manager);
+	}
+
+	/**
+	 * Tests fetching all of the managers from the database
+	 **/
+	@Test
+	public void getManagerAll() throws SQLException, BadStateException, BadArgumentException
+	{
+		noTestAddManagers();
+		Collection<Manager> testSet = dbl.getManagersAll();
+		for (Manager test : testSet)
+		{
+			Manager same = null;
+			for (Manager manager : managers)
+			{
+				if (manager.getId() == test.getId())
+				{
+					same = manager;
+				}
+			}
+			assertTrue(same != null);
+			managerEquals(test, same);
+		}
 	}
 
 	/**
@@ -1171,5 +1217,29 @@ public class TestDatabaseLayer
 		changeTransaction2();
 		changeTransaction3();
 		changeTransaction4();
+	}
+
+	/**
+	 * Tests fetching all of the locations from the database
+	 **/
+	@Test
+	public void getLocationAll() throws SQLException, BadStateException, BadArgumentException
+	{
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+		Collection<Location> testSet = dbl.getLocationsAll();
+		for (Location test : testSet)
+		{
+			Location same = null;
+			for (VendingMachine machine : machines)
+			{
+				if (machine.getLocation().getId() == test.getId())
+				{
+					same = machine.getLocation();
+				}
+			}
+			assertTrue(same != null);
+			locationEquals(test, same);
+		}
 	}
 }
