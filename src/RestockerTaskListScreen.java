@@ -66,6 +66,14 @@ public class RestockerTaskListScreen {
 	 */
 	public void completeStocking() throws SQLException {
 		vm.swapInNextLayout();
-		db.updateOrCreateVendingMachine( vm );
+		try
+		{
+			db.updateOrCreateVendingMachine( vm );
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+		}
 	}
 }

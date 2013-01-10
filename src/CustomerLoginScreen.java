@@ -34,10 +34,19 @@ public class CustomerLoginScreen {
 	 * @throws SQLException from the DatabaseLayer
 	 */
 	public CustomerPurchaseScreen tryLogin ( int id ) throws SQLException {
-		Customer user = db.getCustomerById ( id );
-		if ( user == null )
+		try
+		{
+			Customer user = db.getCustomerById ( id );
+			if ( user == null )
+				return null;
+			return new CustomerPurchaseScreen( user, vm );
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
 			return null;
-		return new CustomerPurchaseScreen( user, vm );
+		}
 	}
 	
 	/**
@@ -46,7 +55,16 @@ public class CustomerLoginScreen {
 	 * @throws SQLException from the DatabaseLayer
 	 */
 	public CashCustomerPurchaseScreen cashLogin () throws SQLException {
-		Customer user = new Customer();
-		return new CashCustomerPurchaseScreen( user, vm );
+		try
+		{
+			Customer user = new Customer();
+			return new CashCustomerPurchaseScreen( user, vm );
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+			return null;
+		}
 	}
 }

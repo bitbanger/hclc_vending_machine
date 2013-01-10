@@ -23,10 +23,19 @@ public class ManagerLoginScreen {
 	 * @return a new home screen if the password is correct null else
 	 */
 	public ManagerHomeScreen tryLogin( int id, String password ) {
-		Manager manny = db.getManagerById( id );
-		if ( manny.comparePassword( password ) ) {
-			return new ManagerHomeScreen( manny );
+		try
+		{
+			Manager manny = db.getManagerById( id );
+			if ( manny.comparePassword( password ) ) {
+				return new ManagerHomeScreen( manny );
+			}
+			return null;
 		}
-		return null;
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+			return null;
+		}
 	}
 }

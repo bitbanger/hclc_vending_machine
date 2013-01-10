@@ -47,9 +47,17 @@ public class ManagerUserAccountsScreen {
 	 * @param name the name of the customer
 	 */
 	public void addCustomer( String name, int initialBalance ) {
-		Customer cust = new Customer( name, initialBalance );
-		db.updateOrCreateCustomer( cust );
-		customers.add( cust );
+		try
+		{
+			Customer cust = new Customer( name, initialBalance );
+			db.updateOrCreateCustomer( cust );
+			customers.add( cust );
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+		}
 	}
 
 	/**
@@ -58,9 +66,17 @@ public class ManagerUserAccountsScreen {
 	 * @param name the name of the manager
 	 */
 	public void addManager( String name, String startingPassword ) {
-		Manager manny = new Manager( name, startingPassword );
-		db.updateOrCreateManager( manny );
-		managers.add( manny );
+		try
+		{
+			Manager manny = new Manager( name, startingPassword );
+			db.updateOrCreateManager( manny );
+			managers.add( manny );
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+		}
 	}
 
 	/**
@@ -69,10 +85,18 @@ public class ManagerUserAccountsScreen {
 	 * @param newPassword the new password
 	 */
 	public void changePassword( int managerId, String newPassword ) {
-		Manager manny = db.getManagerById( managerId );
-		manny.setPassword( newPassword );
-		db.updateOrCreateManager( manny );
-		managers = db.getManagersAll();
+		try
+		{
+			Manager manny = db.getManagerById( managerId );
+			manny.setPassword( newPassword );
+			db.updateOrCreateManager( manny );
+			//managers = db.getManagersAll(); //TODO uncomment these once operations are supported
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+		}
 	}
 
 	/**

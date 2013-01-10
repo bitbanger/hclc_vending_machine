@@ -32,7 +32,16 @@ public class ManagerReportStatsScreen {
 	}
 
 	public Collection<Transaction> listMachineSales( VendingMachine machine ) {
-		return db.getTransactionsByVendingMachine( machine );
+		try
+		{
+			return db.getTransactionsByVendingMachine( machine );
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+			return null;
+		}
 	}
 
 	public Collection<Location> listLocations() {

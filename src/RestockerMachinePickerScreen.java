@@ -23,9 +23,18 @@ public class RestockerMachinePickerScreen {
 	 */
 	public RestockerTaskListScreen tryMachine( int id ) throws SQLException
 	{
-		VendingMachine vm = db.getVendingMachineById(id);
-		if ( vm == null )
+		try
+		{
+			VendingMachine vm = db.getVendingMachineById(id);
+			if ( vm == null )
+				return null;
+			return new RestockerTaskListScreen( vm );
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
 			return null;
-		return new RestockerTaskListScreen( vm );
+		}
 	}
 }

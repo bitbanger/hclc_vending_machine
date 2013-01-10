@@ -73,13 +73,22 @@ public class CustomerPurchaseScreen {
 		if ( cash < price )
 			return "INSUFFICIENT FUNDS"; //insufficient funds
 		// otherwise we're good
-		Transaction trans = new Transaction(new GregorianCalendar(), 
-			machine, user, item, product);
-		db.updateOrCreateTransaction( trans );
-		user.setMoney( cash - price );
-		db.updateOrCreateCustomer(user);
-		rows[product.first][product.second].decrementRemainingQuantity();
-		db.updateOrCreateVendingMachine(machine);
+		
+		try
+		{
+			Transaction trans = new Transaction(new GregorianCalendar(), 
+				machine, user, item, product);
+			db.updateOrCreateTransaction( trans );
+			user.setMoney( cash - price );
+			db.updateOrCreateCustomer(user);
+			rows[product.first][product.second].decrementRemainingQuantity();
+			db.updateOrCreateVendingMachine(machine);
+		}
+		catch(Exception databaseProblem)
+		{
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... "+databaseProblem);
+		}
 		return "GOOD";
 	}
 
