@@ -12,8 +12,12 @@ public class FoodItem extends ModelBase {
 	/** How long the food item is good for, after being added to the machine. */
 	private long freshLength;
 
+	/** Whether the food item is actually being sold. */
+	private boolean active;
+
 	/**
-	 * FoodItem constructor.
+	 * Simpler constructor.
+	 * Assumes the item is active.
 	 *
 	 * @param name 			The food item's name.
 	 * @param price			The food item's price.
@@ -22,6 +26,20 @@ public class FoodItem extends ModelBase {
 	 */
 	public FoodItem(String name, int price, long freshLength) throws BadArgumentException
 	{
+		this(name, price, freshLength, true);
+	}
+
+	/**
+	 * Full constructor.
+	 *
+	 * @param name 			The food item's name.
+	 * @param price			The food item's price.
+	 * @param freshLength	How long the food item is good for, after being added to the machine.
+	 * @param active		Whether the item is acutally available for sale.
+	 * @throws BadArgumentException if <tt>name</tt> is <tt>null</tt>, <tt>price</tt> is negative, or <tt>freshLength</tt> is nonpositive
+	 */
+	public FoodItem(String name, int price, long freshLength, boolean active) throws BadArgumentException
+	{
 		if(name==null) throw new BadArgumentException("Name must be non-null");
 		else if(price < 0) throw new BadArgumentException("Price must be nonnegative");
 		else if(freshLength <= 0) throw new BadArgumentException("Fresh length must be greater than zero");
@@ -29,6 +47,7 @@ public class FoodItem extends ModelBase {
 		this.name = name;
 		this.price = price;
 		this.freshLength = freshLength;
+		this.active = active;
 	}
 
 	/**
@@ -41,6 +60,7 @@ public class FoodItem extends ModelBase {
 		this.name = old.name;
 		this.price = old.price;
 		this.freshLength = old.freshLength;
+		this.active = old.active;
 	}
 
 	/** @return	The food item's name. */
@@ -56,6 +76,12 @@ public class FoodItem extends ModelBase {
 	/** @return	The food item's fresh length. */
 	public long getFreshLength() {
 		return this.freshLength;
+	}
+
+	/** @return Whether it is active. */
+	public boolean isActive()
+	{
+		return active;
 	}
 
 	/**
@@ -92,5 +118,13 @@ public class FoodItem extends ModelBase {
 			throw new BadArgumentException("Name must not be null");
 		
 		this.freshLength = freshLength;
+	}
+
+	/**
+	 * @param active Whether it will be active.
+	 */
+	public void makeActive(boolean active)
+	{
+		this.active=active;
 	}
 }
