@@ -22,16 +22,16 @@ public class Row extends ModelBase
 	 * @param product the product carrried by the <tt>Row</tt>
 	 * @param quantity the number of items stocked in the <tt>Row</tt>
 	 * @param sellBy the expiration date of the items in the <tt>Row</tt>
-	 * @throws IllegalArgumentException if the <tt>quantity</tt> is invalid or something else is <tt>null</tt>
+	 * @throws BadArgumentException if the <tt>quantity</tt> is invalid or something else is <tt>null</tt>
 	 */
-	public Row(FoodItem product, int quantity, GregorianCalendar sellBy) throws IllegalArgumentException
+	public Row(FoodItem product, int quantity, GregorianCalendar sellBy) throws BadArgumentException
 	{
 		if(product==null)
-			throw new IllegalArgumentException("Product cannot be null");
+			throw new BadArgumentException("Product cannot be null");
 		else if(quantity<0)
-			throw new IllegalArgumentException("Quantity cannot be negative");
+			throw new BadArgumentException("Quantity cannot be negative");
 		else if(sellBy==null)
-			throw new IllegalArgumentException("Expiration date cannot be null");
+			throw new BadArgumentException("Expiration date cannot be null");
 		
 		this.product=product;
 		remainingQuantity=quantity;
@@ -53,12 +53,12 @@ public class Row extends ModelBase
 
 	/**
 	 * @param product a replacement product
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setProduct(FoodItem product) throws IllegalArgumentException
+	public void setProduct(FoodItem product) throws BadArgumentException
 	{
 		if(product==null)
-			throw new IllegalArgumentException("Product cannot be null");
+			throw new BadArgumentException("Product cannot be null");
 		
 		this.product=product;
 	}
@@ -74,12 +74,12 @@ public class Row extends ModelBase
 	/**
 	 * Note that <tt>decrementRemainingQuantity()</tt> is more appropriate for fulfilling purchases.
 	 * @param remainingQuantity a new (positive) quantity
-	 * @throws IllegalArgumentException if a negative value is supplied
+	 * @throws BadArgumentException if a negative value is supplied
 	 */
-	public void setRemainingQuantity(int remainingQuantity) throws IllegalArgumentException
+	public void setRemainingQuantity(int remainingQuantity) throws BadArgumentException
 	{
 		if(remainingQuantity<0)
-			throw new IllegalArgumentException("Quantity cannot be negative");
+			throw new BadArgumentException("Quantity cannot be negative");
 		
 		this.remainingQuantity=remainingQuantity;
 	}
@@ -94,12 +94,12 @@ public class Row extends ModelBase
 
 	/**
 	 * @param expirationDate a replacement expiration date
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setExpirationDate(GregorianCalendar expirationDate) throws IllegalArgumentException
+	public void setExpirationDate(GregorianCalendar expirationDate) throws BadArgumentException
 	{
 		if(expirationDate==null)
-			throw new IllegalArgumentException("Expiration date cannot be null");
+			throw new BadArgumentException("Expiration date cannot be null");
 		
 		this.expirationDate=expirationDate;
 	}

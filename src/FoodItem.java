@@ -18,13 +18,13 @@ public class FoodItem extends ModelBase {
 	 * @param name 			The food item's name.
 	 * @param price			The food item's price.
 	 * @param freshLength	How long the food item is good for, after being added to the machine.
-	 * @throws IllegalArgumentException if <tt>name</tt> is <tt>null</tt>, <tt>price</tt> is negative, or <tt>freshLength</tt> is nonpositive
+	 * @throws BadArgumentException if <tt>name</tt> is <tt>null</tt>, <tt>price</tt> is negative, or <tt>freshLength</tt> is nonpositive
 	 */
-	public FoodItem(String name, int price, long freshLength) throws IllegalArgumentException
+	public FoodItem(String name, int price, long freshLength) throws BadArgumentException
 	{
-		if(name==null) throw new IllegalArgumentException("Name must be non-null");
-		else if(price < 0) throw new IllegalArgumentException("Price must be nonnegative");
-		else if(freshLength <= 0) throw new IllegalArgumentException("Fresh length must be greater than zero");
+		if(name==null) throw new BadArgumentException("Name must be non-null");
+		else if(price < 0) throw new BadArgumentException("Price must be nonnegative");
+		else if(freshLength <= 0) throw new BadArgumentException("Fresh length must be greater than zero");
 		
 		this.name = name;
 		this.price = price;
@@ -60,36 +60,36 @@ public class FoodItem extends ModelBase {
 
 	/**
 	 * @param name	The new name.
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setName(String name) throws IllegalArgumentException
+	public void setName(String name) throws BadArgumentException
 	{
 		if(name==null)
-			throw new IllegalArgumentException("Name must not be null");
+			throw new BadArgumentException("Name must not be null");
 		
 		this.name = name;
 	}
 
 	/**
 	 * @param price	The new price.
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setPrice(int price) throws IllegalArgumentException
+	public void setPrice(int price) throws BadArgumentException
 	{
 		if(name==null)
-			throw new IllegalArgumentException("Name must not be null");
+			throw new BadArgumentException("Name must not be null");
 		
 		this.price = price;
 	}
 
 	/**
 	 * @param freshLength	The new fresh length.
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setFreshLength(long freshLength) throws IllegalArgumentException
+	public void setFreshLength(long freshLength) throws BadArgumentException
 	{
 		if(name==null)
-			throw new IllegalArgumentException("Name must not be null");
+			throw new BadArgumentException("Name must not be null");
 		
 		this.freshLength = freshLength;
 	}

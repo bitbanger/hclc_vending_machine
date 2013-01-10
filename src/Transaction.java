@@ -28,22 +28,22 @@ public class Transaction extends ModelBase {
 	 * @param customer		The customer who purchased the product.
 	 * @param product		The product purchased.
 	 * @param whichRow		The row the product was purchased from.
-	 * @throws IllegalArgumentException if a <tt>null</tt> is passed in or a coordinate is negative
+	 * @throws BadArgumentException if a <tt>null</tt> is passed in or a coordinate is negative
 	 */
-	public Transaction(GregorianCalendar timestamp, VendingMachine machine, Customer customer, FoodItem product, Pair<Integer, Integer> whichRow) throws IllegalArgumentException
+	public Transaction(GregorianCalendar timestamp, VendingMachine machine, Customer customer, FoodItem product, Pair<Integer, Integer> whichRow) throws BadArgumentException
 	{
 		if(timestamp==null)
-			throw new IllegalArgumentException("Timestamp cannot be null");
+			throw new BadArgumentException("Timestamp cannot be null");
 		else if(machine==null)
-			throw new IllegalArgumentException("Machine cannot be null");
+			throw new BadArgumentException("Machine cannot be null");
 		else if(customer==null)
-			throw new IllegalArgumentException("Customer cannot be null");
+			throw new BadArgumentException("Customer cannot be null");
 		else if(whichRow==null)
-			throw new IllegalArgumentException("Row specification cannot be null");
+			throw new BadArgumentException("Row specification cannot be null");
 		else if(whichRow.first==null || whichRow.second==null)
-			throw new IllegalArgumentException("Row specification cannot contain null coordinate");
+			throw new BadArgumentException("Row specification cannot contain null coordinate");
 		else if(whichRow.first<0 || whichRow.second<0)
-			throw new IllegalArgumentException("Row specification cannot contain negative coordinate");
+			throw new BadArgumentException("Row specification cannot contain negative coordinate");
 		
 		this.timestamp = timestamp;
 		this.machine = machine;
@@ -93,64 +93,64 @@ public class Transaction extends ModelBase {
 
 	/**
 	 * @param timestamp	The new timestamp.
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is provided
+	 * @throws BadArgumentException if a <tt>null</tt> value is provided
 	 */
-	public void setTimestamp(GregorianCalendar timestamp) throws IllegalArgumentException
+	public void setTimestamp(GregorianCalendar timestamp) throws BadArgumentException
 	{
 		if(timestamp==null)
-			throw new IllegalArgumentException("Timestamp must not be null");
+			throw new BadArgumentException("Timestamp must not be null");
 		
 		this.timestamp = timestamp;
 	}
 
 	/**
 	 * @param machine	The new machine.
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is provided
+	 * @throws BadArgumentException if a <tt>null</tt> value is provided
 	 */
-	public void setMachine(VendingMachine machine) throws IllegalArgumentException
+	public void setMachine(VendingMachine machine) throws BadArgumentException
 	{
 		if(machine==null)
-			throw new IllegalArgumentException("Machine must not be null");
+			throw new BadArgumentException("Machine must not be null");
 		
 		this.machine = machine;
 	}
 
 	/**
 	 * @param customer	The new customer.
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is provided
+	 * @throws BadArgumentException if a <tt>null</tt> value is provided
 	 */
-	public void setCustomer(Customer customer) throws IllegalArgumentException
+	public void setCustomer(Customer customer) throws BadArgumentException
 	{
 		if(customer==null)
-			throw new IllegalArgumentException("Customer must not be null");
+			throw new BadArgumentException("Customer must not be null");
 		
 		this.customer = customer;
 	}
 
 	/**
 	 * @param product	The new product.
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is provided
+	 * @throws BadArgumentException if a <tt>null</tt> value is provided
 	 */
-	public void setProduct(FoodItem product) throws IllegalArgumentException
+	public void setProduct(FoodItem product) throws BadArgumentException
 	{
 		if(product==null)
-			throw new IllegalArgumentException("Product must not be null");
+			throw new BadArgumentException("Product must not be null");
 		
 		this.product = product;
 	}
 
 	/**
 	 * @param whichRow	The new row.
-	 * @throws IllegalArgumentException if a <tt>null</tt> or negative value is provided
+	 * @throws BadArgumentException if a <tt>null</tt> or negative value is provided
 	 */
-	public void setRow(Pair<Integer, Integer> whichRow) throws IllegalArgumentException
+	public void setRow(Pair<Integer, Integer> whichRow) throws BadArgumentException
 	{
 		if(whichRow==null)
-			throw new IllegalArgumentException("Row specification must not be null");
+			throw new BadArgumentException("Row specification must not be null");
 		else if(whichRow.first==null || whichRow.second==null)
-			throw new IllegalArgumentException("Row specification mustn't contain null coordinate");
+			throw new BadArgumentException("Row specification mustn't contain null coordinate");
 		else if(whichRow.first<0 || whichRow.second<0)
-			throw new IllegalArgumentException("Row specification mustn't contain negative coordinate");
+			throw new BadArgumentException("Row specification mustn't contain negative coordinate");
 		
 		this.whichRow = whichRow;
 	}
