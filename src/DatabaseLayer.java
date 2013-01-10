@@ -259,7 +259,7 @@ public class DatabaseLayer
 		if (layout.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO VMLayout(layoutId) VALUES(NULL)");
+			String query = String.format("INSERT INTO VMLayout(layoutId, depth) VALUES(NULL, "+layout.getDepth()+")");
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
