@@ -66,9 +66,9 @@ public class CustomerPurchaseScreen {
 			return "ITEM SOLD OUT"; //check if there is some remaining
 		if ( !rows[product.first][product.second].isActive() )
 			return "ITEM INACTIVE"; //check if product disabled
-		CustomerPurchaseScreen.java's tryPurchase to returning string with reason for failure
+		
 		FoodItem item = rows[product.first][product.second].getProduct();
-		int cash = this.getBalance();
+		int cash = getBalance();
 		int price = item.getPrice();
 		if ( cash < price )
 			return "INSUFFICIENT FUNDS"; //insufficient funds

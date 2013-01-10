@@ -1,3 +1,6 @@
+import java.util.Collection;
+import java.util.ArrayList;
+
 /**
  * 
  * @author Kyle Savarese
@@ -10,17 +13,17 @@ public class ManagerReportStatsScreen {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	/** all the transactions */
-	private ArrayList<Transaction> transactions;
+	private Collection<Transaction> transactions;
 
 	/** all the machines */
-	private ArrayList<VendingMachine> machines;
+	private Collection<VendingMachine> machines;
 
 	/** all the locations */
-	private ArrayList<Location> locations;
+	private Collection<Location> locations;
 
 	public ManagerReportStatsScreen () {
 		transactions = db.getTransactionsAll();
-		machines = db.getMachinesAll();
+		machines = db.getVendingMachinesAll();
 		locatons = db.getLocationsAll();
 	}
 
@@ -38,8 +41,7 @@ public class ManagerReportStatsScreen {
 
 	public Collection<Transaction> listLocationSales( Location place ) {
 		ArrayList<Transaction> trans = new ArrayList<Transaction>();
-		for ( int i = 0; i < transactions.size(); i++ ) {
-			Transaction cur = transactions.get(i);
+		for ( Transaction cur : transactions ) {
 			if (cur.getMachine().getLocation().equals( place ) )
 				trans.add( cur );
 		}

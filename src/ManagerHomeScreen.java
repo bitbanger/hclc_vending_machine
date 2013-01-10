@@ -10,13 +10,13 @@ public class ManagerHomeScreen {
 	private Manager manny;
 
 	/** the database */
-	private static db = DatabaseLayer.getInstance();	
+	private static DatabaseLayer db = DatabaseLayer.getInstance();	
 
 	/**
 	 * base constructor
 	 * @param man the manager
 	 */
-	public ManagerHomeScreen( man ) {
+	public ManagerHomeScreen( Manager man ) {
 		manny = man;
 	}
 
@@ -32,7 +32,7 @@ public class ManagerHomeScreen {
 	 * @param id the id of the machine
 	 * @return the alter layout screen for the machine
 	 */
-	public ManagerAlterLayoutScreen( int id ) {
+	public ManagerAlterLayoutScreen alterLayout( int id ) {
 
 	}
 

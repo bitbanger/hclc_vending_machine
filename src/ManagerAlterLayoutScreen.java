@@ -13,7 +13,7 @@ public class ManagerAlterLayoutScreen {
 	 * base constructor
 	 * @param vm the machine to be operated on
  	 */
-	public ManagerAlterLayouScreen( VendingMachine vm ) {
+	public ManagerAlterLayoutScreen( VendingMachine vm ) {
 		machine = vm;
 	}
 
@@ -22,7 +22,7 @@ public class ManagerAlterLayoutScreen {
 	 * @return the Food in the rows
 	 */
 	public FoodItem[][] listRows() {
-		Row[][] rows = machine.getRows();
+		Row[][] rows = machine.getCurrentLayout().getRows();
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
@@ -37,7 +37,7 @@ public class ManagerAlterLayoutScreen {
 	 * @param row the row to change
 	 * @param it the fooditem in question
 	 */
-	public void queueRowChange( Point<Integer, Integer> row, FoodItem it ) {
+	public void queueRowChange( Pair<Integer, Integer> row, FoodItem it ) {
 
 	}
 

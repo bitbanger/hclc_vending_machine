@@ -1,10 +1,12 @@
+import java.util.*;
+
 /**
  *
  * @author Kyle Savarese
  *
  */
 
-public class ManagerMachineManagamentScreen {
+public class ManagerMachineManagementScreen {
 
 	/** the database */
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
