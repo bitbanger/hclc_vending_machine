@@ -107,7 +107,7 @@ public class DatabaseLayer
 		
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS Location( locationId INTEGER PRIMARY KEY AUTOINCREMENT, zipCode INTEGER, state TEXT);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS Item( itemId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, price INTEGER NOT NULL, freshLength INTEGER NOT NULL);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS Item( itemId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, price INTEGER NOT NULL, freshLength INTEGER NOT NULL, active INTEGER NOT NULL);");
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT, depth INTEGER NOT NULL);");
 
@@ -152,10 +152,10 @@ public class DatabaseLayer
 	{
 		FoodItem returnValue = null;
 		Statement stmt = db.createStatement();
-		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item WHERE itemId=" + id);
+		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength, active FROM Item WHERE itemId=" + id);
 		if (results.next())
 		{
-			returnValue = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4));
+			returnValue = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4), results.getInt(5) != 0);
 			returnValue.setId(results.getInt(1));
 		}
 		results.close();
@@ -171,10 +171,10 @@ public class DatabaseLayer
 	{
 		Collection<FoodItem> returnSet = new LinkedList<FoodItem>();
 		Statement stmt = db.createStatement();
-		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item");
+		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength, active FROM Item");
 		while (results.next())
 		{
-			FoodItem item = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4));
+			FoodItem item = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4), results.getInt(5) != 0);
 			item.setId(results.getInt(1));
 			returnSet.add(item);
 		}
@@ -194,7 +194,7 @@ public class DatabaseLayer
 		if (item.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO Item(name, price, freshLength) VALUES(\"%s\", %d, %d)", item.getName(), item.getPrice(), item.getFreshLength());
+			String query = String.format("INSERT INTO Item(name, price, freshLength, active) VALUES(\"%s\", %d, %d, %d)", item.getName(), item.getPrice(), item.getFreshLength(), item.isActive() ? 1 : 0);
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
@@ -205,7 +205,7 @@ public class DatabaseLayer
 		else
 		{
 			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Item SET name=\"%s\", price=%d, freshLength=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.getId());
+			String query = String.format("UPDATE Item SET name=\"%s\", price=%d, freshLength=%d, active=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.isActive() ? 1 : 0, item.getId());
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}

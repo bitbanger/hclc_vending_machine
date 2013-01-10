@@ -95,7 +95,7 @@ public class TestDatabaseLayer
 	{
 		items = new ArrayList<FoodItem>();
 		items.add(new FoodItem("Twix", 175, 1000));
-		items.add(new FoodItem("Snickers", 175, 1000));
+		items.add(new FoodItem("Snickers", 175, 1000, false));
 		items.add(new FoodItem("Chips", 150, 500));
 		items.add(new FoodItem("Fish Sandwich", 200, 100000));
 	}
@@ -174,6 +174,7 @@ public class TestDatabaseLayer
 		assertTrue(item1.getName().equals(item2.getName()));
 		assertTrue(item1.getPrice() == item2.getPrice());
 		assertTrue(item1.getFreshLength() == item2.getFreshLength());
+		assertTrue(item1.isActive() == item2.isActive());
 	}
 
 	/**
@@ -421,6 +422,12 @@ public class TestDatabaseLayer
 		foodItemEquals(test,change);
 		for (int i=3;i<items.size();++i)
 			foodItemEquals(dbl.getFoodItemById(items.get(i).getId()), items.get(i));
+
+		change = items.get(3);
+		change.makeActive(false);
+		dbl.updateOrCreateFoodItem(change);
+		test = dbl.getFoodItemById(change.getId());
+		foodItemEquals(test, change);
 	}
 
 	/**
