@@ -21,10 +21,10 @@ public class ManagerReportStatsScreen {
 	/** all the locations */
 	private Collection<Location> locations;
 
-	public ManagerReportStatsScreen () { //TODO uncomment these once operations are supported
-		/* transactions = db.getTransactionsAll();
+	public ManagerReportStatsScreen () {
+		transactions = db.getTransactionsAll();
 		machines = db.getVendingMachinesAll();
-		locations = db.getLocationsAll(); */
+		locations = db.getLocationsAll();
 	}
 
 	public Collection<VendingMachine> listMachines() {

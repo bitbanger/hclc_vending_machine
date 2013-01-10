@@ -20,9 +20,9 @@ public class ManagerUserAccountsScreen {
 	/**
 	 * base constructor
 	 */
-	public ManagerUserAccountsScreen() { //TODO uncomment these once operations are supported
-		/* customers = db.getCustomersAll();
-		managers = db.getManagersAll(); */
+	public ManagerUserAccountsScreen() {
+		customers = db.getCustomersAll();
+		managers = db.getManagersAll();
 	}
 
 	/**
