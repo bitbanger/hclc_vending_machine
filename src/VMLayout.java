@@ -98,7 +98,7 @@ public class VMLayout extends ModelBase
 			this.rows=existing.rows;
 		}
 		
-		this.depth=depth;
+		this.depth=existing.depth;
 		this.nextVisit=existing.nextVisit;
 	}
 
