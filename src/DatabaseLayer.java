@@ -107,9 +107,9 @@ public class DatabaseLayer
 		
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS Location( locationId INTEGER PRIMARY KEY AUTOINCREMENT, zipCode INTEGER, state TEXT);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS Item( itemId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, price INTEGER NOT NULL, freshLength INTEGER NOT NULL);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS Item( itemId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, price INTEGER NOT NULL, freshLength INTEGER NOT NULL, active INTEGER NOT NULL);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT, depth INTEGER NOT NULL);");
 
 		stmt.addBatch(" CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL);");
 
@@ -148,14 +148,14 @@ public class DatabaseLayer
 	 * @throws SQLException in case of a database error
 	 * with the given id exists.
 	 **/
-	public FoodItem getFoodItemById(int id) throws SQLException
+	public FoodItem getFoodItemById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
 		FoodItem returnValue = null;
 		Statement stmt = db.createStatement();
-		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item WHERE itemId=" + id);
+		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength, active FROM Item WHERE itemId=" + id);
 		if (results.next())
 		{
-			returnValue = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4));
+			returnValue = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4), results.getInt(5) != 0);
 			returnValue.setId(results.getInt(1));
 		}
 		results.close();
@@ -167,14 +167,14 @@ public class DatabaseLayer
 	 * @return A collection of all of the items in the database.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<FoodItem> getFoodItemsAll() throws SQLException
+	public Collection<FoodItem> getFoodItemsAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<FoodItem> returnSet = new LinkedList<FoodItem>();
 		Statement stmt = db.createStatement();
-		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength FROM Item");
+		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength, active FROM Item");
 		while (results.next())
 		{
-			FoodItem item = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4));
+			FoodItem item = new FoodItem(results.getString(2), results.getInt(3), results.getInt(4), results.getInt(5) != 0);
 			item.setId(results.getInt(1));
 			returnSet.add(item);
 		}
@@ -189,12 +189,12 @@ public class DatabaseLayer
 	 * @param item The item to update
 	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateFoodItem(FoodItem item) throws SQLException
+	public void updateOrCreateFoodItem(FoodItem item) throws SQLException, BadStateException, BadArgumentException
 	{
 		if (item.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO Item(name, price, freshLength) VALUES(\"%s\", %d, %d)", item.getName(), item.getPrice(), item.getFreshLength());
+			String query = String.format("INSERT INTO Item(name, price, freshLength, active) VALUES(\"%s\", %d, %d, %d)", item.getName(), item.getPrice(), item.getFreshLength(), item.isActive() ? 1 : 0);
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
@@ -205,7 +205,7 @@ public class DatabaseLayer
 		else
 		{
 			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Item SET name=\"%s\", price=%d, freshLength=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.getId());
+			String query = String.format("UPDATE Item SET name=\"%s\", price=%d, freshLength=%d, active=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.isActive() ? 1 : 0, item.getId());
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
@@ -220,7 +220,7 @@ public class DatabaseLayer
 	 * VMLayout exists.
 	 * @throws SQLException in case of a database error.
 	 **/
-	private VMLayout getVMLayoutById(int id) throws SQLException
+	private VMLayout getVMLayoutById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
 		int maxX = -1;
 		int maxY = -1;
@@ -238,7 +238,13 @@ public class DatabaseLayer
 		Row[][] rows = new Row[maxY+1][maxX+1];
 		for (Pair<Row,Pair<Integer,Integer>> entry : raw)
 			rows[entry.second.second][entry.second.first] = entry.first;
-		VMLayout layout = new VMLayout(rows);
+
+		Statement moreInfo = db.createStatement();
+		ResultSet metaData = moreInfo.executeQuery(String.format("SELECT depth FROM VMLayout WHERE layoutId=%d", id));
+		int depth = metaData.getInt("depth");
+		moreInfo.close();
+
+		VMLayout layout = new VMLayout(rows, depth);
 		layout.setId(id);
 		return layout;
 	}
@@ -248,12 +254,12 @@ public class DatabaseLayer
 	 * then it and its rows are created.
 	 * @param layout The VMLayout to update/create.
 	 **/
-	private void updateOrCreateVMLayout(VMLayout layout) throws SQLException
+	private void updateOrCreateVMLayout(VMLayout layout) throws SQLException, BadStateException, BadArgumentException
 	{
 		if (layout.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO VMLayout(layoutId) VALUES(NULL)");
+			String query = String.format("INSERT INTO VMLayout(layoutId, depth) VALUES(NULL, "+layout.getDepth()+")");
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
@@ -284,7 +290,7 @@ public class DatabaseLayer
 	 * are the rows (duh) and the pairs of integers are the x and y coordinates
 	 * of the row in its parent VMLayout
 	 **/
-	private LinkedList<Pair<Row,Pair<Integer,Integer>>> getRowsByVMLayoutId(int layoutId) throws SQLException
+	private LinkedList<Pair<Row,Pair<Integer,Integer>>> getRowsByVMLayoutId(int layoutId) throws SQLException, BadStateException, BadArgumentException
 	{
 		LinkedList<Pair<Row,Pair<Integer,Integer>>> returnSet = new LinkedList<Pair<Row,Pair<Integer,Integer>>>();
 		Statement rowStmt = db.createStatement();
@@ -320,7 +326,7 @@ public class DatabaseLayer
 	 * @param y The y value of the row in the grid of the parent layout
 	 * @param parentLayoutId The id of the parent layout
 	 **/
-	private void updateOrCreateRow(Row row, int x, int y, int parentLayoutId) throws SQLException
+	private void updateOrCreateRow(Row row, int x, int y, int parentLayoutId) throws SQLException, BadStateException, BadArgumentException
 	{
 		Statement qStmt = db.createStatement();
 		if (row.isTempId())
@@ -360,7 +366,7 @@ public class DatabaseLayer
 	 * @return The Location with the given id or null if no such Location exists.
 	 * @throws SQLException in case of a database error.
 	 **/
-	private Location getLocationById(int id) throws SQLException
+	private Location getLocationById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
 		Location returnValue = null;
 		Statement locStmt = db.createStatement();
@@ -386,7 +392,7 @@ public class DatabaseLayer
 	 * @param location The location to create/update.
 	 * @throws SQLException in case of a database error.
 	 **/
-	private void updateOrCreateLocation(Location location) throws SQLException
+	private void updateOrCreateLocation(Location location) throws SQLException, BadStateException, BadArgumentException
 	{
 		if (location.isTempId())
 		{
@@ -435,7 +441,7 @@ public class DatabaseLayer
 	 * machine does not exist.
 	 * @throws SQLException in case of a database error
 	 **/
-	public VendingMachine getVendingMachineById(int id) throws SQLException
+	public VendingMachine getVendingMachineById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
 		VendingMachine returnValue = null;
 		Statement vmStmt = db.createStatement();
@@ -464,7 +470,7 @@ public class DatabaseLayer
 	 * @return Collection of all of the vending machines in the database.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesAll() throws SQLException
+	public Collection<VendingMachine> getVendingMachinesAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
@@ -495,7 +501,7 @@ public class DatabaseLayer
 	 * @return Collection of all of the vending machines at the given zip code.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException
+	public Collection<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
@@ -526,7 +532,7 @@ public class DatabaseLayer
 	 * @return Collection of all of the vending machines in the given state.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesByState(String state) throws SQLException
+	public Collection<VendingMachine> getVendingMachinesByState(String state) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
@@ -560,7 +566,7 @@ public class DatabaseLayer
 	 * @param vm The vending machine to update or create.
 	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateVendingMachine(VendingMachine vm) throws SQLException
+	public void updateOrCreateVendingMachine(VendingMachine vm) throws SQLException, BadStateException, BadArgumentException
 	{
 		updateOrCreateVMLayout(vm.getCurrentLayout());
 		updateOrCreateVMLayout(vm.getNextLayout());
@@ -593,7 +599,7 @@ public class DatabaseLayer
 	 * @throws SQLException in case of a database error
 	 * exist.
 	 **/
-	public Customer getCustomerById(int id) throws SQLException
+	public Customer getCustomerById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
 		Customer returnValue = null;
 		Statement stmt = db.createStatement();
@@ -614,7 +620,7 @@ public class DatabaseLayer
 	 * @param customer The Customer to update/create.
 	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateCustomer(Customer customer) throws SQLException
+	public void updateOrCreateCustomer(Customer customer) throws SQLException, BadStateException, BadArgumentException
 	{
 		if (customer.isTempId())
 		{
@@ -642,7 +648,7 @@ public class DatabaseLayer
 	 * @return The manager with the given id or null if no such manager exists.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Manager getManagerById(int id) throws SQLException
+	public Manager getManagerById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
 		Manager returnValue = null;
 		Statement stmt = db.createStatement();
@@ -663,7 +669,7 @@ public class DatabaseLayer
 	 * @param manager The manager to update/create.
 	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateManager(Manager manager) throws SQLException
+	public void updateOrCreateManager(Manager manager) throws SQLException, BadStateException, BadArgumentException
 	{
 		if (manager.isTempId())
 		{
@@ -692,7 +698,7 @@ public class DatabaseLayer
 	 * exists.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Transaction getTransactionById(int id) throws SQLException
+	public Transaction getTransactionById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
 		Transaction returnValue = null;
 		Statement stmt = db.createStatement();
@@ -723,7 +729,7 @@ public class DatabaseLayer
 	 * given vending machine.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm) throws SQLException
+	public Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -753,7 +759,7 @@ public class DatabaseLayer
 	 * given zip code.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByZipCode(int zipCode) throws SQLException
+	public Collection<Transaction> getTransactionsByZipCode(int zipCode) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -783,7 +789,7 @@ public class DatabaseLayer
 	 * given state.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByState(String state) throws SQLException
+	public Collection<Transaction> getTransactionsByState(String state) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -813,7 +819,7 @@ public class DatabaseLayer
 	 * performed.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByCustomer(Customer customer) throws SQLException
+	public Collection<Transaction> getTransactionsByCustomer(Customer customer) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -841,7 +847,7 @@ public class DatabaseLayer
 	 * @return A collection of all of the transactions.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsAll() throws SQLException
+	public Collection<Transaction> getTransactionsAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -870,7 +876,7 @@ public class DatabaseLayer
 	 * @param transaction The transaction to create/update.
 	 * @throws SQLException in case of a database error
 	 **/
-	public void updateOrCreateTransaction(Transaction transaction) throws SQLException
+	public void updateOrCreateTransaction(Transaction transaction) throws SQLException, BadStateException, BadArgumentException
 	{
 		if (transaction.isTempId())
 		{

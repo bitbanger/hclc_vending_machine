@@ -11,12 +11,12 @@ public abstract class User extends ModelBase
 	 * Fresh constructor.
 	 * Creates an instance with the specified <tt>name</tt>.
 	 * @param name the <tt>User</tt>'s name
-	 * @throws IllegalArgumentException if the supplied <tt>name</tt> is <tt>null</tt>
+	 * @throws BadArgumentException if the supplied <tt>name</tt> is <tt>null</tt>
 	 */
-	public User(String name) throws IllegalArgumentException
+	public User(String name) throws BadArgumentException
 	{
 		if(name==null)
-			throw new IllegalArgumentException("Name cannot be null");
+			throw new BadArgumentException("Name cannot be null");
 		
 		this.name=name;
 	}
@@ -34,12 +34,12 @@ public abstract class User extends ModelBase
 
 	/**
 	 * @param name a replacement name
-	 * @throws IllegalArgumentException if given a <tt>null</tt> value
+	 * @throws BadArgumentException if given a <tt>null</tt> value
 	 */
-	public void setName(String name) throws IllegalArgumentException
+	public void setName(String name) throws BadArgumentException
 	{
 		if(name==null)
-			throw new IllegalArgumentException("Name cannot be null");
+			throw new BadArgumentException("Name cannot be null");
 		
 		this.name=name;
 	}

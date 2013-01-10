@@ -10,6 +10,9 @@ public class VMLayout extends ModelBase
 	/** The rows of products. */
 	private Row[][] rows; 
 
+	/** The maximum number of objects in each row */
+	private int depth;
+
 	/** When the next restocking is due (<tt>null</tt> if unset). */
 	private GregorianCalendar nextVisit;
 
@@ -19,9 +22,10 @@ public class VMLayout extends ModelBase
 	 * The actual rows are left empty until filled.
 	 * @param height the major size
 	 * @param width the minor size
+	 * @param depth the size of each product row
 	 * @throws IllegalArgumentException if the <tt>height</tt>, or <tt>width</tt> is invalid
 	 */
-	public VMLayout(int height, int width) throws IllegalArgumentException
+	public VMLayout(int height, int width, int depth) throws IllegalArgumentException
 	{
 		if(height<=0)
 			throw new IllegalArgumentException("Height must be positive");
@@ -29,6 +33,7 @@ public class VMLayout extends ModelBase
 			throw new IllegalArgumentException("Width must be positive");
 		
 		rows=new Row[height][width];
+		this.depth=depth;
 		nextVisit=null;
 	}
 
@@ -36,9 +41,10 @@ public class VMLayout extends ModelBase
 	 * Contents initialization constructor.
 	 * Creates an instance with the provided contents.
 	 * @param rows the rows to be held in the machine
+	 * @param depth the size of each product row
 	 * @throws IllegalArgumentException if <tt>rows</tt> is <tt>null</tt> or ragged
 	 */
-	public VMLayout(Row[][] rows) throws IllegalArgumentException
+	public VMLayout(Row[][] rows, int depth) throws IllegalArgumentException
 	{
 		if(rows==null)
 			throw new IllegalArgumentException("Rows cannot be null");
@@ -51,6 +57,7 @@ public class VMLayout extends ModelBase
 		}
 		
 		this.rows = rows;
+		this.depth=depth;
 		nextVisit=null;
 	}
 
@@ -83,19 +90,33 @@ public class VMLayout extends ModelBase
 		}
 		else //shallow copy
 		{
-			setId(existing.getId()); //this cannot fail, since there can be no ID
+			try
+			{
+				setId(existing.getId());
+			}
+			catch(Exception impossible) {} //there can be no ID there!
 			this.rows=existing.rows;
 		}
 		
+		this.depth=existing.depth;
 		this.nextVisit=existing.nextVisit;
 	}
 
 	/**
+	 * Note that you shouldn't add any <tt>Row</tt> that stocks more items than <tt>getDepth()</tt>'s value.
 	 * @return all the rows
 	 */
 	public Row[][] getRows()
 	{
 		return rows;
+	}
+
+	/**
+	 * @return the maximum number of elements in any row
+	 */
+	public int getDepth()
+	{
+		return depth;
 	}
 
 	/**

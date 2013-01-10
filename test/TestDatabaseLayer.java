@@ -72,7 +72,7 @@ public class TestDatabaseLayer
 	 * Clears the database and initializes test objects for each test
 	 **/
 	@Before
-	public void setUp() throws SQLException
+	public void setUp() throws SQLException, BadStateException, BadArgumentException
 	{
 		dbl = DatabaseLayer.getInstance();
 		dbl.nuke();
@@ -91,11 +91,11 @@ public class TestDatabaseLayer
 	/**
 	 * Creates a set of FoodItems for use in tests
 	 **/
-	private void initFoodItems()
+	private void initFoodItems() throws BadStateException, BadArgumentException
 	{
 		items = new ArrayList<FoodItem>();
 		items.add(new FoodItem("Twix", 175, 1000));
-		items.add(new FoodItem("Snickers", 175, 1000));
+		items.add(new FoodItem("Snickers", 175, 1000, false));
 		items.add(new FoodItem("Chips", 150, 500));
 		items.add(new FoodItem("Fish Sandwich", 200, 100000));
 	}
@@ -103,7 +103,7 @@ public class TestDatabaseLayer
 	/**
 	 * Creates a set of VendingMachines for use in tests
 	 **/
-	private void initVendingMachines()
+	private void initVendingMachines() throws BadStateException, BadArgumentException
 	{
 		machines = new ArrayList<VendingMachine>();
 		Row[][][] testRows = new Row[4][2][2];
@@ -119,20 +119,20 @@ public class TestDatabaseLayer
 		}
 
 		Location loc1 = new Location(20622, "Maryland", new String[] {"Mckay's"});
-		VMLayout cur1 = new VMLayout(testRows[0]);
-		VMLayout next1 = new VMLayout(testRows[1]);
+		VMLayout cur1 = new VMLayout(testRows[0], 7);
+		VMLayout next1 = new VMLayout(testRows[1], 7);
 		machines.add(new VendingMachine(loc1, 1000000, cur1, next1, true));
 		
 		Location loc2 = new Location(99999, "Pandora", new String[] {"Zed's Medical Supplies", "That other dude's gun shop", "The chick's bar", "Whatever that guy's name who runs the scooter shop. His scooter shop. I should really know his name but I forget and I'm not willing to lookup it up."});
-		VMLayout cur2 = new VMLayout(testRows[2]);
-		VMLayout next2 = new VMLayout(testRows[3]);
+		VMLayout cur2 = new VMLayout(testRows[2], 7);
+		VMLayout next2 = new VMLayout(testRows[3], 7);
 		machines.add(new VendingMachine(loc2, 500000, cur2, next2, false));
 	}
 
 	/**
 	 * Initializes a set of customers to use in tests.
 	 **/
-	private void initCustomers()
+	private void initCustomers() throws BadStateException, BadArgumentException
 	{
 		customers = new ArrayList<Customer>();
 		customers.add(new Customer("Carlton", 2000));
@@ -144,7 +144,7 @@ public class TestDatabaseLayer
 	/**
 	 * Initializes a set of managers to use in tests.
 	 **/
-	private void initManagers()
+	private void initManagers() throws BadStateException, BadArgumentException
 	{
 		managers = new ArrayList<Manager>();
 		managers.add(new Manager("Superman", "kypto"));
@@ -155,7 +155,7 @@ public class TestDatabaseLayer
 	/**
 	 * Initializes a set of transactions to use in tests.
 	 **/
-	private void initTransactions()
+	private void initTransactions() throws BadStateException, BadArgumentException
 	{
 		transactions = new ArrayList<Transaction>();
 		transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), machines.get(0), customers.get(0), items.get(0), new Pair<Integer, Integer>(0,0)));
@@ -168,12 +168,13 @@ public class TestDatabaseLayer
 	 * @param item1 The first item
 	 * @param item2 The second item
 	 **/
-	private void foodItemEquals(FoodItem item1, FoodItem item2)
+	private void foodItemEquals(FoodItem item1, FoodItem item2) throws BadStateException, BadArgumentException
 	{
 		assertTrue(item1.getId() == item2.getId());
 		assertTrue(item1.getName().equals(item2.getName()));
 		assertTrue(item1.getPrice() == item2.getPrice());
 		assertTrue(item1.getFreshLength() == item2.getFreshLength());
+		assertTrue(item1.isActive() == item2.isActive());
 	}
 
 	/**
@@ -181,7 +182,7 @@ public class TestDatabaseLayer
 	 * @param machine1 The first vending machine
 	 * @param machine2 The second vending machine
 	 **/
-	private void vendingMachineEquals(VendingMachine machine1, VendingMachine machine2)
+	private void vendingMachineEquals(VendingMachine machine1, VendingMachine machine2) throws BadStateException, BadArgumentException
 	{
 		assertTrue(machine1.getId() == machine2.getId());
 		assertTrue(machine1.getStockingInterval() == machine2.getStockingInterval());
@@ -197,7 +198,7 @@ public class TestDatabaseLayer
 	 * @param location1 The first location
 	 * @param location2 The second location
 	 **/
-	private void locationEquals(Location location1, Location location2)
+	private void locationEquals(Location location1, Location location2) throws BadStateException, BadArgumentException
 	{
 		assertTrue(location1.getId() == location2.getId());
 		assertTrue(location1.getZipCode() == location2.getZipCode());
@@ -209,7 +210,7 @@ public class TestDatabaseLayer
 	 * @param layout1 The first VMLayout
 	 * @param layout2 The second VMLayout
 	 **/
-	private void vmLayoutEquals(VMLayout layout1, VMLayout layout2)
+	private void vmLayoutEquals(VMLayout layout1, VMLayout layout2) throws BadStateException, BadArgumentException
 	{
 		assertTrue(layout1.getId() == layout2.getId());
 
@@ -231,6 +232,7 @@ public class TestDatabaseLayer
 				assertTrue(row1.getRemainingQuantity() == row2.getRemainingQuantity());
 			}
 		}
+		assertTrue(layout1.getDepth() == layout2.getDepth());
 	}
 
 	/**
@@ -238,7 +240,7 @@ public class TestDatabaseLayer
 	 * @param customer1 The first customer
 	 * @param customer2 The second customer
 	 **/
-	private void customerEquals(Customer customer1, Customer customer2)
+	private void customerEquals(Customer customer1, Customer customer2) throws BadStateException, BadArgumentException
 	{
 		assertTrue(customer1.getId() == customer2.getId());
 		assertTrue(customer1.getName() + ", " + customer2.getName() + "\n",
@@ -251,7 +253,7 @@ public class TestDatabaseLayer
 	 * @param manager1 The first manager
 	 * @param manager2 The second manager
 	 **/
-	private void managerEquals(Manager manager1, Manager manager2)
+	private void managerEquals(Manager manager1, Manager manager2) throws BadStateException, BadArgumentException
 	{
 		assertTrue(manager1.getId() == manager2.getId());
 		assertTrue(manager1.getName() + "|" + manager2.getName(),
@@ -264,7 +266,7 @@ public class TestDatabaseLayer
 	 * @param trans1 The first transaction
 	 * @param trans2 The second transaction
 	 **/
-	private void transactionEquals(Transaction trans1, Transaction trans2)
+	private void transactionEquals(Transaction trans1, Transaction trans2) throws BadStateException, BadArgumentException
 	{
 		assertTrue(trans1.getTimestamp().equals(trans2.getTimestamp()));
 		vendingMachineEquals(trans1.getMachine(), trans2.getMachine());
@@ -278,7 +280,7 @@ public class TestDatabaseLayer
 	 * Adds FoodItems to the database iff they have not already
 	 * been added. Used in several tests.
 	 **/
-	private void noTestAddFoodItems() throws SQLException
+	private void noTestAddFoodItems() throws SQLException, BadStateException, BadArgumentException
 	{
 		if (addedFoodItems)
 			return;
@@ -291,7 +293,7 @@ public class TestDatabaseLayer
 	 * Adds vending machines to the database iff they have not
 	 * already been added. Used in several tests.
 	 **/
-	private void noTestAddVendingMachines() throws SQLException
+	private void noTestAddVendingMachines() throws SQLException, BadStateException, BadArgumentException
 	{
 		if (addedVendingMachines)
 			return;
@@ -304,7 +306,7 @@ public class TestDatabaseLayer
 	 * Adds customers to the database iff they have not already
 	 * been added. Used in several tests.
 	 **/
-	private void noTestAddCustomers() throws SQLException
+	private void noTestAddCustomers() throws SQLException, BadStateException, BadArgumentException
 	{
 		if (addedCustomers)
 			return;
@@ -317,7 +319,7 @@ public class TestDatabaseLayer
 	 * Adds managers to the database iff they have not already been added. Used
 	 * in several tests.
 	 **/
-	private void noTestAddManagers() throws SQLException
+	private void noTestAddManagers() throws SQLException, BadStateException, BadArgumentException
 	{
 		if (addedManagers)
 			return;
@@ -330,7 +332,7 @@ public class TestDatabaseLayer
 	 * Adds transactions to the database iff they have not already been added.
 	 * Used in several tests.
 	 **/
-	private void noTestAddTransactions() throws SQLException
+	private void noTestAddTransactions() throws SQLException, BadStateException, BadArgumentException
 	{
 		if (addedTransactions)
 			return;
@@ -345,7 +347,7 @@ public class TestDatabaseLayer
 	 * FoodItems can be added correctly.
 	 **/
 	@Test
-	public void addFoodItem() throws SQLException
+	public void addFoodItem() throws SQLException, BadStateException, BadArgumentException
 	{
 		for (FoodItem item : items)
 		{
@@ -358,7 +360,7 @@ public class TestDatabaseLayer
 	 * Tests getting items from the database
 	 **/
 	@Test
-	public void getFoodItem() throws SQLException
+	public void getFoodItem() throws SQLException, BadStateException, BadArgumentException
 	{
 		for (FoodItem item : items)
 			dbl.updateOrCreateFoodItem(item);
@@ -393,7 +395,7 @@ public class TestDatabaseLayer
 	 * Tests updating items in the database
 	 **/
 	@Test
-	public void changeFoodItem() throws SQLException
+	public void changeFoodItem() throws SQLException, BadStateException, BadArgumentException
 	{
 		for (FoodItem item : items)
 			dbl.updateOrCreateFoodItem(item);
@@ -420,6 +422,12 @@ public class TestDatabaseLayer
 		foodItemEquals(test,change);
 		for (int i=3;i<items.size();++i)
 			foodItemEquals(dbl.getFoodItemById(items.get(i).getId()), items.get(i));
+
+		change = items.get(3);
+		change.makeActive(false);
+		dbl.updateOrCreateFoodItem(change);
+		test = dbl.getFoodItemById(change.getId());
+		foodItemEquals(test, change);
 	}
 
 	/**
@@ -429,7 +437,7 @@ public class TestDatabaseLayer
 	 * correctly.
 	 **/
 	@Test
-	public void addVendingMachine() throws SQLException
+	public void addVendingMachine() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		for (VendingMachine machine : machines)
@@ -443,7 +451,7 @@ public class TestDatabaseLayer
 	 * Tests retrieving vending machines from the database.
 	 **/
 	 @Test
-	 public void getVendingMachine() throws SQLException
+	 public void getVendingMachine() throws SQLException, BadStateException, BadArgumentException
 	 {
 		noTestAddFoodItems();
 		for (VendingMachine machine : machines)
@@ -460,7 +468,7 @@ public class TestDatabaseLayer
 	  * Tests fetching vending machines from the database by state
 	  **/
 	 @Test
-	 public void getVendingMachineState() throws SQLException
+	 public void getVendingMachineState() throws SQLException, BadStateException, BadArgumentException
 	 {
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -518,7 +526,7 @@ public class TestDatabaseLayer
 	  * Tests fetching vending machines from the database by zip code
 	  **/
 	 @Test
-	 public void getVendingMachineZipCode() throws SQLException
+	 public void getVendingMachineZipCode() throws SQLException, BadStateException, BadArgumentException
 	 {
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -577,7 +585,7 @@ public class TestDatabaseLayer
 	 * Tests fetching all vending machines from the database
 	 **/
 	@Test
-	public void getVendingMachineAll() throws SQLException
+	public void getVendingMachineAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -605,7 +613,7 @@ public class TestDatabaseLayer
 	 * the database.
 	 **/
 	 @Test
-	 public void changeVendingMachine1() throws SQLException
+	 public void changeVendingMachine1() throws SQLException, BadStateException, BadArgumentException
 	 {
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -622,7 +630,7 @@ public class TestDatabaseLayer
 	 * Tests changing the active flag on a vending machine.
 	 **/
 	@Test
-	public void changeVendingMachine2() throws SQLException
+	public void changeVendingMachine2() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -638,7 +646,7 @@ public class TestDatabaseLayer
 	 * Tests changing current layout to next layout in a vending machine.
 	 **/
 	@Test
-	public void changeVendingMachine3() throws SQLException
+	public void changeVendingMachine3() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -654,7 +662,7 @@ public class TestDatabaseLayer
 	 * Tests changing the stocking interval of a vending machine.
 	 **/
 	@Test
-	public void changeVendingMachine4() throws SQLException
+	public void changeVendingMachine4() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -670,7 +678,7 @@ public class TestDatabaseLayer
 	 * Tests changing the zip code of the location of a vending machine.
 	 **/
 	@Test
-	public void changeVendingMachine5() throws SQLException
+	public void changeVendingMachine5() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -686,7 +694,7 @@ public class TestDatabaseLayer
 	 * Tests changing the state of the location of a vending machine.
 	 **/
 	@Test
-	public void changeVendingMachine6() throws SQLException
+	public void changeVendingMachine6() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -703,7 +711,7 @@ public class TestDatabaseLayer
 	  * not exist in the database and that has rows which also do not exist.
 	  **/
 	 @Test
-	 public void changeVendingMachine7() throws SQLException
+	 public void changeVendingMachine7() throws SQLException, BadStateException, BadArgumentException
 	 {
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -717,7 +725,7 @@ public class TestDatabaseLayer
 			}
 		}
 
-		VMLayout testLayout = new VMLayout(testRows);
+		VMLayout testLayout = new VMLayout(testRows, 8);
 		machines.get(0).setNextLayout(testLayout);
 		dbl.updateOrCreateVendingMachine(machines.get(0));
 		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
@@ -731,7 +739,7 @@ public class TestDatabaseLayer
 	  * rows that do exist.
 	  **/
 	 @Test
-	 public void changeVendingMachine8() throws SQLException
+	 public void changeVendingMachine8() throws SQLException, BadStateException, BadArgumentException
 	 {
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -747,7 +755,7 @@ public class TestDatabaseLayer
 
 		testRows[2][1] = machines.get(1).getNextLayout().getRows()[0][1];
 
-		VMLayout testLayout = new VMLayout(testRows);
+		VMLayout testLayout = new VMLayout(testRows, 8);
 		machines.get(0).setNextLayout(testLayout);
 		dbl.updateOrCreateVendingMachine(machines.get(0));
 		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
@@ -759,7 +767,7 @@ public class TestDatabaseLayer
 	 * Tests changing the location of a vending machine.
 	 **/
 	@Test
-	public void changeVendingMachine9() throws SQLException
+	public void changeVendingMachine9() throws SQLException, BadStateException, BadArgumentException
 	 {
 		 noTestAddFoodItems();
 		 noTestAddVendingMachines();
@@ -776,7 +784,7 @@ public class TestDatabaseLayer
 	 * Tests running changeVendingMachine* in succession.
 	 **/
 	@Test
-	public void changeVendingMachineAll() throws SQLException
+	public void changeVendingMachineAll() throws SQLException, BadStateException, BadArgumentException
 	 {
 		 noTestAddFoodItems();
 		 noTestAddVendingMachines();
@@ -799,7 +807,7 @@ public class TestDatabaseLayer
 	 * getCustomer() test.
 	 **/
 	@Test
-	public void addCustomer() throws SQLException
+	public void addCustomer() throws SQLException, BadStateException, BadArgumentException
 	{
 	    for (Customer customer : customers)
 	    {
@@ -812,7 +820,7 @@ public class TestDatabaseLayer
 	 * Tests fetching customers from the database.
 	 **/
 	@Test
-	public void getCustomer() throws SQLException
+	public void getCustomer() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddCustomers();
 		for (Customer customer : customers)
@@ -824,7 +832,7 @@ public class TestDatabaseLayer
 	 * Tests changing customers in the database.
 	 **/
 	@Test
-	public void changeCustomer() throws SQLException
+	public void changeCustomer() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddCustomers();
 
@@ -846,7 +854,7 @@ public class TestDatabaseLayer
 	 * the getManager() test.
 	 **/
 	@Test
-	public void addManager() throws SQLException
+	public void addManager() throws SQLException, BadStateException, BadArgumentException
 	{
 		for (Manager manager : managers)
 		{
@@ -859,7 +867,7 @@ public class TestDatabaseLayer
 	 * Tests fetching managers from the database.
 	 **/
 	@Test
-	public void getManager() throws SQLException
+	public void getManager() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddManagers();
 		for (Manager manager : managers)
@@ -870,7 +878,7 @@ public class TestDatabaseLayer
 	 * Tests changing managers in the database.
 	 **/
 	@Test
-	public void changeManager() throws SQLException
+	public void changeManager() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddManagers();
 
@@ -898,7 +906,7 @@ public class TestDatabaseLayer
 	 * the getTransaction() test.
 	 **/
 	@Test
-	public void addTransactions() throws SQLException
+	public void addTransactions() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -915,7 +923,7 @@ public class TestDatabaseLayer
 	 * Tests fetching transactions from the database by id
 	 **/
 	@Test
-	public void getTransaction() throws SQLException
+	public void getTransaction() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -931,7 +939,7 @@ public class TestDatabaseLayer
 	 * Tests fetching transactions from the database by zip code
 	 **/
 	@Test
-	public void getTransactionZip() throws SQLException
+	public void getTransactionZip() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -990,7 +998,7 @@ public class TestDatabaseLayer
 	 * Tests fetching transactions by state
 	 **/
 	@Test
-	public void getTransactionState() throws SQLException
+	public void getTransactionState() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -1049,7 +1057,7 @@ public class TestDatabaseLayer
 	 * Tests fetching all transactions
 	 **/
 	@Test
-	public void getTransactionAll() throws SQLException
+	public void getTransactionAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -1079,7 +1087,7 @@ public class TestDatabaseLayer
 	 * Tests changing the timestamp of a transaction
 	 **/
 	@Test
-	public void changeTransaction1() throws SQLException
+	public void changeTransaction1() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -1097,7 +1105,7 @@ public class TestDatabaseLayer
 	 * Tests changing the vending machine of a transaction
 	 **/
 	@Test
-	public void changeTransaction2() throws SQLException
+	public void changeTransaction2() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -1115,7 +1123,7 @@ public class TestDatabaseLayer
 	 * Tests changing the customer of a transaction
 	 **/
 	@Test
-	public void changeTransaction3() throws SQLException
+	public void changeTransaction3() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -1133,7 +1141,7 @@ public class TestDatabaseLayer
 	 * Tests changing the row of a transaction
 	 **/
 	@Test
-	public void changeTransaction4() throws SQLException
+	public void changeTransaction4() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
@@ -1151,7 +1159,7 @@ public class TestDatabaseLayer
 	 * Runs all of the changeTransaction* tests consecutively 
 	 **/
 	@Test
-	public void changeTransactionAll() throws SQLException
+	public void changeTransactionAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		noTestAddFoodItems();
 		noTestAddVendingMachines();
