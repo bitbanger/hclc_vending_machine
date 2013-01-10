@@ -21,8 +21,13 @@ public class ManagerUserAccountsScreen {
 	 * base constructor
 	 */
 	public ManagerUserAccountsScreen() {
-		customers = db.getCustomersAll();
-		managers = db.getManagersAll();
+		try {
+			customers = db.getCustomersAll();
+			managers = db.getManagersAll();
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+		}
 	}
 
 	/**

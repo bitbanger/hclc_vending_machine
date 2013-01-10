@@ -22,9 +22,14 @@ public class ManagerReportStatsScreen {
 	private Collection<Location> locations;
 
 	public ManagerReportStatsScreen () {
-		transactions = db.getTransactionsAll();
-		machines = db.getVendingMachinesAll();
-		locations = db.getLocationsAll();
+		try {
+			transactions = db.getTransactionsAll();
+			machines = db.getVendingMachinesAll();
+			locations = db.getLocationsAll();
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+		}
 	}
 
 	public Collection<VendingMachine> listMachines() {

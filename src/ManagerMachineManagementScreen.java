@@ -52,7 +52,12 @@ public class ManagerMachineManagementScreen {
 	 */
 	public void addMachine( Location location, int interval, VMLayout layout ) {
 		VendingMachine machine = new VendingMachine( location, interval, layout );
-		db.updateOrCreateVendingMachine( machine );
+		try {
+			db.updateOrCreateVendingMachine( machine );
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+		}
 		storefronts.add( machine );
 	}
 
@@ -61,9 +66,14 @@ public class ManagerMachineManagementScreen {
 	 * @param id the id of the machine
 	 */
 	public void deactivateMachine( int id ) {
-		VendingMachine vm = db.getVendingMachineById( id );
-		vm.makeActive( false );
-		storefronts = db.getVendingMachinesAll();
+		try {
+			VendingMachine vm = db.getVendingMachineById( id );
+			vm.makeActive( false );
+			storefronts = db.getVendingMachinesAll();
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+		}
 	}
 
 	/**
@@ -71,9 +81,14 @@ public class ManagerMachineManagementScreen {
 	 * @param id the id of the machine
 	 */
 	public void reactivateMachine( int id ) {
-		VendingMachine vm = db.getVendingMachineById( id );
-		vm.makeActive( true );
-		storefronts = db.getVendingMachinesAll();
+		try {
+			VendingMachine vm = db.getVendingMachineById( id );
+			vm.makeActive( true );
+			storefronts = db.getVendingMachinesAll();
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+		}
 	}
 	
 	/**
@@ -83,8 +98,13 @@ public class ManagerMachineManagementScreen {
 	 * @return whether it succeeded
 	 */
 	public boolean changeMachineLocation( int id, Location location ) {
-		VendingMachine vm = db.getVendingMachineById( id );
-		vm.setLocation( location );
+		try {
+			VendingMachine vm = db.getVendingMachineById( id );
+			vm.setLocation( location );
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+		}
 		return true;
 	}
 

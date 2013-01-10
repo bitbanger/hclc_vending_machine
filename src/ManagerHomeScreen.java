@@ -24,7 +24,7 @@ public class ManagerHomeScreen {
 	 * create a screen to view stats
 	 */
 	public ManagerReportStatsScreen viewStats() {
-		return null; //TODO remove this!
+		return new ManagerReportStatsScreen();
 	}
 
 	/**
@@ -33,7 +33,14 @@ public class ManagerHomeScreen {
 	 * @return the alter layout screen for the machine
 	 */
 	public ManagerAlterLayoutScreen alterLayout( int id ) {
-		return null; //TODO remove this!
+		try {
+			return new ManagerAlterLayoutScreen( 
+				db.getVendingMachineById( id ) );
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return null;
+		}
 	}
 
 	/**
@@ -41,7 +48,14 @@ public class ManagerHomeScreen {
 	 * @return the stocked item screen
 	 */
 	public ManagerStockedItemsScreen manageItems() {
-		return null; //TODO remove this!
+		try {
+			return new ManagerStockedItemsScreen( 
+				db.getFoodItemsAll() );
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return null;
+		}
 	}
 
 	/**
@@ -49,7 +63,14 @@ public class ManagerHomeScreen {
 	 * @return the machine management screen
 	 */
 	public ManagerMachineManagementScreen manageMachines() {
-		return null; //TODO remove this!
+		try {
+			return new ManagerMachineManagementScreen( 
+				db.getVendingMachinesAll() );
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return null;
+		}
 	}
 	
 	/**
@@ -57,7 +78,7 @@ public class ManagerHomeScreen {
 	 * @return the user management screen
 	 */
 	public ManagerUserAccountsScreen manageUsers() {
-		return null; //TODO remove this!
+		return new ManagerUserAccountsScreen();
 	}
 	
 	/**
