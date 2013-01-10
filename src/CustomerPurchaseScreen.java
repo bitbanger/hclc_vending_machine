@@ -64,7 +64,7 @@ public class CustomerPurchaseScreen {
 			return "NO PRODUCT"; //nothing to see here
 		if ( rows[product.first][product.second].getRemainingQuantity() <= 0 )
 			return "ITEM SOLD OUT"; //check if there is some remaining
-		if ( !rows[product.first][product.second].isActive() )
+		if ( !rows[product.first][product.second].getProduct().isActive() )
 			return "ITEM INACTIVE"; //check if product disabled
 		
 		FoodItem item = rows[product.first][product.second].getProduct();
