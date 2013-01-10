@@ -109,7 +109,7 @@ public class DatabaseLayer
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS Item( itemId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, price INTEGER NOT NULL, freshLength INTEGER NOT NULL);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT, depth INTEGER NOT NULL);");
 
 		stmt.addBatch(" CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL);");
 
@@ -238,7 +238,13 @@ public class DatabaseLayer
 		Row[][] rows = new Row[maxY+1][maxX+1];
 		for (Pair<Row,Pair<Integer,Integer>> entry : raw)
 			rows[entry.second.second][entry.second.first] = entry.first;
-		VMLayout layout = new VMLayout(rows);
+
+		Statement moreInfo = db.createStatement();
+		ResultSet metaData = moreInfo.executeQuery(String.format("SELECT depth FROM VMLayout WHERE layoutId=%d", id));
+		int depth = metaData.getInt("depth");
+		moreInfo.close();
+
+		VMLayout layout = new VMLayout(rows, depth);
 		layout.setId(id);
 		return layout;
 	}
