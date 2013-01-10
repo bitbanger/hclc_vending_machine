@@ -12,14 +12,14 @@ public class Manager extends User
 	 * Creates an instance with the specified initial password.
 	 * @param name the <tt>Manager</tt>'s name
 	 * @param password the <tt>Manager</tt>'s initial password
-	 * @throws IllegalArgumentException if the <tt>name</tt> is invalid or the <tt>password</tt> is <tt>null</tt>
+	 * @throws BadArgumentException if the <tt>name</tt> is invalid or the <tt>password</tt> is <tt>null</tt>
 	 */
-	public Manager(String name, String password) throws IllegalArgumentException
+	public Manager(String name, String password) throws BadArgumentException
 	{
 		super(name);
 		
 		if(password==null)
-			throw new IllegalArgumentException("Password must not be null");
+			throw new BadArgumentException("Password must not be null");
 		
 		this.password=password;
 	}
@@ -37,12 +37,12 @@ public class Manager extends User
 
 	/**
 	 * @param password the new password
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setPassword(String password)
+	public void setPassword(String password) throws BadArgumentException
 	{
 		if(password==null)
-			throw new IllegalArgumentException("Password must not be null");
+			throw new BadArgumentException("Password must not be null");
 		
 		this.password=password;
 	}

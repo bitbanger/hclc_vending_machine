@@ -37,14 +37,14 @@ public abstract class ModelBase
 	 * This method may only be invoked once in order to assign a permanent primary key.
 	 * @param id the permanent primary key
 	 * @throws IllegalStateException if the instance has already been assigned a primary key
-	 * @throws IllegalArgumentException if an invalid ID is supplied
+	 * @throws BadArgumentException if an invalid ID is supplied
 	 */
-	public void setId(int id) throws IllegalStateException, IllegalArgumentException
+	public void setId(int id) throws IllegalStateException, BadArgumentException
 	{
 		if(this.id!=TEMP_ID)
 			throw new IllegalStateException("Cannot replace existing ID");
 		else if(id<MIN_ID)
-			throw new IllegalArgumentException("Invalid ID supplied");
+			throw new BadArgumentException("Invalid ID supplied");
 		
 		this.id=id;
 	}

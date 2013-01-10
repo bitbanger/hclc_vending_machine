@@ -83,7 +83,11 @@ public class VMLayout extends ModelBase
 		}
 		else //shallow copy
 		{
-			setId(existing.getId()); //this cannot fail, since there can be no ID
+			try
+			{
+				setId(existing.getId());
+			}
+			catch(BadArgumentException impossible) {} //there can be no ID there!
 			this.rows=existing.rows;
 		}
 		
