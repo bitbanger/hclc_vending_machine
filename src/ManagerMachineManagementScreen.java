@@ -32,18 +32,28 @@ public class ManagerMachineManagementScreen {
 
 	/**
 	 * lists machines by location
+	 * @param loc the location to find machines from
 	 * @return lists the machines
 	 */
-	public Collection<VendingMachine> listMachinesByLocation() {
-		return null; //TODO remove this!
+	public Collection<VendingMachine> listMachinesByLocation( Location loc ) {
+		ArrayList<VendingMachine> vms = new ArrayList<VendingMachine>();
+		for ( VendingMachine vm : storefronts ) {
+			if ( vm.getLocation().equals( loc ) ) 
+				vms.add( vm );
+		}
+		return vms;
 	}
 
 	/**
 	 * adds a new machine
 	 * @param location the loc of the machine
+	 * @param interval the stocking interval
+	 * @param layout the initial layout to use
 	 */
-	public void addMachine( Location location ) {
-
+	public void addMachine( Location location, int interval, VMLayout layout ) {
+		VendingMachine machine = new VendingMachine( location, interval, layout );
+		db.updateOrCreateVendingMachine( machine );
+		storefronts.add( machine );
 	}
 
 	/**
@@ -51,7 +61,9 @@ public class ManagerMachineManagementScreen {
 	 * @param id the id of the machine
 	 */
 	public void deactivateMachine( int id ) {
-
+		VendingMachine vm = db.getVendingMachineById( id );
+		vm.makeActive( false );
+		storefronts = db.getVendingMachinesAll();
 	}
 
 	/**
@@ -59,7 +71,9 @@ public class ManagerMachineManagementScreen {
 	 * @param id the id of the machine
 	 */
 	public void reactivateMachine( int id ) {
-
+		VendingMachine vm = db.getVendingMachineById( id );
+		vm.makeActive( true );
+		storefronts = db.getVendingMachinesAll();
 	}
 	
 	/**
@@ -69,7 +83,9 @@ public class ManagerMachineManagementScreen {
 	 * @return whether it succeeded
 	 */
 	public boolean changeMachineLocation( int id, Location location ) {
-		return false; //TODO remove this!
+		VendingMachine vm = db.getVendingMachineById( id );
+		vm.setLocation( location );
+		return true;
 	}
 
 	/**
