@@ -119,13 +119,13 @@ public class TestDatabaseLayer
 		}
 
 		Location loc1 = new Location(20622, "Maryland", new String[] {"Mckay's"});
-		VMLayout cur1 = new VMLayout(testRows[0]);
-		VMLayout next1 = new VMLayout(testRows[1]);
+		VMLayout cur1 = new VMLayout(testRows[0], 7);
+		VMLayout next1 = new VMLayout(testRows[1], 7);
 		machines.add(new VendingMachine(loc1, 1000000, cur1, next1, true));
 		
 		Location loc2 = new Location(99999, "Pandora", new String[] {"Zed's Medical Supplies", "That other dude's gun shop", "The chick's bar", "Whatever that guy's name who runs the scooter shop. His scooter shop. I should really know his name but I forget and I'm not willing to lookup it up."});
-		VMLayout cur2 = new VMLayout(testRows[2]);
-		VMLayout next2 = new VMLayout(testRows[3]);
+		VMLayout cur2 = new VMLayout(testRows[2], 7);
+		VMLayout next2 = new VMLayout(testRows[3], 7);
 		machines.add(new VendingMachine(loc2, 500000, cur2, next2, false));
 	}
 
@@ -231,6 +231,7 @@ public class TestDatabaseLayer
 				assertTrue(row1.getRemainingQuantity() == row2.getRemainingQuantity());
 			}
 		}
+		assertTrue(layout1.getDepth() == layout2.getDepth());
 	}
 
 	/**
@@ -717,7 +718,7 @@ public class TestDatabaseLayer
 			}
 		}
 
-		VMLayout testLayout = new VMLayout(testRows);
+		VMLayout testLayout = new VMLayout(testRows, 8);
 		machines.get(0).setNextLayout(testLayout);
 		dbl.updateOrCreateVendingMachine(machines.get(0));
 		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
@@ -747,7 +748,7 @@ public class TestDatabaseLayer
 
 		testRows[2][1] = machines.get(1).getNextLayout().getRows()[0][1];
 
-		VMLayout testLayout = new VMLayout(testRows);
+		VMLayout testLayout = new VMLayout(testRows, 8);
 		machines.get(0).setNextLayout(testLayout);
 		dbl.updateOrCreateVendingMachine(machines.get(0));
 		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
