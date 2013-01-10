@@ -387,6 +387,33 @@ public class DatabaseLayer
 	}
 
 	/**
+	 * Fetches all of the locations from the database
+	 * @return A collection of all the locations
+	 * @throws SQLException in case of a database error.
+	 **/
+	public Collection<Location> getLocationsAll() throws SQLException, BadStateException, BadArgumentException
+	{
+		Collection<Location> returnSet = new LinkedList<Location>();
+		Statement locStmt = db.createStatement();
+		ResultSet locSet = locStmt.executeQuery("SELECT locationId, zipCode, state FROM Location");
+		while (locSet.next())
+		{
+			int id = locSet.getInt(1);
+			Statement busStmt = db.createStatement();
+			ResultSet busSet = busStmt.executeQuery("SELECT name FROM NearbyBusiness WHERE locationId=" + id);
+			LinkedList<String> busList = new LinkedList<String>();
+			while (busSet.next())
+				busList.add(busSet.getString(1));
+			Location returnValue = new Location(locSet.getInt(2), locSet.getString(3), busList.toArray(new String[0]));
+			returnValue.setId(locSet.getInt(1));
+			returnSet.add(returnValue);
+			busStmt.close();
+		}
+		locStmt.close();
+		return returnSet;
+	}
+
+	/**
 	 * Updates the given location if it exists in the database. If it does not
 	 * exist then it is created.
 	 * @param location The location to create/update.
@@ -615,6 +642,27 @@ public class DatabaseLayer
 	}
 
 	/**
+	 * Fetches all of the customers from the database
+	 * @return A collection of all the managers
+	 * @throws SQLException in case of a database error.
+	 **/
+	public Collection<Customer> getCustomersAll() throws SQLException, BadStateException, BadArgumentException
+	{
+		Collection<Customer> returnSet = new LinkedList<Customer>();
+		Statement stmt = db.createStatement();
+		String query = "SELECT customerId, money, name FROM Customer";
+		ResultSet results = stmt.executeQuery(query);
+		if (results.next())
+		{
+			Customer returnValue = new Customer(results.getString(3), results.getInt(2));
+			returnValue.setId(results.getInt(1));
+			returnSet.add(returnValue);
+		}
+		stmt.close();
+		return returnSet;
+	}
+
+	/**
 	 * Updates the given customer if it exists (determined by id) or creates it
 	 * if it does not exist.
 	 * @param customer The Customer to update/create.
@@ -659,8 +707,29 @@ public class DatabaseLayer
 			returnValue = new Manager(results.getString(3), results.getString(2));
 			returnValue.setId(results.getInt(1));
 		}
-		results.close();
+		stmt.close();
 		return returnValue;
+	}
+
+	/**
+	 * Fetches all of the managers from the database
+	 * @return A collection of all the managers
+	 * @throws SQLException in case of a database error.
+	 **/
+	public Collection<Manager> getManagersAll() throws SQLException, BadStateException, BadArgumentException
+	{
+		Collection<Manager> returnSet = new LinkedList<Manager>();
+		Statement stmt = db.createStatement();
+		String query = "SELECT managerId, password, name FROM Manager";
+		ResultSet results = stmt.executeQuery(query);
+		while (results.next())
+		{
+			Manager returnValue = new Manager(results.getString(3), results.getString(2));
+			returnValue.setId(results.getInt(1));
+			returnSet.add(returnValue);
+		}
+		stmt.close();
+		return returnSet;
 	}
 
 	/**
