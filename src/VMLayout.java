@@ -87,7 +87,7 @@ public class VMLayout extends ModelBase
 			{
 				setId(existing.getId());
 			}
-			catch(BadArgumentException impossible) {} //there can be no ID there!
+			catch(Exception impossible) {} //there can be no ID there!
 			this.rows=existing.rows;
 		}
 		

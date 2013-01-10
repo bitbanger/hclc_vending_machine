@@ -22,7 +22,11 @@ public class Customer extends User
 	public Customer() throws BadArgumentException
 	{
 		super(CASH_NAME);
-		setId(CASH_ID); //we *cannot* get an IllegalStateException because we just created the parent instance
+		try
+		{
+			setId(CASH_ID);
+		}
+		catch(BadStateException impossible) {} //we just created the parent, so this can't happen
 		money=0;
 	}
 
@@ -57,11 +61,11 @@ public class Customer extends User
 	/**
 	 * This method may only be used to obtain the primary key of a <i>non-cash</i> customer if such a key has actually been set.
 	 * @return the primary key
-	 * @throws IllegalStateException if the instance has never been assigned a primary key
+	 * @throws BadStateException if the instance has never been assigned a primary key
 	 * @throws UnsupportedOperationException if the instance is a cash customer
 	 */
 	@Override
-	public int getId() throws IllegalStateException, UnsupportedOperationException
+	public int getId() throws BadStateException, UnsupportedOperationException
 	{
 		if(super.getId()==CASH_ID)
 			throw new UnsupportedOperationException("Cash customers refuse to show their IDs");
@@ -118,7 +122,7 @@ public class Customer extends User
 		{
 			return getId()==CASH_ID; //always false if it doesn't fail
 		}
-		catch(IllegalStateException noneSet) //ID was unset
+		catch(BadStateException noneSet) //ID was unset
 		{
 			return false; //not a cash customer
 		}
