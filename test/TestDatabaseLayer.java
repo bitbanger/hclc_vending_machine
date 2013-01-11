@@ -281,6 +281,7 @@ public class TestDatabaseLayer
 		foodItemEquals(trans1.getProduct(), trans2.getProduct());
 		assertTrue(trans1.getRow().first == trans2.getRow().first &&
 			trans1.getRow().second == trans2.getRow().second);
+		assertTrue(trans1.getBalance() == trans2.getBalance());
 	}
 
 	/**

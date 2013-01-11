@@ -123,7 +123,7 @@ public class DatabaseLayer
 
 		stmt.addBatch(" CREATE TABLE IF NOT EXISTS Manager( managerId INTEGER PRIMARY KEY AUTOINCREMENT, password TEXT NOT NULL, name TEXT)");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMTransaction( transactionId INTEGER PRIMARY KEY AUTOINCREMENT, timestamp INTEGER NOT NULL, machineId INTEGER REFERENCES VendingMachine(machineId), customerId INTEGER REFERENCES Customer(customerId), productId INTEGER REFERENCES Item(itemId), rowX INTEGER NOT NULL, rowY INTEGER NOT NULL);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMTransaction( transactionId INTEGER PRIMARY KEY AUTOINCREMENT, timestamp INTEGER NOT NULL, machineId INTEGER REFERENCES VendingMachine(machineId), customerId INTEGER REFERENCES Customer(customerId), productId INTEGER REFERENCES Item(itemId), rowX INTEGER NOT NULL, rowY INTEGER NOT NULL, balance INTEGER NOT NULL);");
 
 		stmt.executeBatch();
 		stmt.close();
@@ -779,7 +779,7 @@ public class DatabaseLayer
 	{
 		Transaction returnValue = null;
 		Statement stmt = db.createStatement();
-		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction WHERE transactionId=" + id;
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE transactionId=" + id;
 		ResultSet results = stmt.executeQuery(query);
 		if (results.next())
 		{
@@ -789,7 +789,8 @@ public class DatabaseLayer
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
 			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
-			returnValue = new Transaction(time, machine, customer, product, row);
+			int balance = results.getInt(8);
+			returnValue = new Transaction(time, machine, customer, product, row, balance);
 			returnValue.setId(id);
 			
 		}
@@ -810,7 +811,7 @@ public class DatabaseLayer
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
-		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction WHERE machineId=" + vm.getId();
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE machineId=" + vm.getId();
 		ResultSet results = stmt.executeQuery(query);
 		while (results.next())
 		{
@@ -821,7 +822,8 @@ public class DatabaseLayer
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
 			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
-			Transaction transaction = new Transaction(time, machine, customer, product, row);
+			int balance = results.getInt(8);
+			Transaction transaction = new Transaction(time, machine, customer, product, row, balance);
 			transaction.setId(id);
 			transactions.add(transaction);
 		}
@@ -840,7 +842,7 @@ public class DatabaseLayer
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
-		String query = "SELECT transactionId, timestamp, VMTransaction.machineId, customerId, productId, rowX, rowY FROM VMTransaction JOIN VendingMachine JOIN Location ON VMTransaction.machineId = VendingMachine.machineId AND VendingMachine.locationId = Location.locationId WHERE Location.zipCode=" + zipCode;
+		String query = "SELECT transactionId, timestamp, VMTransaction.machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction JOIN VendingMachine JOIN Location ON VMTransaction.machineId = VendingMachine.machineId AND VendingMachine.locationId = Location.locationId WHERE Location.zipCode=" + zipCode;
 		ResultSet results = stmt.executeQuery(query);
 		while (results.next())
 		{
@@ -851,7 +853,8 @@ public class DatabaseLayer
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
 			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
-			Transaction transaction = new Transaction(time, machine, customer, product, row);
+			int balance = results.getInt(8);
+			Transaction transaction = new Transaction(time, machine, customer, product, row, balance);
 			transaction.setId(id);
 			transactions.add(transaction);
 		}
@@ -870,7 +873,7 @@ public class DatabaseLayer
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
-		String query = "SELECT transactionId, timestamp, VMTransaction.machineId, customerId, productId, rowX, rowY FROM VMTransaction JOIN VendingMachine JOIN Location ON VMTransaction.machineId = VendingMachine.machineId AND VendingMachine.locationId = Location.locationId WHERE Location.state=\"" + state + "\"";
+		String query = "SELECT transactionId, timestamp, VMTransaction.machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction JOIN VendingMachine JOIN Location ON VMTransaction.machineId = VendingMachine.machineId AND VendingMachine.locationId = Location.locationId WHERE Location.state=\"" + state + "\"";
 		ResultSet results = stmt.executeQuery(query);
 		while (results.next())
 		{
@@ -881,7 +884,8 @@ public class DatabaseLayer
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
 			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
-			Transaction transaction = new Transaction(time, machine, customer, product, row);
+			int balance = results.getInt(8);
+			Transaction transaction = new Transaction(time, machine, customer, product, row, balance);
 			transaction.setId(id);
 			transactions.add(transaction);
 		}
@@ -900,7 +904,7 @@ public class DatabaseLayer
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
-		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction WHERE customerId=" + customer.getId();
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE customerId=" + customer.getId();
 		ResultSet results = stmt.executeQuery(query);
 		while (results.next())
 		{
@@ -911,7 +915,8 @@ public class DatabaseLayer
 			Customer cust = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
 			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
-			Transaction transaction = new Transaction(time, machine, cust, product, row);
+			int balance = results.getInt(8);
+			Transaction transaction = new Transaction(time, machine, cust, product, row, balance);
 			transaction.setId(id);
 			transactions.add(transaction);
 		}
@@ -928,7 +933,7 @@ public class DatabaseLayer
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
-		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY FROM VMTransaction";
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction";
 		ResultSet results = stmt.executeQuery(query);
 		while (results.next())
 		{
@@ -939,7 +944,8 @@ public class DatabaseLayer
 			Customer customer = getCustomerById(results.getInt(4));
 			FoodItem product = getFoodItemById(results.getInt(5));
 			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
-			Transaction transaction = new Transaction(time, machine, customer, product, row);
+			int balance = results.getInt(8);
+			Transaction transaction = new Transaction(time, machine, customer, product, row, balance);
 			transaction.setId(id);
 			transactions.add(transaction);
 		}
@@ -957,7 +963,7 @@ public class DatabaseLayer
 	{
 		if (transaction.isTempId())
 		{
-			String query = String.format("INSERT INTO VMTransaction(timestamp, machineId, customerId, productId, rowX, rowY) VALUES(%d, %d, %d, %d, %d, %d)", transaction.getTimestamp().getTimeInMillis(), transaction.getMachine().getId(), transaction.getCustomer().getId(), transaction.getProduct().getId(), transaction.getRow().first, transaction.getRow().second);
+			String query = String.format("INSERT INTO VMTransaction(timestamp, machineId, customerId, productId, rowX, rowY, balance) VALUES(%d, %d, %d, %d, %d, %d, %d)", transaction.getTimestamp().getTimeInMillis(), transaction.getMachine().getId(), transaction.getCustomer().getId(), transaction.getProduct().getId(), transaction.getRow().first, transaction.getRow().second, transaction.getBalance());
 			Statement insertStmt = db.createStatement();
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
@@ -967,7 +973,7 @@ public class DatabaseLayer
 		}
 		else
 		{
-			String query = String.format("UPDATE VMTransaction SET timestamp=%d, machineId=%d, customerId=%d, productId=%d, rowX=%d, rowY=%d WHERE transactionId=%d", transaction.getTimestamp().getTimeInMillis(), transaction.getMachine().getId(), transaction.getCustomer().getId(), transaction.getProduct().getId(), transaction.getRow().first, transaction.getRow().second, transaction.getId());
+			String query = String.format("UPDATE VMTransaction SET timestamp=%d, machineId=%d, customerId=%d, productId=%d, rowX=%d, rowY=%d, balance=%d WHERE transactionId=%d", transaction.getTimestamp().getTimeInMillis(), transaction.getMachine().getId(), transaction.getCustomer().getId(), transaction.getProduct().getId(), transaction.getRow().first, transaction.getRow().second, transaction.getBalance(), transaction.getId());
 			Statement updateStmt = db.createStatement();
 			updateStmt.executeUpdate(query);
 			updateStmt.close();

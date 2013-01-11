@@ -55,4 +55,5 @@ machineId INTEGER REFERENCES VendingMachine(machineId),
 customerId INTEGER REFERENCES Customer(customerId),
 productId INTEGER REFERENCES Item(itemId),
 rowX INTEGER NOT NULL,
-rowY INTEGER NOT NULL);
+rowY INTEGER NOT NULL,
+balance INTEGER NOT NULL);
