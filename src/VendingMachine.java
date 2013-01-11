@@ -32,19 +32,7 @@ public class VendingMachine extends ModelBase
 	 */
 	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout) throws IllegalArgumentException
 	{
-		if(location==null)
-			throw new IllegalArgumentException("Location cannot be null");
-		else if(stockingInterval<=0)
-			throw new IllegalArgumentException("Stocking interval must be positive");
-		else if(currentLayout==null)
-			throw new IllegalArgumentException("Current layout cannot be null");
-		
-		active=true;
-		this.location=location;
-		this.stockingInterval=stockingInterval;
-		this.currentLayout=currentLayout;
-		nextLayout=new VMLayout(currentLayout, true); //deep copy
-		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
+		this(location, stockingInterval, currentLayout, new VMLayout(currentLayout, true), true);
 	}
 
 	/**
@@ -60,11 +48,21 @@ public class VendingMachine extends ModelBase
 	 */
 	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout, VMLayout nextLayout, boolean active) throws IllegalArgumentException
 	{
-		this(location, stockingInterval, currentLayout);
-		
+		if(location==null)
+			throw new IllegalArgumentException("Location cannot be null");
+		else if(stockingInterval<=0)
+			throw new IllegalArgumentException("Stocking interval must be positive");
+		else if(currentLayout==null)
+			throw new IllegalArgumentException("Current layout cannot be null");
 		if(nextLayout==null)
 			throw new IllegalArgumentException("Next layout cannot be null");
+
+		if (currentLayout.getNextVisit() == null)
+			currentLayout.setNextVisit(lastPossibleVisit(stockingInterval));
 		
+		this.location=location;
+		this.stockingInterval=stockingInterval;
+		this.currentLayout=currentLayout;
 		this.active=active;
 		this.nextLayout = nextLayout;
 	}
