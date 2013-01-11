@@ -78,6 +78,6 @@ public abstract class ModelBase
 	@Override
 	public boolean equals(Object another)
 	{
-		return another instanceof ModelBase && this.id==another.id;
+		return another instanceof ModelBase && this.id==((ModelBase)another).id;
 	}
 }
