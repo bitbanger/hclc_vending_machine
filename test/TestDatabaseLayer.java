@@ -118,6 +118,8 @@ public class TestDatabaseLayer
 			}
 		}
 
+		testRows[0][0][0] = null;
+
 		Location loc1 = new Location(20622, "Maryland", new String[] {"Mckay's"});
 		VMLayout cur1 = new VMLayout(testRows[0], 7);
 		VMLayout next1 = new VMLayout(testRows[1], 7);
@@ -227,9 +229,14 @@ public class TestDatabaseLayer
 			{
 				Row row1 = rowx1[j];
 				Row row2 = rowx2[j];
-				foodItemEquals(row1.getProduct(), row2.getProduct());
-				assertTrue(row1.getExpirationDate() + "\n" + row2.getExpirationDate(), row1.getExpirationDate().equals(row2.getExpirationDate()));
-				assertTrue(row1.getRemainingQuantity() == row2.getRemainingQuantity());
+				if (row1 == null)
+					assertTrue(i + "," + j, row2 == null);
+				else
+				{
+					foodItemEquals(row1.getProduct(), row2.getProduct());
+					assertTrue(row1.getExpirationDate() + "\n" + row2.getExpirationDate(), row1.getExpirationDate().equals(row2.getExpirationDate()));
+					assertTrue(row1.getRemainingQuantity() == row2.getRemainingQuantity());
+				}
 			}
 		}
 		assertTrue(layout1.getDepth() == layout2.getDepth());
@@ -274,6 +281,7 @@ public class TestDatabaseLayer
 		foodItemEquals(trans1.getProduct(), trans2.getProduct());
 		assertTrue(trans1.getRow().first == trans2.getRow().first &&
 			trans1.getRow().second == trans2.getRow().second);
+		assertTrue(trans1.getBalance() == trans2.getBalance());
 	}
 
 	/**
@@ -779,6 +787,21 @@ public class TestDatabaseLayer
 		 vendingMachineEquals(test, machines.get(1));
 		 vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
 	 }
+	 /**
+	  * Tests changing a row of a vending machine to null
+	  **/
+	 @Test
+	 public void changeVendingMachine10() throws SQLException, BadStateException, BadArgumentException
+	 {
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		machines.get(1).getNextLayout().getRows()[1][0] = null;
+		 dbl.updateOrCreateVendingMachine(machines.get(1));
+		 VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
+		 vendingMachineEquals(test, machines.get(1));
+		 vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	 }
 
 	/**
 	 * Tests running changeVendingMachine* in succession.
@@ -798,6 +821,7 @@ public class TestDatabaseLayer
 		 changeVendingMachine7();
 		 changeVendingMachine8();
 		 changeVendingMachine9();
+		 changeVendingMachine10();
 	 }
 
 	/**

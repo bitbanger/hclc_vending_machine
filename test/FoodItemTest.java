@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 @RunWith(JUnit4.class)
 public class FoodItemTest {
 	@Test
-	public void testNormalConstruction() {
+	public void testNormalConstruction() throws BadArgumentException {
 		FoodItem food = new FoodItem(
 			"Condom",
 			312,
@@ -25,7 +25,7 @@ public class FoodItemTest {
 	}
 
 	@Test
-	public void testCopyConstruction() {
+	public void testCopyConstruction() throws BadArgumentException {
 		FoodItem f = new FoodItem("Condom", 312, 452);
 
 		FoodItem fCopy = new FoodItem(f);
@@ -40,7 +40,7 @@ public class FoodItemTest {
 
 		try {
 			FoodItem f = new FoodItem(null, 312, 452);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
@@ -53,7 +53,7 @@ public class FoodItemTest {
 
 		try {
 			FoodItem t = new FoodItem("Condom", -4, 452);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
@@ -66,7 +66,7 @@ public class FoodItemTest {
 
 		try {
 			FoodItem t = new FoodItem("Condom", 312, 0);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
@@ -79,7 +79,7 @@ public class FoodItemTest {
 
 		try {
 			FoodItem t = new FoodItem("Condom", 312, -4);
-		} catch(IllegalArgumentException e) {
+		} catch(BadArgumentException e) {
 			testFailed = true;
 		} finally {
 			Assert.assertTrue(testFailed);
