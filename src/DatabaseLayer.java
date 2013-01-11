@@ -109,7 +109,7 @@ public class DatabaseLayer
 
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS Item( itemId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, price INTEGER NOT NULL, freshLength INTEGER NOT NULL, active INTEGER NOT NULL);");
 
-		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT, depth INTEGER NOT NULL);");
+		stmt.addBatch("CREATE TABLE IF NOT EXISTS VMLayout( layoutId INTEGER PRIMARY KEY AUTOINCREMENT, nextVisit INTEGER, depth INTEGER NOT NULL);");
 
 		stmt.addBatch(" CREATE TABLE IF NOT EXISTS VMRow( vmRowId INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER REFERENCES Item(itemId), expirationDate INTEGER NOT NULL, remainingQuant INTEGER NOT NULL);");
 
@@ -240,11 +240,19 @@ public class DatabaseLayer
 			rows[entry.second.second][entry.second.first] = entry.first;
 
 		Statement moreInfo = db.createStatement();
-		ResultSet metaData = moreInfo.executeQuery(String.format("SELECT depth FROM VMLayout WHERE layoutId=%d", id));
+		ResultSet metaData = moreInfo.executeQuery(String.format("SELECT depth, nextVisit FROM VMLayout WHERE layoutId=%d", id));
 		int depth = metaData.getInt("depth");
+		long nextVisitInt = metaData.getLong("nextVisit");
+		GregorianCalendar nextVisit = null;
+		if (!metaData.wasNull())
+		{
+			nextVisit = new GregorianCalendar();
+			nextVisit.setTimeInMillis(nextVisitInt);
+		}
 		moreInfo.close();
 
 		VMLayout layout = new VMLayout(rows, depth);
+		layout.setNextVisit(nextVisit);
 		layout.setId(id);
 		return layout;
 	}
@@ -259,13 +267,22 @@ public class DatabaseLayer
 		if (layout.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO VMLayout(layoutId, depth) VALUES(NULL, "+layout.getDepth()+")");
+			String time = layout.getNextVisit() == null ? "NULL" : layout.getNextVisit().getTimeInMillis() + "";
+			String query = String.format("INSERT INTO VMLayout(nextVisit, depth) VALUES(%s, %d)", time, layout.getDepth());
 			insertStmt.executeUpdate(query);
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			int id = keys.getInt(1);
 			layout.setId(id);
 			insertStmt.close();
+		}
+		else
+		{
+			Statement updateStmt = db.createStatement();
+			String time = layout.getNextVisit() == null ? "NULL" : layout.getNextVisit().getTimeInMillis() + "";
+			String query = String.format("UPDATE VMLayout SET nextVisit=%s, depth=%d WHERE layoutId=%d", time, layout.getDepth(), layout.getId());
+			updateStmt.executeUpdate(query);
+			updateStmt.close();
 		}
 
 		Statement delStatement = db.createStatement();

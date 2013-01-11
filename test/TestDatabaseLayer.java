@@ -128,6 +128,7 @@ public class TestDatabaseLayer
 		Location loc2 = new Location(99999, "Pandora", new String[] {"Zed's Medical Supplies", "That other dude's gun shop", "The chick's bar", "Whatever that guy's name who runs the scooter shop. His scooter shop. I should really know his name but I forget and I'm not willing to lookup it up."});
 		VMLayout cur2 = new VMLayout(testRows[2], 7);
 		VMLayout next2 = new VMLayout(testRows[3], 7);
+		next2.setNextVisit(new GregorianCalendar(2013,1,11,5,3,15));
 		machines.add(new VendingMachine(loc2, 500000, cur2, next2, false));
 	}
 
@@ -240,6 +241,15 @@ public class TestDatabaseLayer
 			}
 		}
 		assertTrue(layout1.getDepth() == layout2.getDepth());
+		GregorianCalendar nextVisit = layout1.getNextVisit();
+		
+		if (nextVisit == null)
+			assertTrue(layout2.getNextVisit() == null);
+		else
+		{
+			assertTrue(nextVisit + "\n\n\n" + layout2.getNextVisit(),
+				nextVisit.equals(layout2.getNextVisit()));
+		}
 	}
 
 	/**
@@ -787,6 +797,7 @@ public class TestDatabaseLayer
 		 vendingMachineEquals(test, machines.get(1));
 		 vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
 	 }
+
 	 /**
 	  * Tests changing a row of a vending machine to null
 	  **/
@@ -801,6 +812,39 @@ public class TestDatabaseLayer
 		 VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
 		 vendingMachineEquals(test, machines.get(1));
 		 vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	 }
+
+	 /**
+	  * Tests changing the next visit of a VMLayout to null
+	  **/
+	 @Test
+	 public void changeVendingMachine11() throws SQLException, BadStateException, BadArgumentException
+	 {
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		machines.get(1).getNextLayout().setNextVisit(null);
+		dbl.updateOrCreateVendingMachine(machines.get(1));
+		VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
+		vendingMachineEquals(test, machines.get(1));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(0).getId()), machines.get(0));
+	 }
+
+	 /**
+	  * Tests changing the next visit of a VMLayout to a non-null
+	  **/
+	 @Test
+	 public void changeVendingMachine12() throws SQLException, BadStateException, BadArgumentException
+	 {
+		noTestAddFoodItems();
+		noTestAddVendingMachines();
+
+		GregorianCalendar testVisit = new GregorianCalendar(1994,1,10,3,2,10);
+		machines.get(0).getNextLayout().setNextVisit(testVisit);
+		dbl.updateOrCreateVendingMachine(machines.get(0));
+		VendingMachine test = dbl.getVendingMachineById(machines.get(0).getId());
+		vendingMachineEquals(test, machines.get(0));
+		vendingMachineEquals(dbl.getVendingMachineById(machines.get(1).getId()), machines.get(1));
 	 }
 
 	/**
@@ -822,6 +866,8 @@ public class TestDatabaseLayer
 		 changeVendingMachine8();
 		 changeVendingMachine9();
 		 changeVendingMachine10();
+		 changeVendingMachine11();
+		 changeVendingMachine12();
 	 }
 
 	/**
