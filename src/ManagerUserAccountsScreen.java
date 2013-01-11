@@ -95,7 +95,7 @@ public class ManagerUserAccountsScreen {
 			Manager manny = db.getManagerById( managerId );
 			manny.setPassword( newPassword );
 			db.updateOrCreateManager( manny );
-			//managers = db.getManagersAll(); //TODO uncomment these once operations are supported
+			managers = db.getManagersAll();
 		}
 		catch(Exception databaseProblem)
 		{

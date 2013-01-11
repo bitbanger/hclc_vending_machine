@@ -56,7 +56,16 @@ public class ManagerStockedItemsScreen {
 	 * @return boolean whether it succeeded
 	 */
 	public boolean changeItemName( int id, String name ) {
-		return false; //TODO remove this!
+		try {
+			FoodItem item = db.getFoodItemById( id );
+			item.setName( name );
+			db.updateOrCreateFoodItem( item );
+			return true;
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return false;
+		}
 	}
 
 	/** 
@@ -66,7 +75,16 @@ public class ManagerStockedItemsScreen {
 	 * @return boolean whether it succeeded
 	 */
 	public boolean changeItemPrice( int id, int price ) {
-		return false; //TODO remove this!
+		try {
+			FoodItem item = db.getFoodItemById( id );
+			item.setPrice( price );
+			db.updateOrCreateFoodItem( item );
+			return true;
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return false;
+		}
 	}
 
 	/**
@@ -76,7 +94,16 @@ public class ManagerStockedItemsScreen {
 	 * @return boolean whether it succeeded
 	 */
 	public boolean changeItemFreshLength( int id, long freshLength ) {
-		return false; //TODO remove this!
+		try {
+			FoodItem item = db.getFoodItemById( id );
+			item.setFreshLength( freshLength );
+			db.updateOrCreateFoodItem( item );
+			return true;
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return false;
+		}
 	}
 
 	/** 

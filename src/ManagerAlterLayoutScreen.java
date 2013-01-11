@@ -6,6 +6,9 @@
 
 public class ManagerAlterLayoutScreen {
 
+	/** the database */
+	private static DatabaseLayer db = DatabaseLayer.getInstance();
+
 	/** the current machine */
 	VendingMachine machine;
 
@@ -34,19 +37,39 @@ public class ManagerAlterLayoutScreen {
 
 	/**
 	 * queues a change to the layout
+	 * note: this will change the local copy's next layout 
+	 * 	but the database will not reflect this change 
+	 * 	until the commitRowChanges()
 	 * @param row the row to change
 	 * @param it the fooditem in question
 	 */
 	public void queueRowChange( Pair<Integer, Integer> row, FoodItem it ) {
-
+		Row[][] rows = machine.getNextLayout().getRows();
+		try {
+			rows[row.first][row.second].setProduct( it );
+			rows[row.first][row.second].setRemainingQuantity( 
+				machine.getNextLayout().getDepth() );
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+		}
+		machine.setNextLayout( new VMLayout ( rows, 
+			machine.getNextLayout().getDepth() ) );
 	}
 
 	/**
-	 * commits the queued changes
+	 * commits the queued changes to the database
 	 * @return whether the changes succeeded
 	 */
 	public boolean commitRowChanges() {
-		return false; //TODO remove this!
+		try {
+			db.updateOrCreateVendingMachine( machine );
+			return true;
+		} catch ( Exception databaseProblem ) {
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return false;
+		}
 	}
 
 	/**
