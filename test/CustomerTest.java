@@ -29,19 +29,6 @@ public class CustomerTest {
 	}
 
 	@Test
-	public void testNullName() {
-		boolean testFailed = false;
-
-		try {
-			Customer c = new Customer(null, 512);
-		} catch(BadArgumentException e) {
-			testFailed = true;
-		} finally {
-			Assert.assertTrue(testFailed);
-		}
-	}
-
-	@Test
 	public void testNegativeMoney() {
 		boolean testFailed = false;
 

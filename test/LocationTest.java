@@ -54,6 +54,23 @@ public class LocationTest {
 	}
 
 	@Test
+	public void testBadZipCodeSet() {
+		boolean testFailed = false;
+
+		String[] nearby = {"Dave's", "Joe's", "Jack's"};
+
+		Location loc = new Location(14586, "New York", nearby);
+
+		try {
+			loc.setZipCode(-4);
+		} catch(BadArgumentException e) {
+			testFailed = true;
+		}
+
+		Assert.assertTrue(testFailed);
+	}
+
+	@Test
 	public void testNoStateGiven() {
 		boolean testFailed = false;
 
