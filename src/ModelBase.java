@@ -70,4 +70,14 @@ public abstract class ModelBase
 	{
 		return id==TEMP_ID;
 	}
+
+	/**
+	 * Checks whether two instances' IDs are the same.
+	 * @return whether the primary keys match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		return another instanceof ModelBase && this.id==((ModelBase)another).id;
+	}
 }
