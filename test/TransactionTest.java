@@ -13,43 +13,168 @@ import java.util.GregorianCalendar;
 public class TransactionTest {
 	@Test
 	public void testNormalConstruction() throws BadArgumentException {
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
 		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(4, 2);
-		Transaction t = new Transaction(
-			new GregorianCalendar(),
-			123,
-			null,
-			null,
-			null,
-			whichRow
-		);
 
-		Assert.assertTrue(t.getId() == 123);
-		Assert.assertTrue(t.getRow().first.equals(whichRow.first));
-		Assert.assertTrue(t.getRow().second.equals(whichRow.second));
+		Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
+
+		Assert.assertTrue(transaction.getTimestamp() == calendar);
+		Assert.assertTrue(transaction.getMachine() == machine);
+		Assert.assertTrue(transaction.getCustomer() == customer);
+		Assert.assertTrue(transaction.getProduct() == product);
+		Assert.assertTrue(transaction.getRow() == whichRow);
 	}
 
 	@Test
 	public void testCopyConstruction() throws BadArgumentException {
-		Transaction t = new Transaction(new GregorianCalendar(), 42, null, null, null, new Pair<Integer, Integer>(4, 2));
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		Location loc = new Location(14586, "New York", new String[] {"A", "B", "C"});
+		VendingMachine machine = new VendingMachine(loc, 1, layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(4, 2);
 
-		Transaction tCopy = new Transaction(t);
+		Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
 
-		Assert.assertTrue(t.equals(tCopy));
-		Assert.assertFalse(t == tCopy);
+		Transaction tCopy = new Transaction(transaction);
+
+		Assert.assertTrue(transaction.equals(tCopy));
+		Assert.assertFalse(transaction == tCopy);
 	}
 
 	@Test
-	public void testBadRowConstruction() {
-		Pair<Integer, Integer> badRow = new Pair<Integer, Integer>(-4, -2);
-
+	public void testNullTimestampConstruction() throws BadArgumentException {
 		boolean testFailed = false;
 
+		GregorianCalendar calendar = null;
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(4, 2);
+
 		try {
-			Transaction t = new Transaction(new GregorianCalendar(), 123, null, null, null, badRow);
+			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
 		} catch(BadArgumentException e) {
 			testFailed = true;
-		} finally {
-			Assert.assertTrue(testFailed);
 		}
+
+		Assert.assertTrue(testFailed);
+	}
+
+	@Test
+	public void testNullMachineConstruction() throws BadArgumentException {
+		boolean testFailed = false;
+
+		GregorianCalendar calendar = new GregorianCalendar();
+		VendingMachine machine = null;
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(4, 2);
+
+		try {
+			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
+		} catch(BadArgumentException e) {
+			testFailed = true;
+		}
+
+		Assert.assertTrue(testFailed);
+	}
+
+	@Test
+	public void testNullCustomerConstruction() throws BadArgumentException {
+		boolean testFailed = false;
+
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = null;
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(4, 2);
+
+		try {
+			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
+		} catch(BadArgumentException e) {
+			testFailed = true;
+		}
+
+		Assert.assertTrue(testFailed);
+	}
+
+	@Test
+	public void testNullRowConstruction() throws BadArgumentException {
+		boolean testFailed = false;
+
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = null;
+
+		try {
+			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
+		} catch(BadArgumentException e) {
+			testFailed = true;
+		}
+
+		Assert.assertTrue(testFailed);
+	}
+
+	@Test
+	public void testNullRowCoordinateConstruction() throws BadArgumentException {
+		boolean testFailed = false;
+
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(null, 2);
+
+		try {
+			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
+		} catch(BadArgumentException e) {
+			testFailed = true;
+		}
+
+		Assert.assertTrue(testFailed);
+	}
+
+	@Test
+	public void testNegativeRowCoordinateConstruction() throws BadArgumentException {
+		boolean testFailed = false;
+
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(-4, 2);
+
+		try {
+			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
+		} catch(BadArgumentException e) {
+			testFailed = true;
+		}
+
+		Assert.assertTrue(testFailed);
 	}
 }

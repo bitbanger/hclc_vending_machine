@@ -59,9 +59,8 @@ public class LocationTest {
 
 		String[] nearby = {"Dave's", "Joe's", "Jack's"};
 
-		Location loc = new Location(14586, "New York", nearby);
-
 		try {
+			Location loc = new Location(14586, "New York", nearby);
 			loc.setZipCode(-4);
 		} catch(BadArgumentException e) {
 			testFailed = true;
