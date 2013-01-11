@@ -20,8 +20,11 @@ public class Transaction extends ModelBase {
 	/** The row the product was purchased from. */
 	private Pair<Integer, Integer> whichRow;
 
+	/** The amount of money that changed hands. */
+	private int balance;
+
 	/**
-	 * Transaction constructor.
+	 * Preferred constructor.
 	 *
 	 * @param timestamp		The time the transaction occurred.
 	 * @param machine		The machine at which the transaction occurred.
@@ -29,8 +32,25 @@ public class Transaction extends ModelBase {
 	 * @param product		The product purchased.
 	 * @param whichRow		The row the product was purchased from.
 	 * @throws BadArgumentException if a <tt>null</tt> is passed in or a coordinate is negative
+	 * @throws NullPointerException if <tt>product</tt> happens to be negative ... avoid!
 	 */
 	public Transaction(GregorianCalendar timestamp, VendingMachine machine, Customer customer, FoodItem product, Pair<Integer, Integer> whichRow) throws BadArgumentException
+	{
+		this(timestamp, machine, customer, product, whichRow, product.getPrice());
+	}
+	
+	/**
+	 * Strongly discouraged constructor; please avoid using.
+	 *
+	 * @param timestamp		The time the transaction occurred.
+	 * @param machine		The machine at which the transaction occurred.
+	 * @param customer		The customer who purchased the product.
+	 * @param product		The product purchased.
+	 * @param whichRow		The row the product was purchased from.
+	 * @param balance		The amount of money that changed hands.
+	 * @throws BadArgumentException if a <tt>null</tt> is passed in or a coordinate is negative
+	 */
+	public Transaction(GregorianCalendar timestamp, VendingMachine machine, Customer customer, FoodItem product, Pair<Integer, Integer> whichRow, int balance) throws BadArgumentException
 	{
 		if(timestamp==null)
 			throw new BadArgumentException("Timestamp cannot be null");
@@ -50,6 +70,7 @@ public class Transaction extends ModelBase {
 		this.customer = customer;
 		this.product = product;
 		this.whichRow = whichRow;
+		this.balance = balance;
 	}
 
 	/**
@@ -64,6 +85,7 @@ public class Transaction extends ModelBase {
 		this.customer = old.customer;
 		this.product = old.product;
 		this.whichRow = old.whichRow;
+		this.balance = old.balance;
 	}
 
 	/** @return	The time the transaction occurred. */
@@ -89,6 +111,16 @@ public class Transaction extends ModelBase {
 	/** @return The row the product was purchased from. */
 	public Pair<Integer, Integer> getRow() {
 		return whichRow;
+	}
+
+	/**
+	 * Danger, Will Robinson!  Use this instead of asking the <tt>Product</tt> for its <tt>getPrice()</tt>.
+	 * Otherwise, you may get an inaccurate result.
+	 * @return The amount of money that changed hands.
+	 */
+	public int getBalance()
+	{
+		return balance;
 	}
 
 	/**
