@@ -131,4 +131,19 @@ public class Customer extends User
 			return true; //must be a cash customer
 		}
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof Customer))
+			return false;
+		Customer other=(Customer)another;
+		
+		return super.equals(another) && this.money==other.money;
+	}
 }

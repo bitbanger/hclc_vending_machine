@@ -127,4 +127,19 @@ public class FoodItem extends ModelBase {
 	{
 		this.active=active;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof FoodItem))
+			return false;
+		FoodItem other=(FoodItem)another;
+		
+		return super.equals(another) && name.equals(other.name) && this.price==other.price && this.freshLength==other.freshLength && this.active==other.active;
+	}
 }

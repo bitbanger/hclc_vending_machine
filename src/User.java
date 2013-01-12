@@ -51,4 +51,19 @@ public abstract class User extends ModelBase
 	{
 		return name;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof User))
+			return false;
+		User other=(User)another;
+		
+		return super.equals(another) && name.equals(other.name);
+	}
 }

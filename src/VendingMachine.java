@@ -202,4 +202,19 @@ public class VendingMachine extends ModelBase
 		
 		return visitation;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof VendingMachine))
+			return false;
+		VendingMachine other=(VendingMachine)another;
+		
+		return super.equals(another) && this.active==other.active && location.equals(other.location) && this.stockingInterval==other.stockingInterval && currentLayout.equals(other.currentLayout) && nextLayout.equals(other.nextLayout);
+	}
 }
