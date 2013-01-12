@@ -84,9 +84,10 @@ public class VMLayout extends ModelBase
 		
 		if(deep) //deep copy
 		{
-			this.rows=new Row[existing.rows.length][];
-			for(int index=0; index<rows.length; ++index)
-				this.rows[index]=Arrays.copyOf(existing.rows[index], existing.rows[index].length);
+			this.rows=new Row[existing.rows.length][existing.rows[0].length];
+			for(int row=0; row<rows.length; ++row)
+				for(int col=0; col<rows[row].length; ++col)
+					this.rows[row][col]= existing.rows[row][col]==null ? null : new Row(existing.rows[row][col]);
 		}
 		else //shallow copy
 		{
