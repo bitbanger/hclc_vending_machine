@@ -39,28 +39,6 @@ public class RestockerTaskListScreen {
 		ArrayList<String> instructions = new ArrayList<String>();
 		Row[][] cur = vm.getCurrentLayout().getRows();
 		Row[][] next = vm.getNextLayout().getRows();
-		if ( next == null ) {
-		for ( int i = 0; i < cur.length; i++ ) {
-			for ( int j = 0; j < cur[i].length; j++ ) {
-				Row items = cur[i][j];
-				GregorianCalendar exp = items.getExpirationDate();
-				GregorianCalendar nextVisit = (GregorianCalendar)exp.clone();
-				exp.roll(GregorianCalendar.DAY_OF_MONTH, 
-					vm.getStockingInterval());
-				if ( exp.before( nextVisit ) ) {
-					instructions.add("Remove all from " +
-						i + ", " + j);
-				}
-				if ( exp.before( nextVisit )  || 
-					items.getRemainingQuantity() == 0 ) {
-					instructions.add("Add " + vm.getNextLayout().getDepth()
-						+ " " + items.getProduct().getName() 
-						+ " to location " + i + ", " + j);
-				}
-			}	
-		} // end for
-		} // end if
-		else {
 		for ( int i = 0; i < cur.length; i++ ) {
 			for ( int j = 0; j < cur[i].length; j++ ) {
 				Row items = cur[i][j];
@@ -70,25 +48,22 @@ public class RestockerTaskListScreen {
 				exp.roll(GregorianCalendar.DAY_OF_MONTH, 
 					vm.getStockingInterval());
 				if ( exp.before( nextVisit ) ) {
+					// expiration
 					instructions.add("Remove all from " +
-						i + ", " + j);
-					instructions.add("Add " + vm.getNextLayout()
-						.getDepth() + " " + nextItems.
-						getProduct().getName() + " to " + 
-						i + ", " + j);
+						i + ", " + j);	
+					instructions.add("Add " + vm.getNextLayout().getDepth()
+						+ " " + items.getProduct().getName() 
+						+ " to location " + i + ", " + j);
 				}
-				if ( !items.getProduct().getName().equals(
-					nextItems.getProduct().getName() ) ) {
-					instructions.add("Remove all from " +
-						i + ", " + j);
-					instructions.add("Add " + vm.
-						getNextLayout().getDepth() 
-						+ " " + nextItems.getProduct().getName() 
-						+ " to " + i + ", " + j);
+				else if ( items.getRemainingQuantity() == 0 
+					&& items.getId() == nextItems.getId() ) {
+					// Manager didn't change this row and it's empty
+					instructions.add("Add " + vm.getNextLayout().getDepth()
+						+ " " + items.getProduct().getName() 
+						+ " to location " + i + ", " + j);
 				}
-			}
-		} // end for loop	
-		} // end else
+			}	
+		} // end for
 		return instructions.toArray(new String[0]);
 	}
 
