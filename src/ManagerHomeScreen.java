@@ -29,13 +29,13 @@ public class ManagerHomeScreen {
 
 	/**
 	 * alter the layout of a given machine
-	 * @param id the id of the machine
+	 * @param vm The vending machine
 	 * @return the alter layout screen for the machine
 	 */
-	public ManagerAlterLayoutScreen alterLayout( int id ) {
+	public ManagerAlterLayoutScreen alterLayout(VendingMachine vm) {
 		try {
 			return new ManagerAlterLayoutScreen( 
-				db.getVendingMachineById( id ) );
+				db.getVendingMachineById(vm.getId()) );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
 			System.err.println("     : Dump details ... " + databaseProblem);
