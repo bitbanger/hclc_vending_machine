@@ -64,4 +64,19 @@ public class Manager extends User
 	{
 		return password;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof Manager))
+			return false;
+		Manager other=(Manager)another;
+		
+		return super.equals(another) && password.equals(other.password);
+	}
 }

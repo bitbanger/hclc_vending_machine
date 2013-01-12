@@ -134,4 +134,21 @@ public class VMLayout extends ModelBase
 	{
 		return nextVisit;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof VMLayout))
+			return false;
+		VMLayout other=(VMLayout)another;
+		
+		if(this.nextVisit==null ^ other.nextVisit==null)
+			return false;
+		return super.equals(another) && Arrays.equals(this.rows, other.rows) && this.depth==other.depth && ((this.nextVisit==null && other.nextVisit==null) || nextVisit.equals(other.nextVisit));
+	}
 }

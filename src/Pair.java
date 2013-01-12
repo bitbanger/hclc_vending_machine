@@ -38,4 +38,19 @@ public class Pair<L,R> {
 		this.first = old.first;
 		this.second = old.second;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof Pair))
+			return false;
+		Pair other=(Pair)another;
+		
+		return first.equals(other.first) && second.equals(other.second);
+	}
 }

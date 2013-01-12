@@ -186,4 +186,19 @@ public class Transaction extends ModelBase {
 		
 		this.whichRow = whichRow;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof Transaction))
+			return false;
+		Transaction other=(Transaction)another;
+		
+		return super.equals(another) && timestamp.equals(other.timestamp) && machine.equals(other.machine) && customer.equals(other.customer) && product.equals(other.product) && whichRow.equals(other.whichRow) && this.balance==other.balance;
+	}
 }
