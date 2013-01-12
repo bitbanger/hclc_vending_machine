@@ -63,7 +63,12 @@ public class TestUtilities
 	 **/
 	private boolean addedTransactions;
 
-	public TestUtilities() throws BadStateException, BadArgumentException
+	/**
+	 * Generates objects for use in tests.
+	 * @param addItemsToDatabase If true the items generated are also added to
+	 * the database.
+	 **/
+	public TestUtilities(boolean addItemsToDatabase) throws BadStateException, BadArgumentException, SQLException
 	{
 		dbl = DatabaseLayer.getInstance();
 
@@ -77,6 +82,23 @@ public class TestUtilities
 		addedVendingMachines = false;
 		addedCustomers = false;
 		addedTransactions = false;
+
+		if (addItemsToDatabase)
+		{
+			noTestAddFoodItems();
+			noTestAddVendingMachines();
+			noTestAddCustomers();
+			noTestAddManagers();
+			noTestAddTransactions();
+		}
+	}
+
+	/**
+	 * Generates objects for use in tests. Does not add items to database.
+	 **/
+	public TestUtilities() throws BadStateException, BadArgumentException, SQLException
+	{
+		this(false);
 	}
 
 	/**
