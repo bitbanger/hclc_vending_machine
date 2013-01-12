@@ -51,8 +51,9 @@ public class RestockerTaskListScreen {
 					// expiration
 					instructions.add("Remove all from " +
 						i + ", " + j);	
-					instructions.add("Add " + vm.getNextLayout().getDepth()
-						+ " " + items.getProduct().getName() 
+					instructions.add("Add " + 
+						nextItems.getRemainingQuantity()
+						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}
 				else if ( items.getRemainingQuantity() == 0 
@@ -60,6 +61,27 @@ public class RestockerTaskListScreen {
 					// Manager didn't change this row and it's empty
 					instructions.add("Add " + vm.getNextLayout().getDepth()
 						+ " " + items.getProduct().getName() 
+						+ " to location " + i + ", " + j);
+				}
+				else if ( !items.getProduct().equals( 
+					nextItems.getProduct() ) ) {
+					// next products not the same	
+					instructions.add("Remove all from " +
+						i + ", " + j);	
+					instructions.add("Add " + 
+						nextItems.getRemainingQuantity()
+						+ " " + nextItems.getProduct().getName() 
+						+ " to location " + i + ", " + j);
+				}
+				else if ( items.getRemainingQuantity() !=
+					nextItems.getRemainingQuantity() ) {
+					// differing remaining quantities 
+					// of the same product
+					instructions.add("Remove all from " +
+						i + ", " + j);	
+					instructions.add("Add " + 
+						nextItems.getRemainingQuantity()
+						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}
 			}	
