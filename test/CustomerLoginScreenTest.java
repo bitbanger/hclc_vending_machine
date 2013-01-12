@@ -33,5 +33,5 @@ public class CustomerLoginScreenTest {
 			testFailed = true;
 			Assert.assertTrue(testFailed);
 		}
-	}	
+	}
 }
