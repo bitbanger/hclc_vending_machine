@@ -73,6 +73,7 @@ public abstract class ModelBase
 
 	/**
 	 * Checks whether two instances' IDs are the same.
+	 * @param another another instance
 	 * @return whether the primary keys match
 	 */
 	@Override

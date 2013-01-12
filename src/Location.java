@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Represents a vending machine's location.
  * @author Lane Lawley <lxl5734@rit.edu>
@@ -104,5 +106,20 @@ public class Location extends ModelBase {
 	public String retrieveFormattedZipCode()
 	{
 		return String.format("%05d", zipCode);
+	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof Location))
+			return false;
+		Location other=(Location)another;
+		
+		return super.equals(another) && this.zipCode==other.zipCode && state.equals(other.state) && Arrays.equals(this.nearbyBusinesses, other.nearbyBusinesses);
 	}
 }

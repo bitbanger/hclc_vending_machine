@@ -124,66 +124,17 @@ public class Transaction extends ModelBase {
 	}
 
 	/**
-	 * @param timestamp	The new timestamp.
-	 * @throws BadArgumentException if a <tt>null</tt> value is provided
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
 	 */
-	public void setTimestamp(GregorianCalendar timestamp) throws BadArgumentException
+	@Override
+	public boolean equals(Object another)
 	{
-		if(timestamp==null)
-			throw new BadArgumentException("Timestamp must not be null");
+		if(!(another instanceof Transaction))
+			return false;
+		Transaction other=(Transaction)another;
 		
-		this.timestamp = timestamp;
-	}
-
-	/**
-	 * @param machine	The new machine.
-	 * @throws BadArgumentException if a <tt>null</tt> value is provided
-	 */
-	public void setMachine(VendingMachine machine) throws BadArgumentException
-	{
-		if(machine==null)
-			throw new BadArgumentException("Machine must not be null");
-		
-		this.machine = machine;
-	}
-
-	/**
-	 * @param customer	The new customer.
-	 * @throws BadArgumentException if a <tt>null</tt> value is provided
-	 */
-	public void setCustomer(Customer customer) throws BadArgumentException
-	{
-		if(customer==null)
-			throw new BadArgumentException("Customer must not be null");
-		
-		this.customer = customer;
-	}
-
-	/**
-	 * @param product	The new product.
-	 * @throws BadArgumentException if a <tt>null</tt> value is provided
-	 */
-	public void setProduct(FoodItem product) throws BadArgumentException
-	{
-		if(product==null)
-			throw new BadArgumentException("Product must not be null");
-		
-		this.product = product;
-	}
-
-	/**
-	 * @param whichRow	The new row.
-	 * @throws BadArgumentException if a <tt>null</tt> or negative value is provided
-	 */
-	public void setRow(Pair<Integer, Integer> whichRow) throws BadArgumentException
-	{
-		if(whichRow==null)
-			throw new BadArgumentException("Row specification must not be null");
-		else if(whichRow.first==null || whichRow.second==null)
-			throw new BadArgumentException("Row specification mustn't contain null coordinate");
-		else if(whichRow.first<0 || whichRow.second<0)
-			throw new BadArgumentException("Row specification mustn't contain negative coordinate");
-		
-		this.whichRow = whichRow;
+		return super.equals(another) && timestamp.equals(other.timestamp) && machine.equals(other.machine) && customer.equals(other.customer) && product.equals(other.product) && whichRow.equals(other.whichRow) && this.balance==other.balance;
 	}
 }

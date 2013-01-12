@@ -128,4 +128,19 @@ public class Row extends ModelBase
 		else
 			return false;
 	}
+
+	/**
+	 * Checks whether two instances contain the same data.
+	 * @param another another instance
+	 * @return whether their contents match
+	 */
+	@Override
+	public boolean equals(Object another)
+	{
+		if(!(another instanceof Row))
+			return false;
+		Row other=(Row)another;
+		
+		return super.equals(another) && product.equals(other.product) && this.remainingQuantity==other.remainingQuantity && expirationDate.equals(other.expirationDate);
+	}
 }
