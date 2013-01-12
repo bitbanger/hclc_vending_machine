@@ -371,14 +371,4 @@ public class TestUtilities
 		for (Transaction trans : transactions)
 			dbl.updateOrCreateTransaction(trans);
 	}
-
-	/**
-	 * Does nothing. Exists so an error is not thrown when this class is run
-	 * by the testsuite.sh script.
-	 **/
-	@Test
-	public void fakeTest()
-	{
-
-	}
 }
