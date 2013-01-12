@@ -60,7 +60,7 @@ public class CustomerPurchaseScreen {
 		if ( product.first < 0 || rows.length < product.first ||
 			product.second < 0 || rows[product.first].length < product.second )
 			return "INVALID LOCATION"; //not a valid location
-		if ( rows[product.first][product.second].getProduct() == null)
+		if ( rows[product.first][product.second] == null)
 			return "NO PRODUCT"; //nothing to see here
 		if ( rows[product.first][product.second].getRemainingQuantity() <= 0 )
 			return "ITEM SOLD OUT"; //check if there is some remaining
