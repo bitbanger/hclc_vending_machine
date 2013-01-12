@@ -47,6 +47,7 @@ public class RestockerTaskListScreen {
 				GregorianCalendar nextVisit = (GregorianCalendar)exp.clone();
 				exp.roll(GregorianCalendar.DAY_OF_MONTH, 
 					vm.getStockingInterval());
+				try {
 				if ( exp.before( nextVisit ) ) {
 					// expiration
 					instructions.add("Remove all from " +
@@ -83,6 +84,12 @@ public class RestockerTaskListScreen {
 						nextItems.getRemainingQuantity()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j);
+				}
+				} catch ( Exception databaseProblem ) {
+					System.err.println("ERROR: Database problem " );
+					System.err.println("     : Dumb details " 
+						+ databaseProblem );
+					return null;
 				}
 			}	
 		} // end for
