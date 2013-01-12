@@ -96,4 +96,15 @@ public class ManagerHomeScreenTest
 		ManagerMachineManagementScreen test1 = test.manageMachines();
 		assertTrue(test1 != null);
 	}
+
+	/**
+	 * Tests the manageUser method with good input
+	 **/
+	@Test
+	public void goodManageUsers()
+	{
+		ManagerHomeScreen test = new ManagerHomeScreen(manny);
+		ManagerUserAccountsScreen test1 = test.manageUsers();
+		assertTrue(test1 != null);
+	}
 }
