@@ -188,4 +188,39 @@ public class FoodItemTest {
 		assertEquals(tooMuch, change.getPrice());
 		assertEquals(old, chgCopy.getPrice());
 	}
+
+	@Test(expected=BadArgumentException.class)
+	public void testSetNegativeFreshLength() throws BadArgumentException
+	{
+		noTestReadyUtilities();
+		util.items.get(1).setFreshLength(-1);
+	}
+
+	@Test(expected=BadArgumentException.class)
+	public void testSetZeroFreshLength() throws BadArgumentException
+	{
+		noTestReadyUtilities();
+		util.items.get(1).setFreshLength(0);
+	}
+
+	@Test(expected=BadArgumentException.class)
+	public void testSetNullName() throws BadArgumentException
+	{
+		noTestReadyUtilities();
+		util.items.get(1).setName(null);
+	}
+
+	@Test(expected=BadArgumentException.class)
+	public void testSetNegativePrice() throws BadArgumentException
+	{
+		noTestReadyUtilities();
+		util.items.get(1).setPrice(-1);
+	}
+
+	@Test
+	public void testSetZeroPrice() throws BadArgumentException
+	{
+		noTestReadyUtilities();
+		util.items.get(1).setPrice(0);
+	}
 }
