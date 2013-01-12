@@ -31,11 +31,11 @@ public class RestockerTaskListScreenTest {
 		counter.add("Remove all from 0, 0");
 		counter.add("Add 3 Twix to location 0, 0");
 		counter.add("Remove all from 0, 1");
-		counter.add("Add 3 Chips to location 0, 1");
+		counter.add("Add 4 Snickers to location 0, 1");
 		counter.add("Remove all from 1, 0");
-		counter.add("Add 3 Snickers to location 1, 0");
+		counter.add("Add 6 Chips to location 1, 0");
 		counter.add("Remove all from 1, 1");
-		counter.add("Add 3 Fish sandwich to location 1, 1");
+		counter.add("Add 7 Fish Sandwich to location 1, 1");
 		RestockerTaskListScreen hope = new RestockerTaskListScreen( vm );
 		String[] bla = hope.assembleStockingList();
 		ArrayList<String> inst = new ArrayList<String>();
@@ -55,6 +55,14 @@ public class RestockerTaskListScreenTest {
 		
 		RestockerTaskListScreen hope = new RestockerTaskListScreen( vm );
 		hope.completeStocking();
-		Assert.assertTrue( vm.getCurrentLayout().equals( vm.getNextLayout() ) );
+		Row[][] first = vm.getCurrentLayout().getRows();
+		Row[][] second = vm.getNextLayout().getRows();
+		for ( int i = 0; i < 2; i++ ) {
+			for ( int j = 0; j < 2; j++ ) {
+				Assert.assertTrue( first[i][j].equals( second[i][j] ) );
+			}
+		}
+		Assert.assertTrue( vm.getCurrentLayout().getDepth() 
+			== vm.getNextLayout().getDepth() );
 	}
 }
