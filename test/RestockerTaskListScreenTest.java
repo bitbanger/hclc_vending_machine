@@ -21,7 +21,7 @@ public class RestockerTaskListScreenTest {
 
 	@Test
 	public void testAssembler() throws BadArgumentException, SQLException, BadStateException {
-		TestUtilities helper = new TestUtilities();
+		TestUtilities helper = new TestUtilities( true );
 		VendingMachine help0 = helper.machines.get(0);
 		VendingMachine help1 = helper.machines.get(1);
 		VendingMachine vm = new VendingMachine( help0.getLocation(), 2, 
@@ -47,7 +47,7 @@ public class RestockerTaskListScreenTest {
 
 	@Test
 	public void testStockingComplete() throws BadArgumentException, SQLException, BadStateException{
-		TestUtilities helper = new TestUtilities();
+		TestUtilities helper = new TestUtilities( true );
 		VendingMachine help0 = helper.machines.get(0);
 		VendingMachine help1 = helper.machines.get(1);
 		VendingMachine vm = new VendingMachine( help0.getLocation(), 2, 
