@@ -80,11 +80,4 @@ public class ManagerHomeScreen {
 	public ManagerUserAccountsScreen manageUsers() {
 		return new ManagerUserAccountsScreen();
 	}
-	
-	/**
-	 * logs the manager out of the system
-	 */
-	public ManagerLoginScreen logout() {
-		return new ManagerLoginScreen();
-	}
 }
