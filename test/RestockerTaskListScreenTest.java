@@ -20,27 +20,22 @@ public class RestockerTaskListScreenTest {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	@Test
-	public void testAssembler() throws BadArgumentException, SQLException {
-		String[] busis = new String[1];
-		busis[0] = "NOTHING";
-		Location loc = new Location( 00000, "NJ", busis );
-		Row[][] stuff = new Row[2][3];
-		Row[][] newStuff = new Row[2][3];
-		FoodItem first = new FoodItem( "first", 1, 2 );
-		FoodItem second = new FoodItem( "second", 2, 3);
+	public void testAssembler() throws BadArgumentException, SQLException, BadStateException {
+		TestUtilities helper = new TestUtilities();
+		VendingMachine help0 = helper.machines.get(0);
+		VendingMachine help1 = helper.machines.get(1);
+		VendingMachine vm = new VendingMachine( help0.getLocation(), 2, 
+			help1.getCurrentLayout(), help1.getNextLayout(), true );
+		
 		ArrayList<String> counter = new ArrayList<String>();
-		for ( int i = 0; i < 2; i++ ) {
-			for ( int j = 0; j < 3; j++ ) {
-				stuff[i][j] = new Row( first, 4, new GregorianCalendar() );
-				newStuff[i][j] = new Row ( second, 4, new GregorianCalendar() );
-				counter.add("Remove all from " + i + ", " + j);
-				counter.add("Add 4 first to location " + i + ", " + j);
-			}
-		}
-		VMLayout tester = new VMLayout( stuff, 4 );
-		VMLayout newLayout = new VMLayout( newStuff, 4 );
-		VendingMachine vm = new VendingMachine(loc, 2, tester);
-		vm.setNextLayout( newLayout );
+		counter.add("Remove all from 0, 0");
+		counter.add("Add 3 Twix to location 0, 0");
+		counter.add("Remove all from 0, 1");
+		counter.add("Add 3 Chips to location 0, 1");
+		counter.add("Remove all from 1, 0");
+		counter.add("Add 3 Snickers to location 1, 0");
+		counter.add("Remove all from 1, 1");
+		counter.add("Add 3 Fish sandwich to location 1, 1");
 		RestockerTaskListScreen hope = new RestockerTaskListScreen( vm );
 		String[] bla = hope.assembleStockingList();
 		ArrayList<String> inst = new ArrayList<String>();
@@ -51,24 +46,13 @@ public class RestockerTaskListScreenTest {
 	}
 
 	@Test
-	public void testStockingComplete() throws BadArgumentException, SQLException{
-		String[] busis = new String[1];
-		busis[0] = "NOTHING";
-		Location loc = new Location( 00000, "NJ", busis );
-		Row[][] stuff = new Row[2][3];
-		Row[][] newStuff = new Row[2][3];
-		FoodItem first = new FoodItem( "first", 1, 2 );
-		FoodItem second = new FoodItem( "second", 2, 3);
-		for ( int i = 0; i < 2; i++ ) {
-			for ( int j = 0; j < 3; j++ ) {
-				stuff[i][j] = new Row( first, 4, new GregorianCalendar() );
-				newStuff[i][j] = new Row ( second, 4, new GregorianCalendar() );
-			}
-		}
-		VMLayout tester = new VMLayout( stuff, 4 );
-		VMLayout newLayout = new VMLayout( newStuff, 4 );
-		VendingMachine vm = new VendingMachine(loc, 2, tester);
-		vm.setNextLayout( newLayout );
+	public void testStockingComplete() throws BadArgumentException, SQLException, BadStateException{
+		TestUtilities helper = new TestUtilities();
+		VendingMachine help0 = helper.machines.get(0);
+		VendingMachine help1 = helper.machines.get(1);
+		VendingMachine vm = new VendingMachine( help0.getLocation(), 2, 
+			help1.getCurrentLayout(), help1.getNextLayout(), true );
+		
 		RestockerTaskListScreen hope = new RestockerTaskListScreen( vm );
 		hope.completeStocking();
 		Assert.assertTrue( vm.getCurrentLayout().equals( vm.getNextLayout() ) );
