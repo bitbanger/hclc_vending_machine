@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Unit test suite for <tt>Customer</tt>
+ * Unit test suite for <tt>CashCustomerPurchaseScreen</tt>
  * @author Piper Chester <pwc1203@rit.edu>
  */
 @RunWith(JUnit4.class)
