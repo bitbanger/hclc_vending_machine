@@ -27,8 +27,7 @@ public class ManagerReportStatsScreen {
 			machines = db.getVendingMachinesAll();
 			locations = db.getLocationsAll();
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, databaseProblem);
 		}
 	}
 
@@ -43,8 +42,7 @@ public class ManagerReportStatsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... "+databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}

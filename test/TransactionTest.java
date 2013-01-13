@@ -29,6 +29,29 @@ public class TransactionTest {
 		Assert.assertTrue(transaction.getCustomer() == customer);
 		Assert.assertTrue(transaction.getProduct() == product);
 		Assert.assertTrue(transaction.getRow() == whichRow);
+		Assert.assertTrue(transaction.getBalance() == product.getPrice());
+	}
+
+	@Test
+	public void testFullConstruction() throws BadArgumentException
+	{
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(4, 2);
+
+		Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow, 14);
+
+		Assert.assertTrue(transaction.getTimestamp() == calendar);
+		Assert.assertTrue(transaction.getMachine() == machine);
+		Assert.assertTrue(transaction.getCustomer() == customer);
+		Assert.assertTrue(transaction.getProduct() == product);
+		Assert.assertTrue(transaction.getRow() == whichRow);
+		Assert.assertTrue(transaction.getBalance() == 14);
 	}
 
 	@Test
@@ -168,6 +191,28 @@ public class TransactionTest {
 		Customer customer = new Customer("Krutz", 512);
 		FoodItem product = new FoodItem("Pasta", 3, 128);
 		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(-4, 2);
+
+		try {
+			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);
+		} catch(BadArgumentException e) {
+			testFailed = true;
+		}
+
+		Assert.assertTrue(testFailed);
+	}
+
+	@Test
+	public void testOtherNegativeRowCoordinateConstruction() throws BadArgumentException {
+		boolean testFailed = false;
+
+		GregorianCalendar calendar = new GregorianCalendar();
+		VMLayout layout = new VMLayout(3, 3, 3);
+		VendingMachine machine = new VendingMachine(new Location(14586, "New York", new String[] {"A", "B", "C"}),
+													1,
+													layout);
+		Customer customer = new Customer("Krutz", 512);
+		FoodItem product = new FoodItem("Pasta", 3, 128);
+		Pair<Integer, Integer> whichRow = new Pair<Integer, Integer>(2, -2);
 
 		try {
 			Transaction transaction = new Transaction(calendar, machine, customer, product, whichRow);

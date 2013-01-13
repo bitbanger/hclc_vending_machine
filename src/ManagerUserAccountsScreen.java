@@ -25,8 +25,7 @@ public class ManagerUserAccountsScreen {
 			customers = db.getCustomersAll();
 			managers = db.getManagersAll();
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, databaseProblem);
 		}
 	}
 
@@ -50,18 +49,20 @@ public class ManagerUserAccountsScreen {
 	 * add a new customer
  	 * @param initialBalance the inital balance
 	 * @param name the name of the customer
+	 * @return the id of the new customer
 	 */
-	public void addCustomer( String name, int initialBalance ) {
+	public int addCustomer( String name, int initialBalance ) {
 		try
 		{
 			Customer cust = new Customer( name, initialBalance );
 			db.updateOrCreateCustomer( cust );
 			customers.add( cust );
+			return cust.getId();
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... "+databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			return -1;
 		}
 	}
 
@@ -69,18 +70,20 @@ public class ManagerUserAccountsScreen {
 	 * add a new manager
  	 * @param startingPassword the initial password
 	 * @param name the name of the manager
+	 * @return int the id of the new manager
 	 */
-	public void addManager( String name, String startingPassword ) {
+	public int addManager( String name, String startingPassword ) {
 		try
 		{
 			Manager manny = new Manager( name, startingPassword );
 			db.updateOrCreateManager( manny );
 			managers.add( manny );
+			return manny.getId();
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... "+databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			return -1;
 		}
 	}
 
@@ -99,8 +102,7 @@ public class ManagerUserAccountsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... "+databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 	}
 

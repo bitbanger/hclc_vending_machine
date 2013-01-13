@@ -1,18 +1,16 @@
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.ArrayList;
-import java.sql.SQLException;
 import java.util.GregorianCalendar;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class TestUtilities
+/**
+ * This version does NOT use the database and doesn't support doing so.
+ * @author Sol Boucher <slb1566@rit.edu>
+ */
+public class TestUtilitiesSimple
 {
-	/**
-	 * DatabaseLayer instance
-	 **/
-	private DatabaseLayer dbl;
-
 	/**
 	 * Set of items to use in tests
 	 **/
@@ -39,66 +37,15 @@ public class TestUtilities
 	public ArrayList<Transaction> transactions;
 
 	/**
-	 * Flag to see if food items have already been added by noTestAddFoodItems()
+	 * Generates objects for use in tests. Does not add items to database.
 	 **/
-	private boolean addedFoodItems;
-
-	/**
-	 * Flag to see if vending machine have already been added by noTestAddVendingMachines()
-	 **/
-	private boolean addedVendingMachines;
-
-	/**
-	 * Flag to see if customers have already been added by noTestAddCustomers()
-	 **/
-	private boolean addedCustomers;
-
-	 /**
-	  * Flag to see if managers have already been added by noTestAddManagers()
-	  **/
-	private boolean addedManagers;
-
-	/**
-	 * Flags to see if transactions have already been added by noTestAddTransactions()
-	 **/
-	private boolean addedTransactions;
-
-	/**
-	 * Generates objects for use in tests.
-	 * @param addItemsToDatabase If true the items generated are also added to
-	 * the database.
-	 **/
-	public TestUtilities(boolean addItemsToDatabase) throws BadStateException, BadArgumentException, SQLException
+	public TestUtilitiesSimple() throws BadStateException, BadArgumentException
 	{
-		dbl = DatabaseLayer.getInstance();
-
 		initFoodItems();
 		initVendingMachines();
 		initCustomers();
 		initManagers();
 		initTransactions();
-
-		addedFoodItems = false;
-		addedVendingMachines = false;
-		addedCustomers = false;
-		addedTransactions = false;
-
-		if (addItemsToDatabase)
-		{
-			noTestAddFoodItems();
-			noTestAddVendingMachines();
-			noTestAddCustomers();
-			noTestAddManagers();
-			noTestAddTransactions();
-		}
-	}
-
-	/**
-	 * Generates objects for use in tests. Does not add items to database.
-	 **/
-	public TestUtilities() throws BadStateException, BadArgumentException, SQLException
-	{
-		this(false);
 	}
 
 	/**
@@ -305,70 +252,5 @@ public class TestUtilities
 		assertTrue(trans1.getRow().first == trans2.getRow().first &&
 			trans1.getRow().second == trans2.getRow().second);
 		assertTrue(trans1.getBalance() == trans2.getBalance());
-	}
-
-	/**
-	 * Adds FoodItems to the database iff they have not already
-	 * been added. Used in several tests.
-	 **/
-	public void noTestAddFoodItems() throws SQLException, BadStateException, BadArgumentException
-	{
-		if (addedFoodItems)
-			return;
-		addedFoodItems = true;
-		for (FoodItem item : items)
-			dbl.updateOrCreateFoodItem(item);
-	}
-
-	/**
-	 * Adds vending machines to the database iff they have not
-	 * already been added. Used in several tests.
-	 **/
-	public void noTestAddVendingMachines() throws SQLException, BadStateException, BadArgumentException
-	{
-		if (addedVendingMachines)
-			return;
-		addedVendingMachines = true;
-		for (VendingMachine machine : machines)
-			dbl.updateOrCreateVendingMachine(machine);
-	}
-
-	/**
-	 * Adds customers to the database iff they have not already
-	 * been added. Used in several tests.
-	 **/
-	public void noTestAddCustomers() throws SQLException, BadStateException, BadArgumentException
-	{
-		if (addedCustomers)
-			return;
-		addedCustomers = true;
-		for (Customer customer : customers)
-			dbl.updateOrCreateCustomer(customer);
-	}
-
-	/**
-	 * Adds managers to the database iff they have not already been added. Used
-	 * in several tests.
-	 **/
-	public void noTestAddManagers() throws SQLException, BadStateException, BadArgumentException
-	{
-		if (addedManagers)
-			return;
-		addedManagers = true;
-		for (Manager manager : managers)
-			dbl.updateOrCreateManager(manager);
-	}
-
-	/**
-	 * Adds transactions to the database iff they have not already been added.
-	 * Used in several tests.
-	 **/
-	public void noTestAddTransactions() throws SQLException, BadStateException, BadArgumentException
-	{
-		if (addedTransactions)
-			return;
-		addedTransactions = true;
-		for (Transaction trans : transactions)
-			dbl.updateOrCreateTransaction(trans);
 	}
 }

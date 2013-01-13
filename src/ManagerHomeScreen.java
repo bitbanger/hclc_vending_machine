@@ -29,46 +29,43 @@ public class ManagerHomeScreen {
 
 	/**
 	 * alter the layout of a given machine
-	 * @param id the id of the machine
-	 * @return the alter layout screen for the machine
+	 * @param vm The vending machine
+	 * @return the alter layout screen for the machine, or <tt>null</tt> on failure
 	 */
-	public ManagerAlterLayoutScreen alterLayout( int id ) {
+	public ManagerAlterLayoutScreen alterLayout(VendingMachine vm) {
 		try {
 			return new ManagerAlterLayoutScreen( 
-				db.getVendingMachineById( id ) );
-		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+				db.getVendingMachineById(vm.getId()) );
+		} catch ( Exception generalFailure ) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFailure);
 			return null;
 		}
 	}
 
 	/**
 	 * manage the items that are in the database
-	 * @return the stocked item screen
+	 * @return the stocked item screen, or <tt>null</tt> on failure
 	 */
 	public ManagerStockedItemsScreen manageItems() {
 		try {
 			return new ManagerStockedItemsScreen( 
 				db.getFoodItemsAll() );
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}
 
 	/**
 	 * manage machines
-	 * @return the machine management screen
+	 * @return the machine management screen, or <tt>null</tt> on failure
 	 */
 	public ManagerMachineManagementScreen manageMachines() {
 		try {
 			return new ManagerMachineManagementScreen( 
 				db.getVendingMachinesAll() );
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}
@@ -79,12 +76,5 @@ public class ManagerHomeScreen {
 	 */
 	public ManagerUserAccountsScreen manageUsers() {
 		return new ManagerUserAccountsScreen();
-	}
-	
-	/**
-	 * logs the manager out of the system
-	 */
-	public ManagerLoginScreen logout() {
-		return new ManagerLoginScreen();
 	}
 }

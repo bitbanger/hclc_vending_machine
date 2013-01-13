@@ -18,8 +18,8 @@ public class RestockerMachinePickerScreen {
  	 * attempts to find the specified machine in the database
 	 * @param id the id of the vending machine
 	 * @return the RestockerTaskListScreen based around
-	 *	the specified VendingMachine or null if the 
-	 * 	machine does not exist
+	 *	the specified VendingMachine or <tt>null</tt> if the 
+	 * 	machine does not exist or there's an error
 	 */
 	public RestockerTaskListScreen tryMachine( int id ) throws SQLException
 	{
@@ -32,8 +32,7 @@ public class RestockerMachinePickerScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... "+databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}

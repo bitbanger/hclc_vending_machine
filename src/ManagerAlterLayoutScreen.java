@@ -25,7 +25,7 @@ public class ManagerAlterLayoutScreen {
 	 * @return the Food in the rows
 	 */
 	public FoodItem[][] listRows() {
-		Row[][] rows = machine.getCurrentLayout().getRows();
+		Row[][] rows = machine.getNextLayout().getRows();
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
@@ -49,12 +49,9 @@ public class ManagerAlterLayoutScreen {
 			rows[row.first][row.second].setProduct( it );
 			rows[row.first][row.second].setRemainingQuantity( 
 				machine.getNextLayout().getDepth() );
-		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+		} catch ( Exception generalFault ) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, generalFault);
 		}
-		machine.setNextLayout( new VMLayout ( rows, 
-			machine.getNextLayout().getDepth() ) );
 	}
 
 	/**
@@ -66,16 +63,8 @@ public class ManagerAlterLayoutScreen {
 			db.updateOrCreateVendingMachine( machine );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return false;
 		}
-	}
-
-	/**
-	 * exits the screen
-	 */
-	public void exit() {
-
 	}
 }

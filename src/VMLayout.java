@@ -23,14 +23,16 @@ public class VMLayout extends ModelBase
 	 * @param height the major size
 	 * @param width the minor size
 	 * @param depth the size of each product row
-	 * @throws IllegalArgumentException if the <tt>height</tt>, or <tt>width</tt> is invalid
+	 * @throws BadArgumentException if the <tt>height</tt>, <tt>width</tt>, or <tt>depth</tt> is negative
 	 */
-	public VMLayout(int height, int width, int depth) throws IllegalArgumentException
+	public VMLayout(int height, int width, int depth) throws BadArgumentException
 	{
 		if(height<=0)
-			throw new IllegalArgumentException("Height must be positive");
+			throw new BadArgumentException("Height must be positive");
 		else if(width<=0)
-			throw new IllegalArgumentException("Width must be positive");
+			throw new BadArgumentException("Width must be positive");
+		else if(depth<=0)
+			throw new BadArgumentException("Depth must be positive");
 		
 		rows=new Row[height][width];
 		this.depth=depth;
@@ -42,18 +44,20 @@ public class VMLayout extends ModelBase
 	 * Creates an instance with the provided contents.
 	 * @param rows the rows to be held in the machine
 	 * @param depth the size of each product row
-	 * @throws IllegalArgumentException if <tt>rows</tt> is <tt>null</tt> or ragged
+	 * @throws BadArgumentException if <tt>rows</tt> is <tt>null</tt> or ragged, or if <tt>depth</tt> is negative
 	 */
-	public VMLayout(Row[][] rows, int depth) throws IllegalArgumentException
+	public VMLayout(Row[][] rows, int depth) throws BadArgumentException
 	{
 		if(rows==null)
-			throw new IllegalArgumentException("Rows cannot be null");
+			throw new BadArgumentException("Rows cannot be null");
+		else if(depth<=0)
+			throw new BadArgumentException("Depth must be positive");
 		for(Row[] line : rows)
 		{
 			if(line==null)
-				throw new IllegalArgumentException("Rows cannot contain a null group");
+				throw new BadArgumentException("Rows cannot contain a null group");
 			else if(line.length!=rows[0].length)
-				throw new IllegalArgumentException("Rows cannot have ragged sizing");
+				throw new BadArgumentException("Rows cannot have ragged sizing");
 		}
 		
 		this.rows = rows;
@@ -73,8 +77,9 @@ public class VMLayout extends ModelBase
 
 	/**
 	 * (Optionally deep) copy constructor.
-	 * If asked to make a deep copy, the two instances' sets and arrangements of rows will be decoupled, although the rows themselves will initially be shared.
+	 * If asked to make a deep copy, the two instances' sets, and arrangements of rows, and rows themselves will be decoupled.
 	 * Additionally, a deep copy has a different storage ID so as not to be confused with the original.
+	 * Note that the latter property means that a deep-copied daughter <tt>VMLayout</tt> is <i>not</i> considered <tt>equal</tt> to its mother instance.
 	 * @param existing the instance to clone
 	 * @param deep whether to make a deep copy
 	 */
@@ -84,9 +89,14 @@ public class VMLayout extends ModelBase
 		
 		if(deep) //deep copy
 		{
-			this.rows=new Row[existing.rows.length][];
-			for(int index=0; index<rows.length; ++index)
-				this.rows[index]=Arrays.copyOf(existing.rows[index], existing.rows[index].length);
+			this.rows=new Row[existing.rows.length][existing.rows[0].length];
+			for(int row=0; row<rows.length; ++row)
+				for(int col=0; col<rows[row].length; ++col)
+					this.rows[row][col]= existing.rows[row][col]==null ? null : new Row(existing.rows[row][col], true);
+			if(existing.nextVisit!=null)
+				this.nextVisit=(GregorianCalendar)existing.nextVisit.clone();
+			else
+				this.nextVisit=null;
 		}
 		else //shallow copy
 		{
@@ -94,17 +104,23 @@ public class VMLayout extends ModelBase
 			{
 				setId(existing.getId());
 			}
-			catch(Exception impossible) {} //there can be no ID there!
+			catch(Exception impossible) //there can be no ID there!
+			{
+				System.err.println("CRITICAL : Model detected a problem not previously thought possible!");
+				System.err.print("    DUMP : ");
+				impossible.printStackTrace();
+				System.err.println();
+			}
 			this.rows=existing.rows;
+			this.nextVisit=existing.nextVisit;
 		}
 		
 		this.depth=existing.depth;
-		this.nextVisit=existing.nextVisit;
 	}
 
 	/**
 	 * Note that you shouldn't add any <tt>Row</tt> that stocks more items than <tt>getDepth()</tt>'s value.
-	 * @return all the rows
+	 * @return all the things!
 	 */
 	public Row[][] getRows()
 	{
@@ -137,6 +153,7 @@ public class VMLayout extends ModelBase
 
 	/**
 	 * Checks whether two instances contain the same data.
+	 * Note: instances sharing a deep-copy operation are<b>n't</b> <tt>equal</tt>.
 	 * @param another another instance
 	 * @return whether their contents match
 	 */
@@ -147,8 +164,13 @@ public class VMLayout extends ModelBase
 			return false;
 		VMLayout other=(VMLayout)another;
 		
+		if(this.rows.length!=other.rows.length)
+			return false;
+		for(int index=0; index<rows.length; ++index)
+			if(!Arrays.equals(this.rows[index], other.rows[index]))
+				return false;
 		if(this.nextVisit==null ^ other.nextVisit==null)
 			return false;
-		return super.equals(another) && Arrays.equals(this.rows, other.rows) && this.depth==other.depth && ((this.nextVisit==null && other.nextVisit==null) || nextVisit.equals(other.nextVisit));
+		return super.equals(another) && this.depth==other.depth && ((this.nextVisit==null && other.nextVisit==null) || nextVisit.equals(other.nextVisit));
 	}
 }
