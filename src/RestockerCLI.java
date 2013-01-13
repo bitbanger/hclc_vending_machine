@@ -5,6 +5,12 @@
  */
 public class RestockerCLI {
 
+	/** Instantiating a new RestockerMachinePickerScreen*/
+	private static RestockerMachinePickerScreen restockerMachinePickerScreen = new RestockerMachinePickerScreen();
+
+	/** Instatntiating a new RestockerTaskListScreen */
+	private static RestockerTaskListScreen restockerTaskListScreen;
+
 	/**
 	 * Begins the program and intitates primary options for the Restocker.
 	 */
@@ -13,14 +19,13 @@ public class RestockerCLI {
 
 		switch(optionSelect) {
 			case 0:
-				viewList();
+				listTasks(restockerTaskListScreen);
 				break;
 			case 1:
-				selectMachine();
+				pickMachine(restockerMachinePickerScreen);
 				break;
 		}
-	}
-	
+	}	
 	/** The entry point to the program.
 	 * 
 	 * @param args Arguments required to create String arrays in Java
@@ -30,19 +35,23 @@ public class RestockerCLI {
 		begin();
 	}
 
-	/** Allows the Restocker to view the list of duties that needs to be performed.
+	/** Allows the Restocker to view the list of tasks that needs to be performed.
 	 *
+	 * @param restockerTaskListScreen The state of the RestockerTaskListScreen
 	 */
-	private static void viewList(){
-		System.out.println("This is the list of duties that need to be performed.");	
+	private static void listTasks(RestockerTaskListScreen restockerTaskListScreen){
+		System.out.println("This is the list of tasks that need to be performed.");
+
+
 
 	}
 	
 	/**
 	 * Allows the Restocker to select a machine.
 	 *
+	 * @param restockerMachinePickerScreen The state of the RestockerMachinePickerScreen
 	 */
-	private static void selectMachine() {
+	private static void pickMachine(RestockerMachinePickerScreen restockerMachinePickerScreen) {
 		System.out.println("Please enter the number of the machine that needs to be selected.");
 	
 	}
