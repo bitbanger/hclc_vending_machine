@@ -91,6 +91,12 @@ public class FoodItemTest {
 	}
 
 	@Test
+	public void testZeroPrice() throws BadArgumentException
+	{
+		FoodItem t=new FoodItem("Condom", 0, 3); //don't eat this
+	}
+
+	@Test
 	public void testZeroFreshLength() {
 		boolean testFailed = false;
 
