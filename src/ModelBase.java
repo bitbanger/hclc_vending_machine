@@ -73,6 +73,7 @@ public abstract class ModelBase
 
 	/**
 	 * Checks whether two instances' IDs are the same.
+	 * Database-backable instances whose IDs are both unassigned are considered to have matching IDs.
 	 * @param another another instance
 	 * @return whether the primary keys match
 	 */

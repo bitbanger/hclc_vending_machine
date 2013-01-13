@@ -54,7 +54,7 @@ public class LocationTest {
 	}
 
 	@Test
-	public void testBadZipCodeSet() {
+	public void testNegativeZipCodeSet() {
 		boolean testFailed = false;
 
 		String[] nearby = {"Dave's", "Joe's", "Jack's"};
@@ -67,6 +67,21 @@ public class LocationTest {
 		}
 
 		Assert.assertTrue(testFailed);
+	}
+
+	@Test
+	public void testZeroZipCode() throws BadArgumentException
+	{
+		String[] nearby = {"Dave's", "Joe's", "Jack's"};
+		Location t = new Location(0, "Non-null", nearby);
+	}
+
+	@Test
+	public void testZeroZipCodeSet() throws BadArgumentException
+	{
+		String[] nearby = {"Dave's", "Joe's", "Jack's"};
+		Location t = new Location(14623, "Non-null", nearby);
+		t.setZipCode(0);
 	}
 
 	@Test
@@ -84,6 +99,14 @@ public class LocationTest {
 		}
 	}
 
+	@Test(expected=BadArgumentException.class)
+	public void testNoStateSet() throws BadArgumentException
+	{
+		String[] nearby = {"Dave's", "Joe's", "Jack's"};
+		Location t = new Location(14586, null, nearby);
+		t.setState(null);
+	}
+
 	@Test
 	public void testNoNearbyBusinessesGiven() {
 		boolean testFailed = false;
@@ -95,5 +118,29 @@ public class LocationTest {
 		} finally {
 			Assert.assertTrue(testFailed);
 		}
+	}
+
+	@Test(expected=BadArgumentException.class)
+	public void testNoNearbyBusinessesSet() throws BadArgumentException
+	{
+		String[] nearby = {"Dave's", "Joe's", "Jack's"};
+		Location t = new Location(14586, "New York", nearby);
+		t.setNearbyBusinesses(null);
+	}
+
+	@Test
+	public void testFormattedZipLong() throws BadArgumentException
+	{
+		String[] nearby = {"Dave's", "Joe's", "Jack's"};
+		Location t = new Location(14586, "Non-null", nearby);
+		Assert.assertEquals(t.retrieveFormattedZipCode(), "14586");
+	}
+
+	@Test
+	public void testFormattedZipShort() throws BadArgumentException
+	{
+		String[] nearby = {"Dave's", "Joe's", "Jack's"};
+		Location t = new Location(17, "Non-null", nearby);
+		Assert.assertEquals(t.retrieveFormattedZipCode(), "00017");
 	}
 }

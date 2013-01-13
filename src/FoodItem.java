@@ -98,24 +98,24 @@ public class FoodItem extends ModelBase {
 
 	/**
 	 * @param price	The new price.
-	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if price is negative
 	 */
 	public void setPrice(int price) throws BadArgumentException
 	{
-		if(name==null)
-			throw new BadArgumentException("Name must not be null");
+		if(price<0)
+			throw new BadArgumentException("Price must not be negative");
 		
 		this.price = price;
 	}
 
 	/**
 	 * @param freshLength	The new fresh length.
-	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if the duration isn't positive
 	 */
 	public void setFreshLength(long freshLength) throws BadArgumentException
 	{
-		if(name==null)
-			throw new BadArgumentException("Name must not be null");
+		if(freshLength<=0)
+			throw new BadArgumentException("Fresh length must be positive");
 		
 		this.freshLength = freshLength;
 	}
