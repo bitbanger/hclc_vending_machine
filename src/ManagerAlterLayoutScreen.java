@@ -73,11 +73,4 @@ public class ManagerAlterLayoutScreen {
 			return false;
 		}
 	}
-
-	/**
-	 * exits the screen
-	 */
-	public void exit() {
-
-	}
 }
