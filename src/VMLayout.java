@@ -104,7 +104,13 @@ public class VMLayout extends ModelBase
 			{
 				setId(existing.getId());
 			}
-			catch(Exception impossible) {} //there can be no ID there!
+			catch(Exception impossible) //there can be no ID there!
+			{
+				System.err.println("CRITICAL : Model detected a problem not previously thought possible!");
+				System.err.print("    DUMP : ");
+				impossible.printStackTrace();
+				System.err.println();
+			}
 			this.rows=existing.rows;
 			this.nextVisit=existing.nextVisit;
 		}

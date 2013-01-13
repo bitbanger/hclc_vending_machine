@@ -196,7 +196,13 @@ public class VendingMachine extends ModelBase
 						{
 							newRows[row][col].setRemainingQuantity(curRows[row][col].getRemainingQuantity());
 						}
-						catch(BadArgumentException impossible) {} //shouldn't happen, as that quantity must be valid
+						catch(BadArgumentException impossible) //shouldn't happen, as that quantity must already be valid
+						{
+							System.err.println("CRITICAL : Model detected a problem not previously thought possible!");
+							System.err.print("    DUMP : ");
+							impossible.printStackTrace();
+							System.err.println();
+						}
 		
 		currentLayout=nextLayout;
 		nextLayout=new VMLayout(currentLayout, true); //deep copy
