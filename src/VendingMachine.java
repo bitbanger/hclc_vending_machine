@@ -28,9 +28,9 @@ public class VendingMachine extends ModelBase
 	 * @param location the <tt>VendingMachine</tt>'s abode
 	 * @param stockingInterval how many days between consecutive restockings
 	 * @param currentLayout the <tt>VendingMachine</tt>'s layout
-	 * @throws IllegalArgumentException if <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>, or if <tt>stockingInterval</tt> is not positive
+	 * @throws BadArgumentException if <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>, or if <tt>stockingInterval</tt> is not positive
 	 */
-	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout) throws IllegalArgumentException
+	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout) throws BadArgumentException
 	{
 		this(location, stockingInterval, currentLayout, new VMLayout(currentLayout, true), true);
 	}
@@ -44,18 +44,18 @@ public class VendingMachine extends ModelBase
 	 * @param currentLayout the <tt>VendingMachine</tt>'s present layout
 	 * @param nextLayout the <tt>VendingMachine</tt>'s future layout
 	 * @param active whether the <tt>VendingMachine</tt> is currently activated
-	 * @throws IllegalArgumentException if an instance is <tt>null</tt> or <tt>stockingInterval</tt> is not positive
+	 * @throws BadArgumentException if an instance is <tt>null</tt> or <tt>stockingInterval</tt> is not positive
 	 */
-	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout, VMLayout nextLayout, boolean active) throws IllegalArgumentException
+	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout, VMLayout nextLayout, boolean active) throws BadArgumentException
 	{
 		if(location==null)
-			throw new IllegalArgumentException("Location cannot be null");
+			throw new BadArgumentException("Location cannot be null");
 		else if(stockingInterval<=0)
-			throw new IllegalArgumentException("Stocking interval must be positive");
+			throw new BadArgumentException("Stocking interval must be positive");
 		else if(currentLayout==null)
-			throw new IllegalArgumentException("Current layout cannot be null");
+			throw new BadArgumentException("Current layout cannot be null");
 		if(nextLayout==null)
-			throw new IllegalArgumentException("Next layout cannot be null");
+			throw new BadArgumentException("Next layout cannot be null");
 
 		if (currentLayout.getNextVisit() == null)
 			currentLayout.setNextVisit(lastPossibleVisit(stockingInterval));
@@ -100,12 +100,12 @@ public class VendingMachine extends ModelBase
 
 	/**
 	 * @param location a replacement location
-	 * @throws IllegalArgumentException if a <tt>null</tt> value is supplied
+	 * @throws BadArgumentException if a <tt>null</tt> value is supplied
 	 */
-	public void setLocation(Location location) throws IllegalArgumentException
+	public void setLocation(Location location) throws BadArgumentException
 	{
 		if(location==null)
-			throw new IllegalArgumentException("Location cannot be null");
+			throw new BadArgumentException("Location cannot be null");
 		
 		this.location=location;
 	}
@@ -123,12 +123,12 @@ public class VendingMachine extends ModelBase
 	 * In the case where the newly-mandated visit is sooner than the already-scheduled one, the new schedule is applied immediately.
 	 * However, in all other cases, the next stocking takes place at the earlier proposed time to prevent items from expiring while in the machine.
 	 * @param stockingInterval replacement stocking interval, in days
-	 * @throws IllegalArgumentException if supplied with a nonpositive value
+	 * @throws BadArgumentException if supplied with a nonpositive value
 	 */
-	public void setStockingInterval(int stockingInterval) throws IllegalArgumentException
+	public void setStockingInterval(int stockingInterval) throws BadArgumentException
 	{
 		if(stockingInterval<=0)
-			throw new IllegalArgumentException("Stocking interval must be positive");
+			throw new BadArgumentException("Stocking interval must be positive");
 		
 		GregorianCalendar latestStocking=lastPossibleVisit(stockingInterval);
 		
@@ -158,12 +158,12 @@ public class VendingMachine extends ModelBase
 
 	/**
 	 * @param nextLayout a replacement future layout
-	 * @throws IllegalArgumentException if supplied with a <tt>null</tt> value
+	 * @throws BadArgumentException if supplied with a <tt>null</tt> value
 	 */
-	public void setNextLayout(VMLayout nextLayout) throws IllegalArgumentException
+	public void setNextLayout(VMLayout nextLayout) throws BadArgumentException
 	{
 		if(nextLayout==null)
-			throw new IllegalArgumentException("Next layout cannot be null");
+			throw new BadArgumentException("Next layout cannot be null");
 		
 		this.nextLayout=nextLayout;
 	}
