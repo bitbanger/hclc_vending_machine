@@ -371,40 +371,4 @@ public class TestUtilities
 		for (Transaction trans : transactions)
 			dbl.updateOrCreateTransaction(trans);
 	}
-
-	public void populateDatabase() throws SQLException, BadStateException, BadArgumentException
-	{
-		dbl.nuke();
-
-		initFoodItems();
-		initVendingMachines();
-		initCustomers();
-		initManagers();
-		initTransactions();
-
-		noTestAddFoodItems();
-		noTestAddVendingMachines();
-		noTestAddCustomers();
-		noTestAddManagers();
-		noTestAddTransactions();
-	}
-
-	public static void main(String[] args) {
-		DatabaseLayer dbl = DatabaseLayer.getInstance();
-		dbl.nuke();
-
-		TestUtilities tu = new TestUtilities(true);
-
-		System.out.println("Database nuked and re-populated with test data");
-	}
-
-	/**
-	 * Does nothing. Exists so an error is not thrown when this class is run
-	 * by the testsuite.sh script.
-	 **/
-	@Test
-	public void fakeTest()
-	{
-
-	}
 }
