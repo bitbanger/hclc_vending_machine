@@ -33,7 +33,7 @@ public class RestockerTaskListScreen {
 	 * creates a list of instructions for the restocker to follow
 	 * compares the next layout and the current layout to determine 
 	 *	the changes that need to be made
-	 * @return String[]: list of instructions
+	 * @return String[]: list of instructions, or <tt>null</tt> on a backend error
 	 */
 	public String[] assembleStockingList() {
 		ArrayList<String> instructions = new ArrayList<String>();
@@ -86,10 +86,7 @@ public class RestockerTaskListScreen {
 						+ " to location " + i + ", " + j);
 				}
 				} catch ( Exception databaseProblem ) {
-					System.err.println("ERROR: Database problem " );
-					System.err.print("     : Dumb details " );
-					databaseProblem.printStackTrace();
-					System.err.println();
+					ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 					return null;
 				}
 			}	
@@ -108,10 +105,7 @@ public class RestockerTaskListScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 	}
 }

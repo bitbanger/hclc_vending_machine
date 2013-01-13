@@ -56,10 +56,7 @@ public class ManagerMachineManagementScreen {
 			db.updateOrCreateVendingMachine( machine );
 			storefronts.add( machine );
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 	}
 
@@ -73,10 +70,7 @@ public class ManagerMachineManagementScreen {
 			vm.makeActive( false );
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 	}
 
@@ -90,10 +84,7 @@ public class ManagerMachineManagementScreen {
 			vm.makeActive( true );
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 	}
 	
@@ -108,10 +99,8 @@ public class ManagerMachineManagementScreen {
 			VendingMachine vm = db.getVendingMachineById( id );
 			vm.setLocation( location );
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			return false;
 		}
 		return true;
 	}

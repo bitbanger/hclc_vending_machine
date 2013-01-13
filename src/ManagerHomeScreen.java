@@ -37,7 +37,6 @@ public class ManagerHomeScreen {
 			return new ManagerAlterLayoutScreen( 
 				db.getVendingMachineById(vm.getId()) );
 		} catch ( Exception generalFailure ) {
-			//System.err.println("WARNING: MALS.alterLayout : bad input caused "+generalFailure);
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFailure);
 			return null;
 		}
@@ -45,34 +44,28 @@ public class ManagerHomeScreen {
 
 	/**
 	 * manage the items that are in the database
-	 * @return the stocked item screen
+	 * @return the stocked item screen, or <tt>null</tt> on failure
 	 */
 	public ManagerStockedItemsScreen manageItems() {
 		try {
 			return new ManagerStockedItemsScreen( 
 				db.getFoodItemsAll() );
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}
 
 	/**
 	 * manage machines
-	 * @return the machine management screen
+	 * @return the machine management screen, or <tt>null</tt> on failure
 	 */
 	public ManagerMachineManagementScreen manageMachines() {
 		try {
 			return new ManagerMachineManagementScreen( 
 				db.getVendingMachinesAll() );
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}

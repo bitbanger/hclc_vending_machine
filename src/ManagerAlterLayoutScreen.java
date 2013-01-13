@@ -49,11 +49,8 @@ public class ManagerAlterLayoutScreen {
 			rows[row.first][row.second].setProduct( it );
 			rows[row.first][row.second].setRemainingQuantity( 
 				machine.getNextLayout().getDepth() );
-		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+		} catch ( Exception generalFault ) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, generalFault);
 		}
 	}
 
@@ -66,10 +63,7 @@ public class ManagerAlterLayoutScreen {
 			db.updateOrCreateVendingMachine( machine );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return false;
 		}
 	}

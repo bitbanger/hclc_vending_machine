@@ -8,6 +8,8 @@ import java.util.ArrayList;
  */
 
 public class ManagerStockedItemsScreen {
+	/** a sentinel key indicating backend failure */
+	public static final int FAILURE_KEY=-1;
 
 	/** the database */
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
@@ -34,7 +36,7 @@ public class ManagerStockedItemsScreen {
 	 * @param name the name of the item
 	 * @param price the price in cents
 	 * @param freshLength the amount of time the item stays fresh
-	 * @return the id of the added item
+	 * @return the id of the added item, or <tt>FAILURE_KEY</tt> on failure
  	 */
 	public int addItem( String name, int price, long freshLength ) {
 		try
@@ -46,11 +48,8 @@ public class ManagerStockedItemsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
-			return -1;
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			return FAILURE_KEY;
 		}
 	}
 	
@@ -67,10 +66,7 @@ public class ManagerStockedItemsScreen {
 			db.updateOrCreateFoodItem( item );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return false;
 		}
 	}
@@ -88,10 +84,7 @@ public class ManagerStockedItemsScreen {
 			db.updateOrCreateFoodItem( item );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return false;
 		}
 	}
@@ -109,10 +102,7 @@ public class ManagerStockedItemsScreen {
 			db.updateOrCreateFoodItem( item );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return false;
 		}
 	}

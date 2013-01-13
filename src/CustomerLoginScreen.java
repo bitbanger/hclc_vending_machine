@@ -31,9 +31,9 @@ public class CustomerLoginScreen {
 	 * @return the CustomerPurchaseScreen associated with the 
 	 *  	Customer and the VendingMachine or null if the Customer
 	 * 	is not found
-	 * @throws SQLException from the DatabaseLayer
 	 */
-	public CustomerPurchaseScreen tryLogin ( int id ) throws SQLException {
+	public CustomerPurchaseScreen tryLogin ( int id )
+	{
 		try
 		{
 			Customer user = db.getCustomerById ( id );
@@ -43,10 +43,7 @@ public class CustomerLoginScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}
@@ -54,9 +51,9 @@ public class CustomerLoginScreen {
 	/**
 	 * creates the CustomerPurchaseScreen state
 	 * @return the CashCustomerPurchaseScreen
-	 * @throws SQLException from the DatabaseLayer
 	 */
-	public CashCustomerPurchaseScreen cashLogin () throws SQLException {
+	public CashCustomerPurchaseScreen cashLogin ()
+	{
 		try
 		{
 			Customer user = new Customer();
@@ -64,10 +61,7 @@ public class CustomerLoginScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}

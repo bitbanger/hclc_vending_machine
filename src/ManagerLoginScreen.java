@@ -20,7 +20,7 @@ public class ManagerLoginScreen {
 	 * attempts to login to a manager's account
 	 * @param id the id of the manager
 	 * @param password the attempted password
-	 * @return a new home screen if the password is correct null else
+	 * @return a new home screen if the password is correct and all goes well (<tt>null</tt> else)
 	 */
 	public ManagerHomeScreen tryLogin( int id, String password ) {
 		try
@@ -33,10 +33,7 @@ public class ManagerLoginScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return null;
 		}
 	}

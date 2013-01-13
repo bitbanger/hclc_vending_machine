@@ -25,10 +25,7 @@ public class ManagerUserAccountsScreen {
 			customers = db.getCustomersAll();
 			managers = db.getManagersAll();
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, databaseProblem);
 		}
 	}
 
@@ -64,10 +61,7 @@ public class ManagerUserAccountsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return -1;
 		}
 	}
@@ -88,10 +82,7 @@ public class ManagerUserAccountsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 			return -1;
 		}
 	}
@@ -111,10 +102,7 @@ public class ManagerUserAccountsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... ");
-			databaseProblem.printStackTrace();
-			System.err.println();
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 	}
 
