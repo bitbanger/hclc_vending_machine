@@ -49,14 +49,19 @@ public class ManagerMachineManagementScreen {
 	 * @param location the loc of the machine
 	 * @param interval the stocking interval
 	 * @param layout the initial layout to use
+	 * @return the id of the machine
 	 */
-	public void addMachine( Location location, int interval, VMLayout layout ) {
+	public int addMachine( Location location, int interval, VMLayout layout ) {
+		VendingMachine machine = new VendingMachine( location, interval, layout );
 		try {
 			VendingMachine machine = new VendingMachine( location, interval, layout );
 			db.updateOrCreateVendingMachine( machine );
 			storefronts.add( machine );
+			return machine.getId();
 		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
+			return -1;
 		}
 	}
 
@@ -68,6 +73,7 @@ public class ManagerMachineManagementScreen {
 		try {
 			VendingMachine vm = db.getVendingMachineById( id );
 			vm.makeActive( false );
+			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
@@ -82,6 +88,7 @@ public class ManagerMachineManagementScreen {
 		try {
 			VendingMachine vm = db.getVendingMachineById( id );
 			vm.makeActive( true );
+			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
@@ -98,8 +105,12 @@ public class ManagerMachineManagementScreen {
 		try {
 			VendingMachine vm = db.getVendingMachineById( id );
 			vm.setLocation( location );
+			db.updateOrCreateVendingMachine( vm );
+			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			System.err.println("ERROR: Database problem encountered!");
+			System.err.println("     : Dump details ... " + databaseProblem);
 			return false;
 		}
 		return true;
