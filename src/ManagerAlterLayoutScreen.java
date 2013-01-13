@@ -42,15 +42,18 @@ public class ManagerAlterLayoutScreen {
 	 * 	until the commitRowChanges()
 	 * @param row the row to change
 	 * @param it the fooditem in question
+	 * @return True iff the row change was queued successfully
 	 */
-	public void queueRowChange( Pair<Integer, Integer> row, FoodItem it ) {
+	public boolean queueRowChange( Pair<Integer, Integer> row, FoodItem it ) {
 		Row[][] rows = machine.getNextLayout().getRows();
 		try {
 			rows[row.first][row.second].setProduct( it );
 			rows[row.first][row.second].setRemainingQuantity( 
 				machine.getNextLayout().getDepth() );
+			return true;
 		} catch ( Exception generalFault ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, generalFault);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFault);
+			return false;
 		}
 	}
 
