@@ -30,17 +30,15 @@ public class ManagerHomeScreen {
 	/**
 	 * alter the layout of a given machine
 	 * @param vm The vending machine
-	 * @return the alter layout screen for the machine
+	 * @return the alter layout screen for the machine, or <tt>null</tt> on failure
 	 */
 	public ManagerAlterLayoutScreen alterLayout(VendingMachine vm) {
 		try {
 			return new ManagerAlterLayoutScreen( 
 				db.getVendingMachineById(vm.getId()) );
-		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.print("     : Dump details ... " );
-			databaseProblem.printStackTrace();
-			System.err.println();
+		} catch ( Exception generalFailure ) {
+			//System.err.println("WARNING: MALS.alterLayout : bad input caused "+generalFailure);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFailure);
 			return null;
 		}
 	}
