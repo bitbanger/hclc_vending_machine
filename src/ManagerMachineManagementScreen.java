@@ -57,7 +57,9 @@ public class ManagerMachineManagementScreen {
 			storefronts.add( machine );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 		}
 	}
 
@@ -72,7 +74,9 @@ public class ManagerMachineManagementScreen {
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 		}
 	}
 
@@ -87,7 +91,9 @@ public class ManagerMachineManagementScreen {
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 		}
 	}
 	
@@ -103,7 +109,9 @@ public class ManagerMachineManagementScreen {
 			vm.setLocation( location );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 		}
 		return true;
 	}

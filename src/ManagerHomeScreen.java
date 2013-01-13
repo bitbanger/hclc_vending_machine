@@ -38,7 +38,9 @@ public class ManagerHomeScreen {
 				db.getVendingMachineById(vm.getId()) );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 			return null;
 		}
 	}
@@ -53,7 +55,9 @@ public class ManagerHomeScreen {
 				db.getFoodItemsAll() );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 			return null;
 		}
 	}
@@ -68,7 +72,9 @@ public class ManagerHomeScreen {
 				db.getVendingMachinesAll() );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 			return null;
 		}
 	}

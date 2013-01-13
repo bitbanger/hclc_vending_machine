@@ -51,7 +51,9 @@ public class ManagerAlterLayoutScreen {
 				machine.getNextLayout().getDepth() );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 		}
 	}
 
@@ -65,7 +67,9 @@ public class ManagerAlterLayoutScreen {
 			return true;
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			System.err.print("     : Dump details ... " );
+			databaseProblem.printStackTrace();
+			System.err.println();
 			return false;
 		}
 	}
