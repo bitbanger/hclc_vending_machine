@@ -92,6 +92,10 @@ public class VMLayout extends ModelBase
 			for(int row=0; row<rows.length; ++row)
 				for(int col=0; col<rows[row].length; ++col)
 					this.rows[row][col]= existing.rows[row][col]==null ? null : new Row(existing.rows[row][col]);
+			if(existing.nextVisit!=null)
+				this.nextVisit=(GregorianCalendar)existing.nextVisit.clone();
+			else
+				this.nextVisit=null;
 		}
 		else //shallow copy
 		{
@@ -101,10 +105,10 @@ public class VMLayout extends ModelBase
 			}
 			catch(Exception impossible) {} //there can be no ID there!
 			this.rows=existing.rows;
+			this.nextVisit=existing.nextVisit;
 		}
 		
 		this.depth=existing.depth;
-		this.nextVisit=existing.nextVisit;
 	}
 
 	/**
@@ -152,8 +156,13 @@ public class VMLayout extends ModelBase
 			return false;
 		VMLayout other=(VMLayout)another;
 		
+		if(this.rows.length!=other.rows.length)
+			return false;
+		for(int index=0; index<rows.length; ++index)
+			if(!Arrays.equals(this.rows[index], other.rows[index]))
+				return false;
 		if(this.nextVisit==null ^ other.nextVisit==null)
 			return false;
-		return super.equals(another) && Arrays.equals(this.rows, other.rows) && this.depth==other.depth && ((this.nextVisit==null && other.nextVisit==null) || nextVisit.equals(other.nextVisit));
+		return super.equals(another) && this.depth==other.depth && ((this.nextVisit==null && other.nextVisit==null) || nextVisit.equals(other.nextVisit));
 	}
 }
