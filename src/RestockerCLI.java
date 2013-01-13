@@ -9,22 +9,15 @@ public class RestockerCLI {
 	 * Begins the program and intitates primary options for the Restocker.
 	 */
 	private static void begin() {
-		int optionSelect = CLIUtilities.option(
-			"I'm viewing the to-do list", "I'm adding an item", "I'm removing an item", "I'm selecting a machine");
+		int optionSelect = CLIUtilities.option("I'm viewing the to-do list", "I'm selecting a machine");
 
 		switch(optionSelect) {
 			case 0:
 				viewList();
 				break;
 			case 1:
-				addItem();
-				break;
-			case 2:
-				removeItem();
-				break;
-			case 3:
 				selectMachine();
-				break;		
+				break;
 		}
 	}
 	
@@ -45,24 +38,6 @@ public class RestockerCLI {
 
 	}
 	
-	/**
-	 * Allows the Restocker to add an item to a machine.
-	 *
-	 */
-	private static void addItem() {
-		System.out.println("Please enter the item that needs to be added.");
-
-	}
-
-	/**
-	 * Allows the Restocker to remove an item from a machine.
-	 *
-	 */
-	private static void removeItem() { 
-		System.out.println("Please enter the item that needs to be removed.");
-	
-	}
-
 	/**
 	 * Allows the Restocker to select a machine.
 	 *
