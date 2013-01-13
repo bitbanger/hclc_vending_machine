@@ -26,7 +26,13 @@ public class Customer extends User
 		{
 			setId(CASH_ID);
 		}
-		catch(BadStateException impossible) {} //we just created the parent, so this can't happen
+		catch(BadStateException impossible) //we just created the parent, so this can't happen
+		{
+			System.err.println("CRITICAL : Model detected a problem not previously thought possible!");
+			System.err.print("    DUMP : ");
+			impossible.printStackTrace();
+			System.err.println();
+		}
 		money=0;
 	}
 
