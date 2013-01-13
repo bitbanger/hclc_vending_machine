@@ -32,7 +32,7 @@ public class Manager extends User
 	public Manager(Manager existing)
 	{
 		super(existing);
-		this.password=password;
+		this.password=existing.password;
 	}
 
 	/**
