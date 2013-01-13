@@ -25,7 +25,7 @@ public class ManagerAlterLayoutScreen {
 	 * @return the Food in the rows
 	 */
 	public FoodItem[][] listRows() {
-		Row[][] rows = machine.getCurrentLayout().getRows();
+		Row[][] rows = machine.getNextLayout().getRows();
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
