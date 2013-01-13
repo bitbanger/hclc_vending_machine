@@ -79,7 +79,7 @@ public class ManagerHomeScreenTest
 	 * the database
 	 **/
 	@Test
-	public void badAlterLayout2()
+	public void badAlterLayout2() throws Exception
 	{
 		ManagerHomeScreen test = new ManagerHomeScreen(manny);
 		ManagerAlterLayoutScreen test1 = test.alterLayout(new VendingMachine(testUtil.machines.get(0).getLocation(), 1, testUtil.machines.get(0).getCurrentLayout()));

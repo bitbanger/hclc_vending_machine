@@ -51,14 +51,14 @@ public class ManagerMachineManagementScreen {
 	 * @param layout the initial layout to use
 	 */
 	public void addMachine( Location location, int interval, VMLayout layout ) {
-		VendingMachine machine = new VendingMachine( location, interval, layout );
 		try {
+			VendingMachine machine = new VendingMachine( location, interval, layout );
 			db.updateOrCreateVendingMachine( machine );
+			storefronts.add( machine );
 		} catch ( Exception databaseProblem ) {
 			System.err.println("ERROR: Database problem encountered!");
 			System.err.println("     : Dump details ... " + databaseProblem);
 		}
-		storefronts.add( machine );
 	}
 
 	/**

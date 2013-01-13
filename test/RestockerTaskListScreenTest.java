@@ -53,13 +53,15 @@ public class RestockerTaskListScreenTest {
 		VendingMachine vm = new VendingMachine( help0.getLocation(), 2, 
 			help1.getCurrentLayout(), help1.getNextLayout(), true );
 		
+		Row[][] second = new VMLayout(vm.getNextLayout()).getRows();
+		Row[][] third = new VMLayout(vm.getCurrentLayout()).getRows();
 		RestockerTaskListScreen hope = new RestockerTaskListScreen( vm );
 		hope.completeStocking();
 		Row[][] first = vm.getCurrentLayout().getRows();
-		Row[][] second = vm.getNextLayout().getRows();
 		for ( int i = 0; i < 2; i++ ) {
 			for ( int j = 0; j < 2; j++ ) {
-				Assert.assertTrue( first[i][j].equals( second[i][j] ) );
+				Assert.assertTrue(first[i][j].getProduct().equals(second[i][j].getProduct()));
+				Assert.assertTrue(first[i][j].getRemainingQuantity() == second[i][j].getRemainingQuantity() || first[i][j].getRemainingQuantity() == third[i][j].getRemainingQuantity());
 			}
 		}
 		Assert.assertTrue( vm.getCurrentLayout().getDepth() 

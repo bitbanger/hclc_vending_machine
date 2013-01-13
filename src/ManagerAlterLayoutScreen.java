@@ -53,8 +53,6 @@ public class ManagerAlterLayoutScreen {
 			System.err.println("ERROR: Database problem encountered!");
 			System.err.println("     : Dump details ... " + databaseProblem);
 		}
-		machine.setNextLayout( new VMLayout ( rows, 
-			machine.getNextLayout().getDepth() ) );
 	}
 
 	/**
