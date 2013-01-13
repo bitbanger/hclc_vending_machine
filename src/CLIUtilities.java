@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.*;
 
 /**
  * Utility class for creating a usable CLI.
@@ -25,7 +26,7 @@ public class CLIUtilities {
 	 * @return			The user's response to the message. One line of recorded input
 	 */
 	public static String prompt(String message) {
-		System.out.print(message);
+		System.out.print(message + ": ");
 		return scan.nextLine();
 	}
 
@@ -56,5 +57,65 @@ public class CLIUtilities {
 		} while(selectedOption < 0 || selectedOption >= options.length);
 
 		return selectedOption;
+	}
+
+	/**
+	 * shows a new title
+	 * @param name the name of the new title
+	 */
+	public static void printTitle( String name ) {
+		System.out.println("========");
+		System.out.println(name);
+		System.out.println("========");
+	}
+
+	/**
+	 * Provides a simple way to get the user to enter a float for cash amounts
+	 * @param prompt 
+	 * @return moneys the amount of money returned
+	 */
+	public static int moneyPrompt( String prompt ) {
+		float moneys = -1;
+		do {
+			try {
+				moneys = Float.parseFloat(prompt(prompt + ": ") );
+				moneys *= 100;
+				if ( Math.abs(moneys - (int)moneys) > (Math.pow(10, -23)) ) {
+					moneys = -1;
+					System.out.println("Please have only two places after the decimal");
+				}
+			} catch (NumberFormatException e) {
+				moneys = -1;
+				continue;
+			}
+		} while (moneys < 0);
+		return (int)moneys;
+	} 
+
+	/**
+	 * Provides a simple way to get a number of ints
+	 * @param prompt the prompt to the screen
+	 * @return the int
+	 */
+	public static int promptInt( String prompt ) {
+		int theInt = -1;
+		do {
+			try {
+				theInt = Integer.parseInt(prompt(prompt + ": "));
+			} catch(NumberFormatException e) {
+				theInt = -1;
+				continue;
+			}
+		} while(theInt < 0);
+		return theInt;
+	}
+
+	/** 
+	 * Provides a way to print a collection
+	 * @param col the collection to print
+	 */
+	public static void printCollection( Collection<Object> col ) {
+		for ( Object next : col )
+			System.out.println( next.toString() );
 	}
 }
