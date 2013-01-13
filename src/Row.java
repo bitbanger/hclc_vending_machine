@@ -39,16 +39,40 @@ public class Row extends ModelBase
 	}
 
 	/**
-	 * Copy constructor.
+	 * (Completely shallow) copy constructor.
 	 * Creates a copy of the supplied instance.
 	 * @param existing the instance to clone
 	 */
 	public Row(Row existing)
 	{
-		super(existing);
+		this(existing, false);
+	}
+
+	/**
+	 * (Optionally mixed-depth) copy constructor.
+	 * If asked to make a deep copy, the two instances' IDs and expiration dates&mdash;but <i>not</i> their products&mdash;will become independent and/or be recursively copied to avoid changes' clashing.
+	 * From the consequential discrepancy between the primary keys, we see that deep-copied daughter instances are never <tt>equal</tt> to their mothers.
+	 * @param existing the instance to clone
+	 * @param deepShallows whether to do the partial-decoupling
+	 */
+	public Row(Row existing, boolean deepShallows)
+	{
+		super();
+		
+		if(deepShallows)
+			this.expirationDate=(GregorianCalendar)existing.expirationDate.clone();
+		else
+		{
+			try
+			{
+				setId(existing.getId());
+			}
+			catch(Exception impossible) {} //there can be no ID there!
+			this.expirationDate=existing.expirationDate;
+		}
+			
 		this.product=existing.product;
 		this.remainingQuantity=existing.remainingQuantity;
-		this.expirationDate=existing.expirationDate;
 	}
 
 	/**
@@ -131,6 +155,7 @@ public class Row extends ModelBase
 
 	/**
 	 * Checks whether two instances contain the same data.
+	 * Note: this is <tt>false</tt> for daughters of deep-copy operations!
 	 * @param another another instance
 	 * @return whether their contents match
 	 */

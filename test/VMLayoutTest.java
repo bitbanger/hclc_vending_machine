@@ -79,23 +79,26 @@ public class VMLayoutTest
 	}
 
 	@Test
-	public void testShallowCopyConstruction() throws BadArgumentException
+	public void testShallowCopyConstruction() throws BadArgumentException, BadStateException
 	{
 		VMLayout orig=new VMLayout(1, 2, 3);
 		orig.setNextVisit(new GregorianCalendar());
+		orig.setId(8);
 		VMLayout bak=new VMLayout(orig);
 		
 		assertTrue(orig.getRows()==bak.getRows());
 		assertEquals(orig.getDepth(), bak.getDepth());
 		assertTrue(orig.getNextVisit()==bak.getNextVisit());
 		assertEquals(orig, bak);
+		assertEquals(orig.getId(), bak.getId());
 	}
 
-	@Test
-	public void testDeepCopyConstruction() throws BadArgumentException
+	@Test(expected=BadStateException.class)
+	public void testDeepCopyConstruction() throws BadArgumentException, BadStateException
 	{
 		VMLayout orig=new VMLayout(1, 2, 3);
 		orig.setNextVisit(new GregorianCalendar());
+		orig.setId(9);
 		VMLayout bak=new VMLayout(orig, true);
 		
 		assertEquals(orig.getRows().length, bak.getRows().length);
@@ -105,7 +108,8 @@ public class VMLayoutTest
 		assertEquals(orig.getDepth(), bak.getDepth());
 		assertFalse(orig.getNextVisit()==bak.getNextVisit());
 		assertEquals(orig.getNextVisit(), bak.getNextVisit());
-		assertEquals(orig, bak);
+		assertFalse(orig==bak);
+		assertFalse(orig.getId()==bak.getId()); //should except (no bak ID)
 	}
 
 	@Test

@@ -53,15 +53,34 @@ public class RowTest
 	}
 
 	@Test
-	public void testCopyConstruction() throws BadArgumentException
+	public void testCopyConstruction() throws BadArgumentException, BadStateException
 	{
 		FoodItem banana=new FoodItem("Banana", 75, 11);
 		GregorianCalendar dragging=new GregorianCalendar();
 		Row fight=new Row(banana, 4, dragging);
+		fight.setId(6);
 		Row noise=new Row(fight);
 		
 		assertEquals(fight, noise);
 		assertFalse(fight==noise);
+		assertEquals(fight.getId(), noise.getId());
+	}
+
+	@Test(expected=BadStateException.class)
+	public void testMixedCopy() throws BadArgumentException, BadStateException
+	{
+		FoodItem banana=new FoodItem("Banana", 75, 11);
+		GregorianCalendar dragging=new GregorianCalendar();
+		Row fight=new Row(banana, 4, dragging);
+		fight.setId(7);
+		Row noise=new Row(fight, true);
+		
+		assertTrue(fight.getProduct()==noise.getProduct());
+		assertEquals(fight.getRemainingQuantity(), noise.getRemainingQuantity());
+		assertEquals(fight.getExpirationDate(), noise.getExpirationDate());
+		assertFalse(fight.getExpirationDate()==noise.getExpirationDate());
+		assertFalse(fight==noise);
+		assertFalse(fight.getId()==noise.getId()); //should except (no noise ID)
 	}
 
 	@Test

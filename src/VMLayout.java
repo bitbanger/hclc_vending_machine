@@ -77,8 +77,9 @@ public class VMLayout extends ModelBase
 
 	/**
 	 * (Optionally deep) copy constructor.
-	 * If asked to make a deep copy, the two instances' sets and arrangements of rows will be decoupled, although the rows themselves will initially be shared.
+	 * If asked to make a deep copy, the two instances' sets, and arrangements of rows, and rows themselves will be decoupled.
 	 * Additionally, a deep copy has a different storage ID so as not to be confused with the original.
+	 * Note that the latter property means that a deep-copied daughter <tt>VMLayout</tt> is <i>not</i> considered <tt>equal</tt> to its mother instance.
 	 * @param existing the instance to clone
 	 * @param deep whether to make a deep copy
 	 */
@@ -91,7 +92,7 @@ public class VMLayout extends ModelBase
 			this.rows=new Row[existing.rows.length][existing.rows[0].length];
 			for(int row=0; row<rows.length; ++row)
 				for(int col=0; col<rows[row].length; ++col)
-					this.rows[row][col]= existing.rows[row][col]==null ? null : new Row(existing.rows[row][col]);
+					this.rows[row][col]= existing.rows[row][col]==null ? null : new Row(existing.rows[row][col], true);
 			if(existing.nextVisit!=null)
 				this.nextVisit=(GregorianCalendar)existing.nextVisit.clone();
 			else
@@ -146,6 +147,7 @@ public class VMLayout extends ModelBase
 
 	/**
 	 * Checks whether two instances contain the same data.
+	 * Note: instances sharing a deep-copy operation are<b>n't</b> <tt>equal</tt>.
 	 * @param another another instance
 	 * @return whether their contents match
 	 */
