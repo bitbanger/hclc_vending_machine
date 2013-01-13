@@ -6,6 +6,11 @@ import java.util.Scanner;
  */
 public class CLIUtilities {
 
+	/**
+	 * Scanner instance
+	 **/
+	private static Scanner scan = new Scanner(System.in);
+
 	/** Private constructor to disable construction */
 	private CLIUtilities() {
 
@@ -21,7 +26,6 @@ public class CLIUtilities {
 	 */
 	public static String prompt(String message) {
 		System.out.print(message);
-		Scanner scan = new Scanner(System.in);
 		return scan.nextLine();
 	}
 
