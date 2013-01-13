@@ -23,14 +23,16 @@ public class VMLayout extends ModelBase
 	 * @param height the major size
 	 * @param width the minor size
 	 * @param depth the size of each product row
-	 * @throws IllegalArgumentException if the <tt>height</tt>, or <tt>width</tt> is invalid
+	 * @throws BadArgumentException if the <tt>height</tt>, <tt>width</tt>, or <tt>depth</tt> is negative
 	 */
-	public VMLayout(int height, int width, int depth) throws IllegalArgumentException
+	public VMLayout(int height, int width, int depth) throws BadArgumentException
 	{
 		if(height<=0)
-			throw new IllegalArgumentException("Height must be positive");
+			throw new BadArgumentException("Height must be positive");
 		else if(width<=0)
-			throw new IllegalArgumentException("Width must be positive");
+			throw new BadArgumentException("Width must be positive");
+		else if(depth<=0)
+			throw new BadArgumentException("Depth must be positive");
 		
 		rows=new Row[height][width];
 		this.depth=depth;
@@ -42,18 +44,20 @@ public class VMLayout extends ModelBase
 	 * Creates an instance with the provided contents.
 	 * @param rows the rows to be held in the machine
 	 * @param depth the size of each product row
-	 * @throws IllegalArgumentException if <tt>rows</tt> is <tt>null</tt> or ragged
+	 * @throws BadArgumentException if <tt>rows</tt> is <tt>null</tt> or ragged, or if <tt>depth</tt> is negative
 	 */
-	public VMLayout(Row[][] rows, int depth) throws IllegalArgumentException
+	public VMLayout(Row[][] rows, int depth) throws BadArgumentException
 	{
 		if(rows==null)
-			throw new IllegalArgumentException("Rows cannot be null");
+			throw new BadArgumentException("Rows cannot be null");
+		else if(depth<=0)
+			throw new BadArgumentException("Depth must be positive");
 		for(Row[] line : rows)
 		{
 			if(line==null)
-				throw new IllegalArgumentException("Rows cannot contain a null group");
+				throw new BadArgumentException("Rows cannot contain a null group");
 			else if(line.length!=rows[0].length)
-				throw new IllegalArgumentException("Rows cannot have ragged sizing");
+				throw new BadArgumentException("Rows cannot have ragged sizing");
 		}
 		
 		this.rows = rows;
@@ -105,7 +109,7 @@ public class VMLayout extends ModelBase
 
 	/**
 	 * Note that you shouldn't add any <tt>Row</tt> that stocks more items than <tt>getDepth()</tt>'s value.
-	 * @return all the rows
+	 * @return all the things!
 	 */
 	public Row[][] getRows()
 	{
