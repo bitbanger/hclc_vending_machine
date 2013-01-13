@@ -52,7 +52,6 @@ public class ManagerMachineManagementScreen {
 	 * @return the id of the machine
 	 */
 	public int addMachine( Location location, int interval, VMLayout layout ) {
-		VendingMachine machine = new VendingMachine( location, interval, layout );
 		try {
 			VendingMachine machine = new VendingMachine( location, interval, layout );
 			db.updateOrCreateVendingMachine( machine );
