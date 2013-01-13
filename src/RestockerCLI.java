@@ -40,10 +40,14 @@ public class RestockerCLI {
 	 * @param restockerTaskListScreen The state of the RestockerTaskListScreen
 	 */
 	private static void listTasks(RestockerTaskListScreen restockerTaskListScreen){
+		String[] tasks;
+
 		System.out.println("This is the list of tasks that need to be performed.");
+	
+		tasks = restockerTaskListScreen.assembleStockingList();
 
-
-
+		for (String task : tasks)
+			System.out.println(task);
 	}
 	
 	/**
@@ -53,6 +57,7 @@ public class RestockerCLI {
 	 */
 	private static void pickMachine(RestockerMachinePickerScreen restockerMachinePickerScreen) {
 		System.out.println("Please enter the number of the machine that needs to be selected.");
-	
+		
+
 	}
 }
