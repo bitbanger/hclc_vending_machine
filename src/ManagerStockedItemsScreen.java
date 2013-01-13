@@ -34,18 +34,21 @@ public class ManagerStockedItemsScreen {
 	 * @param name the name of the item
 	 * @param price the price in cents
 	 * @param freshLength the amount of time the item stays fresh
+	 * @return the id of the added item
  	 */
-	public void addItem( String name, int price, long freshLength ) {
+	public int addItem( String name, int price, long freshLength ) {
 		try
 		{
 			FoodItem next = new FoodItem( name, price, freshLength );
 			db.updateOrCreateFoodItem( next );
 			stockpile.add( next );
+			return next.getId();
 		}
 		catch(Exception databaseProblem)
 		{
 			System.err.println("ERROR: Database problem encountered!");
 			System.err.println("     : Dump details ... "+databaseProblem);
+			return -1;
 		}
 	}
 	
