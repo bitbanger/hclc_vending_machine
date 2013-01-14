@@ -59,31 +59,8 @@ public class ManagerHomeScreenTest
 	public void goodAlterLayout()
 	{
 		ManagerHomeScreen test = new ManagerHomeScreen(manny);
-		ManagerAlterLayoutScreen test1 = test.alterLayout(testUtil.machines.get(0));
+		ManagerAlterLayoutScreen test1 = test.alterLayout();
 		assertTrue(test1 != null);
-	}
-
-	/**
-	 * Tests the alterLayout method with null input
-	 **/
-	@Test
-	public void badAlterLayout1()
-	{
-		ManagerHomeScreen test = new ManagerHomeScreen(manny);
-		ManagerAlterLayoutScreen test1 = test.alterLayout(null);
-		assertTrue(test1 == null);
-	}
-
-	/**
-	 * Tests the alterLayout method with bad input (a vending machine not in
-	 * the database
-	 **/
-	@Test
-	public void badAlterLayout2() throws Exception
-	{
-		ManagerHomeScreen test = new ManagerHomeScreen(manny);
-		ManagerAlterLayoutScreen test1 = test.alterLayout(new VendingMachine(testUtil.machines.get(0).getLocation(), 1, testUtil.machines.get(0).getCurrentLayout()));
-		assertTrue(test1 == null);
 	}
 
 	/**

@@ -20,11 +20,6 @@ public class ManagerAlterLayoutScreenTest
 	private DatabaseLayer dbl;
 
 	/**
-	 * Manager to use in tests. Taken from testUtil.
-	 **/
-	private VendingMachine machine;
-
-	/**
 	 * Runs before each of the following tests. Does the following:
 	 * 1. Gets the instance of the DatabaseLayer
 	 * 2. Nukes the database
@@ -38,7 +33,6 @@ public class ManagerAlterLayoutScreenTest
 		dbl = DatabaseLayer.getInstance();
 		dbl.nuke();
 		testUtil = new TestUtilities(true);
-		machine = testUtil.machines.get(0);
 	}
 
 	/**
@@ -47,7 +41,7 @@ public class ManagerAlterLayoutScreenTest
 	@Test
 	public void testContructor()
 	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
+		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen();
 	}
 	
 	/**
@@ -56,7 +50,7 @@ public class ManagerAlterLayoutScreenTest
 	@Test
 	public void listRowsTest() throws BadStateException, BadArgumentException
 	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
+		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen();
 		FoodItem[][] test1 = test.listRows();
 		Row[][] rows = testUtil.machines.get(0).getNextLayout().getRows();
 		assertTrue(test1.length == rows.length);
@@ -72,298 +66,5 @@ public class ManagerAlterLayoutScreenTest
 				TestUtilities.foodItemEquals(testItem, compareItem);
 			}
 		}
-	}
-
-	/**
-	 * Tests queueRowChange with valid input
-	 **/
-	@Test
-	public void queueRowChangeTest1()
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(0, 0), testUtil.items.get(2));
-		assertTrue(machine.getNextLayout().getRows()[0][0].getProduct().equals(testUtil.items.get(2)));
-		assertTrue(machine.getNextLayout().getRows()[0][0].getRemainingQuantity() == copyDepth);
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				if (i!=0 || j!=0)
-				{
-					assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-				}
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with valid input
-	 **/
-	@Test
-	public void queueRowChangeTest2()
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(1, 0), testUtil.items.get(3));
-		assertTrue(machine.getNextLayout().getRows()[1][0].getProduct().equals(testUtil.items.get(3)));
-		assertTrue(machine.getNextLayout().getRows()[1][0].getRemainingQuantity() == copyDepth);
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				if (i!=1 || j!=0)
-				{
-					assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-				}
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest3()
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(1, 0), null);
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest4() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		FoodItem lubricatedCondom = new FoodItem("Generic Lubricated Condom", 100000, 1);
-		test.queueRowChange(new Pair<Integer, Integer>(1, 1), lubricatedCondom);
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest5() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(null, testUtil.items.get(3));
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest6() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(3,3), testUtil.items.get(3));
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest7() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(-1,-1), testUtil.items.get(3));
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest8() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(-1,0), testUtil.items.get(3));
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest9() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(0,-1), testUtil.items.get(3));
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest10() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(0,3), testUtil.items.get(3));
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests queueRowChange with invalid input
-	 **/
-	@Test
-	public void queueRowChangeTest11() throws BadStateException, BadArgumentException
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		
-		Row[][] copy = new VendingMachine(machine).getNextLayout().getRows();
-		int copyDepth = new VendingMachine(machine).getNextLayout().getDepth();
-		test.queueRowChange(new Pair<Integer, Integer>(3,0), testUtil.items.get(3));
-		assertTrue(copy.length == machine.getNextLayout().getRows().length);
-		for (int i=0;i<2;++i)
-		{
-			assertTrue(copy[i].length == machine.getNextLayout().getRows()[i].length);
-			for (int j=0;j<2;++j)
-			{
-				assertTrue(machine.getNextLayout().getRows()[i][j].equals(copy[i][j]));
-			}
-		}
-	}
-
-	/**
-	 * Tests commitRowChanges with valid input
-	 **/
-	@Test
-	public void commitRowChangesTest1() throws Exception
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		test.queueRowChange(new Pair<Integer, Integer>(0,0), testUtil.items.get(0));
-		boolean result = test.commitRowChanges();
-		assertTrue(result);
-		TestUtilities.vendingMachineEquals(dbl.getVendingMachineById(machine.getId()), machine);
-	}
-	
-	/**
-	 * Tests commitRowChanges with valid input
-	 **/
-	@Test
-	public void commitRowChangesTest2() throws Exception
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		boolean result = test.commitRowChanges();
-		assertTrue(result);
-		TestUtilities.vendingMachineEquals(dbl.getVendingMachineById(machine.getId()), machine);
-	}
-
-	/**
-	 * Tests commitRowChanges with valid input
-	 **/
-	@Test
-	public void commitRowChangesTest3() throws Exception
-	{
-		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen(machine);
-		test.queueRowChange(new Pair<Integer, Integer>(0,0), testUtil.items.get(0));
-		test.queueRowChange(new Pair<Integer, Integer>(1,0), testUtil.items.get(3));
-		test.queueRowChange(new Pair<Integer, Integer>(1,1), testUtil.items.get(1));
-		boolean result = test.commitRowChanges();
-		assertTrue(result);
-		TestUtilities.vendingMachineEquals(dbl.getVendingMachineById(machine.getId()), machine);
 	}
 }
