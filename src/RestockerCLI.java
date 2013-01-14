@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class RestockerCLI {
 
-	/** Instantiating a new RestockerMachinePickerScreen*/
+	/** Instantiating a new RestockerMachinePickerScreen */
 	private static RestockerMachinePickerScreen restockerMachinePickerScreen = new RestockerMachinePickerScreen();
 
 
@@ -17,7 +17,7 @@ public class RestockerCLI {
 	 * @param args Arguments required to create String arrays in Java
 	 */
 	public static void main(String[] args) {
-		System.out.println("Welcome to the Restocker interface!\n---\n");
+		CLIUtilities.printTitle("Welcome to the Restocker interface!");
 		pickMachine(restockerMachinePickerScreen);
 	}
 
@@ -25,17 +25,23 @@ public class RestockerCLI {
 	 *
 	 * @param restockerTaskListScreen The state of the RestockerTaskListScreen
 	 */
-	private static void listTasks(RestockerTaskListScreen restockerTaskListScreen){
+	private static void listTasks(RestockerTaskListScreen restockerTaskListScreen) {
 		String[] tasks;
 
-		CLIUtilities.printTitle("List Tasks Screen");
+		CLIUtilities.printTitle("List of Tasks to Perform");
 	
 		tasks = restockerTaskListScreen.assembleStockingList();
 
 		for (String task : tasks)
 			System.out.println(task);
 
-		System.out.println("========\nApplication closed.");
+		while(!CLIUtilities.yesOrNo("Have you completed all tasks yet?")) {
+
+		}
+
+		restockerTaskListScreen.completeStocking();
+
+		System.out.println("========\nRestocking completed.");
 	}
 	
 	/**
@@ -48,7 +54,7 @@ public class RestockerCLI {
 
 		int idNumber;
 	
-		CLIUtilities.printTitle("Pick Machine Screen");
+		CLIUtilities.printTitle("Please Pick a Machine");
 		
 		CLIUtilities.printCollection(vms);
 
@@ -62,6 +68,6 @@ public class RestockerCLI {
 		}
 		
 
-		listTasks(restockerTaskListScreen);		
+		listTasks(restockerTaskListScreen);
 	}
 }
