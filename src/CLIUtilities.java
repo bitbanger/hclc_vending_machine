@@ -10,7 +10,7 @@ public class CLIUtilities {
 	/**
 	 * Scanner instance
 	 **/
-	private static Scanner scan = new Scanner(System.in);
+	private static final Scanner scan = new Scanner(System.in);
 
 	/** Private constructor to disable construction */
 	private CLIUtilities() {
