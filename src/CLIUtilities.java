@@ -59,6 +59,24 @@ public class CLIUtilities {
 		return selectedOption;
 	}
 
+	public static int option(ArrayList<? extends Object> options) {
+		for(int i = 0; i < options.size(); ++i) {
+			System.out.println((i+1) + ". " + options.get(i));
+		}
+		System.out.println();
+
+		int selectedOption = -1;
+		do {
+			try {
+				selectedOption = Integer.parseInt(prompt("Select an option")) - 1;
+			} catch(NumberFormatException e) {
+				continue;
+			}
+		} while(selectedOption < 0 || selectedOption >= options.size());
+
+		return selectedOption;
+	}
+
 	/**
 	 * shows a new title
 	 * @param name the name of the new title
