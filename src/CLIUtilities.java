@@ -78,7 +78,7 @@ public class CLIUtilities {
 		float moneys = -1;
 		do {
 			try {
-				moneys = Float.parseFloat(prompt(prompt + ": ") );
+				moneys = Float.parseFloat(prompt(prompt) );
 				moneys *= 100;
 				if ( Math.abs(moneys - (int)moneys) > (Math.pow(10, -23)) ) {
 					moneys = -1;
@@ -101,7 +101,7 @@ public class CLIUtilities {
 		int theInt = -1;
 		do {
 			try {
-				theInt = Integer.parseInt(prompt(prompt + ": "));
+				theInt = Integer.parseInt(prompt(prompt));
 			} catch(NumberFormatException e) {
 				theInt = -1;
 				continue;
