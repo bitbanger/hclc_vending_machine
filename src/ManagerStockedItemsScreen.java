@@ -49,7 +49,7 @@ public class ManagerStockedItemsScreen {
 		catch(Exception databaseProblem)
 		{
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
-			return FAILURE_KEY;
+			return FAILURE_KEY; // I wish we were doing this in SML or Haskell
 		}
 	}
 
@@ -59,9 +59,8 @@ public class ManagerStockedItemsScreen {
 	 * @param val the new value of the item
 	 * @return whether it succeeded
 	 */
-	public boolean changeItemStatus( int id, boolean val ) {
+	public boolean changeItemStatus( FoodItem item, boolean val ) {
 		try {
-			FoodItem item = db.getFoodItemById( id );
 			item.makeActive( val );
 			db.updateOrCreateFoodItem( item );
 			return true;
@@ -77,9 +76,8 @@ public class ManagerStockedItemsScreen {
 	 * @param name the new name
 	 * @return boolean whether it succeeded
 	 */
-	public boolean changeItemName( int id, String name ) {
+	public boolean changeItemName( FoodItem item, String name ) {
 		try {
-			FoodItem item = db.getFoodItemById( id );
 			item.setName( name );
 			db.updateOrCreateFoodItem( item );
 			return true;
@@ -95,9 +93,8 @@ public class ManagerStockedItemsScreen {
 	 * @param price the new price
 	 * @return boolean whether it succeeded
 	 */
-	public boolean changeItemPrice( int id, int price ) {
+	public boolean changeItemPrice( FoodItem item, int price ) {
 		try {
-			FoodItem item = db.getFoodItemById( id );
 			item.setPrice( price );
 			db.updateOrCreateFoodItem( item );
 			return true;
@@ -113,9 +110,8 @@ public class ManagerStockedItemsScreen {
 	 * @param freshLength the new length
 	 * @return boolean whether it succeeded
 	 */
-	public boolean changeItemFreshLength( int id, long freshLength ) {
+	public boolean changeItemFreshLength( FoodItem item, long freshLength ) {
 		try {
-			FoodItem item = db.getFoodItemById( id );
 			item.setFreshLength( freshLength );
 			db.updateOrCreateFoodItem( item );
 			return true;
