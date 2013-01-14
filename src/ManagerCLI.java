@@ -1,5 +1,6 @@
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * CLI for the Customer's perspective.
@@ -71,6 +72,9 @@ public class ManagerCLI
 					ManagerMachineManagementScreen machinesScreen = home.manageMachines();
 					manageMachines(machinesScreen);
 					break;
+				case 4:
+					ManagerUserAccountsScreen userAccount = home.manageUsers();
+					manageUsers(userAccount);
 				case 5:
 					return;
 			}
@@ -162,6 +166,12 @@ public class ManagerCLI
 			}
 		}
 		return selected;
+	}
+
+	private static Manager managerChooser(ArrayList<Manager> managers)
+	{
+		int choice = CLIUtilities.option(managers);
+		return managers.get(choice);
 	}
 
 	/**
@@ -417,6 +427,96 @@ public class ManagerCLI
 				System.out.println("Item changed successfully");
 			else
 				System.out.println("An error occurred while attempting to change item");
+		}
+	}
+
+	private static void manageUsers(ManagerUserAccountsScreen screen)
+	{
+		while (true)
+		{
+			int choice = CLIUtilities.option(
+				"Manage Customers",
+				"Manage Managers",
+				"Exit");
+			switch (choice)
+			{
+				case 0:
+					manageCustomers(screen);
+					break;
+				case 1:
+					manageManagers(screen);
+					break;
+				case 2:
+					return;
+			}
+		}
+	}
+
+	private static void manageCustomers(ManagerUserAccountsScreen screen)
+	{
+		while (true)
+		{
+			int choice = CLIUtilities.option(
+				"View Customers",
+				"Add Customer",
+				"Exit");
+			switch (choice)
+			{
+				case 0:
+					System.out.println("Customers");
+					CLIUtilities.printCollection(screen.listCustomers());
+					break;
+				case 1:
+					String name = CLIUtilities.prompt("Name");
+					int balance = CLIUtilities.moneyPrompt("Initial balance");
+					boolean success = screen.addCustomer(name, balance) != -1;
+					if (success)
+						System.out.println("Customer added successfully");
+					else
+						System.out.println("An error occurred while attempting to add customer");
+					break;
+				case 2:
+					return;
+			}
+		}
+	}
+
+	private static void manageManagers(ManagerUserAccountsScreen screen)
+	{
+		while (true)
+		{
+			int choice = CLIUtilities.option(
+				"View Managers",
+				"Add Manager",
+				"Change A Manager's Password",
+				"Exit");
+			switch (choice)
+			{
+				case 0:
+					System.out.println("Managers:");
+					CLIUtilities.printCollection(screen.listManagers());
+					break;
+				case 1:
+					String name = CLIUtilities.prompt("Name");
+					String password = CLIUtilities.prompt("Password");
+					boolean addSuccess = screen.addManager(name, password) != -1;
+					if (addSuccess)
+						System.out.println("Manager added successfully");
+					else
+						System.out.println("An error occurred while attempting to add the manager");
+					break;
+				case 2:
+					Manager manny = managerChooser(screen.listManagers());
+					String newPassword = CLIUtilities.prompt("New password");
+					boolean changeSuccess = screen.changePassword(manny, newPassword);
+					if (changeSuccess)
+						System.out.println("Password changed successfully");
+					else
+						System.out.println("An error occurred while attempting to change the password");
+					break;
+				case 3:
+					return;
+			}
 		}
 	}
 
