@@ -371,4 +371,12 @@ public class TestUtilities
 		for (Transaction trans : transactions)
 			dbl.updateOrCreateTransaction(trans);
 	}
+
+	/**
+	 * Adds data to database
+	 **/
+	public static void main(String[] args) throws Exception
+	{
+		TestUtilities testUtil = new TestUtilities(true);
+	}
 }
