@@ -173,4 +173,10 @@ public class VMLayout extends ModelBase
 			return false;
 		return super.equals(another) && this.depth==other.depth && ((this.nextVisit==null && other.nextVisit==null) || nextVisit.equals(other.nextVisit));
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString() + " " + String.format("Vending machine layout of dimensions %d x %d x %d, next visited on %s", rows.length, rows[0].length, depth, nextVisit.getTime());
+	}
 }

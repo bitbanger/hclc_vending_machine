@@ -122,4 +122,10 @@ public class Location extends ModelBase {
 		
 		return super.equals(another) && this.zipCode==other.zipCode && state.equals(other.state) && Arrays.equals(this.nearbyBusinesses, other.nearbyBusinesses);
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString() + " " + String.format("%s (%05d)", state, zipCode);
+	}
 }
