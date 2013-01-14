@@ -177,10 +177,16 @@ public class CLIUtilities {
 			FoodItem[] column = rows[i];
 			for (int j=0;j<column.length;++j)
 			{
+				System.out.printf("(%d, %d) ", i, j);
 				FoodItem item = column[j];
 				String name = "EMPTY";
-				if (item != null)
-					name = item.getName();
+				if (item != null) {
+					if(item.isActive()) {
+						name = item.getName();
+					} else {
+						name = "INACTIVE";
+					}
+				}
 				System.out.printf("%-10s ", name);
 			}
 			System.out.println();
@@ -188,9 +194,9 @@ public class CLIUtilities {
 			{
 				FoodItem item = column[j];
 				String price = "";
-				if (item != null)
+				if (item != null && item.isActive())
 					price = String.format("$%-8.2f ", item.getPrice()/100.0);
-				System.out.printf("%10s ", price);
+				System.out.printf("       %10s ", price);
 			}
 			System.out.println();
 			System.out.println();
