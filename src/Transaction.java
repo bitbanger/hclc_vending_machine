@@ -137,4 +137,10 @@ public class Transaction extends ModelBase {
 		
 		return super.equals(another) && timestamp.equals(other.timestamp) && machine.equals(other.machine) && customer.equals(other.customer) && product.equals(other.product) && whichRow.equals(other.whichRow) && this.balance==other.balance;
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString() + " " + String.format("%s bought %s at %s", customer.getName(), product.getName(), timestamp.getTime());
+	}
 }

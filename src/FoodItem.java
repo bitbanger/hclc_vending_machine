@@ -9,7 +9,7 @@ public class FoodItem extends ModelBase {
 	/** The food item's price. */
 	private int price;
 
-	/** How long the food item is good for, after being added to the machine. */
+	/** How long the food item is good for, in days, after being added to the machine. */
 	private long freshLength;
 
 	/** Whether the food item is actually being sold. */
@@ -21,7 +21,7 @@ public class FoodItem extends ModelBase {
 	 *
 	 * @param name 			The food item's name.
 	 * @param price			The food item's price.
-	 * @param freshLength	How long the food item is good for, after being added to the machine.
+	 * @param freshLength	How long the food item is good for, in days, after being added to the machine.
 	 * @throws BadArgumentException if <tt>name</tt> is <tt>null</tt>, <tt>price</tt> is negative, or <tt>freshLength</tt> is nonpositive
 	 */
 	public FoodItem(String name, int price, long freshLength) throws BadArgumentException
@@ -141,5 +141,16 @@ public class FoodItem extends ModelBase {
 		FoodItem other=(FoodItem)another;
 		
 		return super.equals(another) && name.equals(other.name) && this.price==other.price && this.freshLength==other.freshLength && this.active==other.active;
+	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString() + " " + 
+			   String.format("%s food item %s, costs %.2f, expires in %d days", 
+			   				 active ? "Active" : "Inactive",
+			   				 name,
+			   				 ((double)price) / 100,
+			  				 freshLength);
 	}
 }

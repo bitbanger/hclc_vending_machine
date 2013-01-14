@@ -174,4 +174,10 @@ public class Row extends ModelBase
 		
 		return super.equals(another) && product.equals(other.product) && this.remainingQuantity==other.remainingQuantity && expirationDate.equals(other.expirationDate);
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString() + " " + String.format("Row of %s, with %d items remaining", product.getName(), remainingQuantity);
+	}
 }
