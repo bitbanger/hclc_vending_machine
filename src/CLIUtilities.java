@@ -114,7 +114,7 @@ public class CLIUtilities {
 	 * Provides a way to print a collection
 	 * @param col the collection to print
 	 */
-	public static void printCollection( Collection<Object> col ) {
+	public static void printCollection( Collection<? extends Object> col ) {
 		for ( Object next : col )
 			System.out.println( next.toString() );
 	}
