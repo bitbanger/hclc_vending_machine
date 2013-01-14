@@ -49,7 +49,7 @@ public class ManagerMachineManagementScreenTest {
 		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
 		Location loc = vms.get(1).getLocation();
 		VMLayout cur = vms.get(0).getCurrentLayout();
-		int id = test.addMachine( loc, 5, cur );
+		int id = test.addMachine( loc.getZipCode(), loc.getState(), loc.getNearbyBusinesses(), 5, cur );
 		Assert.assertTrue( DatabaseLayer.getInstance().
 			getVendingMachineById( id ) != null );
 	}
@@ -62,7 +62,7 @@ public class ManagerMachineManagementScreenTest {
 		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
 		Location loc = vms.get(1).getLocation();
 		VMLayout cur = vms.get(0).getCurrentLayout();
-		int id = test.addMachine( loc, -1, cur );
+		int id = test.addMachine( loc.getZipCode(), loc.getState(), loc.getNearbyBusinesses(), -1, cur );
 		Assert.assertTrue( id == -1 );
 	}
 
@@ -73,10 +73,10 @@ public class ManagerMachineManagementScreenTest {
 		ArrayList<VendingMachine> vms = helper.machines;
 		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
 		int id = vms.get(0).getId();
-		test.deactivateMachine( id );
+		test.deactivateMachine( vms.get(0) );
 		Assert.assertFalse( DatabaseLayer.getInstance().
 			getVendingMachineById( id ).isActive() );
-		test.reactivateMachine( id );
+		test.reactivateMachine( vms.get(0) );
 		Assert.assertTrue( DatabaseLayer.getInstance().
 			getVendingMachineById( id ).isActive() );
 	}
@@ -88,12 +88,24 @@ public class ManagerMachineManagementScreenTest {
 		ArrayList<VendingMachine> vms = helper.machines;
 		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
 		Location loc = vms.get(1).getLocation();
-		test.changeMachineLocation( vms.get(0).getId(), loc );
-		Assert.assertTrue( DatabaseLayer.getInstance().getVendingMachineById( 
-			vms.get(0).getId() ).getLocation().equals( loc ) );
+		test.changeMachineLocation( vms.get(0), loc.getZipCode(), loc.getState(), loc.getNearbyBusinesses() );
+		Location test1 = DatabaseLayer.getInstance().getVendingMachineById(vms.get(0).getId()).getLocation();
+		Assert.assertTrue(test1.getZipCode() == vms.get(1).getLocation().getZipCode());
+		Assert.assertTrue(test1.getState().equals(vms.get(1).getLocation().getState()));
+		String[] arr1 = test1.getNearbyBusinesses();
+		String[] arr2 = vms.get(1).getLocation().getNearbyBusinesses();
+		big: for (String t : arr1)
+		{
+			for (String s : arr2)
+			{
+				if (t.equals(s))
+					continue big;
+			}
+			Assert.assertTrue(false);
+		}
 	}
 
-	@Test
+	/*@Test
 	public void changeLocTestBad() throws SQLException, BadArgumentException,
 		BadStateException {	
 		TestUtilities helper = new TestUtilities( true );
@@ -101,5 +113,5 @@ public class ManagerMachineManagementScreenTest {
 		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
 		boolean result = test.changeMachineLocation( vms.get(0).getId(), null );
 		Assert.assertTrue( result == false );
-	}
+	}*/
 }
