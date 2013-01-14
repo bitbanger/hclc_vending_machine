@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.GregorianCalendar;
-
+import java.util.ArrayList;
 /**
  * The DatabaseLayer class contains static methods for accessing the sqlite
  * database. It includes methods to get, update, and create objects in the
@@ -239,7 +239,7 @@ public class DatabaseLayer
 	 * @return A collection of all of the items in the database.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<FoodItem> getFoodItemsAll() throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<FoodItem> getFoodItemsAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<FoodItem> returnSet = new LinkedList<FoodItem>();
 		Statement stmt = db.createStatement();
@@ -251,7 +251,7 @@ public class DatabaseLayer
 			returnSet.add(item);
 		}
 		results.close();
-		return returnSet;
+		return new ArrayList<FoodItem>( returnSet );
 	}
 
 	/**
@@ -492,7 +492,7 @@ public class DatabaseLayer
 	 * @return A collection of all the locations
 	 * @throws SQLException in case of a database error.
 	 **/
-	public Collection<Location> getLocationsAll() throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Location> getLocationsAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Location> returnSet = new LinkedList<Location>();
 		Statement locStmt = db.createStatement();
@@ -511,7 +511,7 @@ public class DatabaseLayer
 			busStmt.close();
 		}
 		locStmt.close();
-		return returnSet;
+		return new ArrayList<Location>( returnSet );
 	}
 
 	/**
@@ -598,7 +598,7 @@ public class DatabaseLayer
 	 * @return Collection of all of the vending machines in the database.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesAll() throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<VendingMachine> getVendingMachinesAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
@@ -620,7 +620,7 @@ public class DatabaseLayer
 			returnSet.add(machine);
 		}
 		vmResults.close();
-		return returnSet;
+		return new ArrayList<VendingMachine>( returnSet );
 	}
 
 	/**
@@ -629,7 +629,7 @@ public class DatabaseLayer
 	 * @return Collection of all of the vending machines at the given zip code.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
@@ -651,7 +651,7 @@ public class DatabaseLayer
 			returnSet.add(machine);
 		}
 		vmResults.close();
-		return returnSet;
+		return new ArrayList<VendingMachine>( returnSet );
 	}
 
 	/**
@@ -660,7 +660,7 @@ public class DatabaseLayer
 	 * @return Collection of all of the vending machines in the given state.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<VendingMachine> getVendingMachinesByState(String state) throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<VendingMachine> getVendingMachinesByState(String state) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<VendingMachine> returnSet = new LinkedList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
@@ -682,7 +682,7 @@ public class DatabaseLayer
 			returnSet.add(machine);
 		}
 		vmResults.close();
-		return returnSet;
+		return new ArrayList<VendingMachine>( returnSet );
 	}
 
 	/**
@@ -750,7 +750,7 @@ public class DatabaseLayer
 	 * @return A collection of all the managers
 	 * @throws SQLException in case of a database error.
 	 **/
-	public Collection<Customer> getCustomersAll() throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Customer> getCustomersAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Customer> returnSet = new LinkedList<Customer>();
 		Statement stmt = db.createStatement();
@@ -763,7 +763,7 @@ public class DatabaseLayer
 			returnSet.add(returnValue);
 		}
 		stmt.close();
-		return returnSet;
+		return new ArrayList<Customer>( returnSet );
 	}
 
 	/**
@@ -820,7 +820,7 @@ public class DatabaseLayer
 	 * @return A collection of all the managers
 	 * @throws SQLException in case of a database error.
 	 **/
-	public Collection<Manager> getManagersAll() throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Manager> getManagersAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Manager> returnSet = new LinkedList<Manager>();
 		Statement stmt = db.createStatement();
@@ -833,7 +833,7 @@ public class DatabaseLayer
 			returnSet.add(returnValue);
 		}
 		stmt.close();
-		return returnSet;
+		return new ArrayList<Manager>( returnSet );
 	}
 
 	/**
@@ -903,7 +903,7 @@ public class DatabaseLayer
 	 * given vending machine.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByVendingMachine(VendingMachine vm) throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Transaction> getTransactionsByVendingMachine(VendingMachine vm) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -924,7 +924,7 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
-		return transactions;
+		return new ArrayList<Transaction>( transactions );
 	}
 
 	/**
@@ -934,7 +934,7 @@ public class DatabaseLayer
 	 * given zip code.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByZipCode(int zipCode) throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Transaction> getTransactionsByZipCode(int zipCode) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -955,7 +955,7 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
-		return transactions;
+		return new ArrayList<Transaction>( transactions );
 	}
 
 	/**
@@ -965,7 +965,7 @@ public class DatabaseLayer
 	 * given state.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByState(String state) throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Transaction> getTransactionsByState(String state) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -986,7 +986,7 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
-		return transactions;
+		return new ArrayList<Transaction>( transactions );
 	}
 
 	/**
@@ -996,7 +996,7 @@ public class DatabaseLayer
 	 * performed.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsByCustomer(Customer customer) throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Transaction> getTransactionsByCustomer(Customer customer) throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -1017,7 +1017,7 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
-		return transactions;
+		return new ArrayList<Transaction>( transactions );
 	}
 
 	/**
@@ -1025,7 +1025,7 @@ public class DatabaseLayer
 	 * @return A collection of all of the transactions.
 	 * @throws SQLException in case of a database error
 	 **/
-	public Collection<Transaction> getTransactionsAll() throws SQLException, BadStateException, BadArgumentException
+	public ArrayList<Transaction> getTransactionsAll() throws SQLException, BadStateException, BadArgumentException
 	{
 		Collection<Transaction> transactions = new LinkedList<Transaction>();
 		Statement stmt = db.createStatement();
@@ -1046,7 +1046,7 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
-		return transactions;
+		return new ArrayList<Transaction>( transactions );
 	}
 
 	/**
