@@ -41,6 +41,18 @@ public class RestockerTaskListScreen {
 		Row[][] next = vm.getNextLayout().getRows();
 		for ( int i = 0; i < cur.length; i++ ) {
 			for ( int j = 0; j < cur[i].length; j++ ) {
+				if ( next[i][j] == null ) {
+					instructions.add("Remove all from " + i
+						 + ", " + j);
+					continue;
+				}
+				if ( cur[i][j] == null ) {
+					instructions.add("Add " + 
+						next[i][j].getRemainingQuantity()
+						+ " " + next[i][j].getProduct().getName() 
+						+ " to location " + i + ", " + j);
+					continue;
+				}
 				Row items = cur[i][j];
 				Row nextItems = next[i][j];
 				GregorianCalendar exp = items.getExpirationDate();
