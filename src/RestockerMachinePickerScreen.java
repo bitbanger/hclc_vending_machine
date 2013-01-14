@@ -27,8 +27,9 @@ public class RestockerMachinePickerScreen {
 		try
 		{
 			VendingMachine vm = db.getVendingMachineById(id);
-			if ( vm == null )
+			if ( vm == null || !vm.isActive() )
 				return null;
+
 			return new RestockerTaskListScreen( vm );
 		}
 		catch(Exception databaseProblem)
