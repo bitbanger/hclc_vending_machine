@@ -41,6 +41,14 @@ public class ManagerUserAccountsScreenTest {
 			DatabaseLayer.getInstance().getCustomerById( id ) ) );
 	}
 
+	@Test
+	public void addCustTestBad() throws SQLException, BadStateException,
+		BadArgumentException {
+		ManagerUserAccountsScreen test = new ManagerUserAccountsScreen();
+		int id = test.addCustomer("Krutz", -5);
+		Assert.assertTrue( id == -1 );
+	}
+	
 	@Test 
 	public void addManagerTest() throws SQLException, BadStateException, 
 		BadArgumentException {
@@ -48,6 +56,14 @@ public class ManagerUserAccountsScreenTest {
 		int id = test.addManager("Krutz", "password");
 		Assert.assertTrue( test.listManagers().contains( 
 			DatabaseLayer.getInstance().getManagerById( id ) ) );
+	}
+
+	@Test 
+	public void addManagerTestBad() throws SQLException, BadStateException, 
+		BadArgumentException {
+		ManagerUserAccountsScreen test = new ManagerUserAccountsScreen();
+		int id = test.addManager("Krutz", null);
+		Assert.assertTrue( id == -1 );
 	}
 
 	@Test 
@@ -60,4 +76,12 @@ public class ManagerUserAccountsScreenTest {
 			id ).getPassword().equals("password2") );
 	}
 
+	@Test 
+	public void changePassTestBad() throws SQLException, BadStateException, 
+		BadArgumentException {
+		ManagerUserAccountsScreen test = new ManagerUserAccountsScreen();
+		int id = test.addManager("Krutz", "password");
+		boolean success = test.changePassword(id, null);
+		Assert.assertFalse( success );
+	}
 }

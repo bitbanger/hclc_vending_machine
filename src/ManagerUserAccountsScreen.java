@@ -61,7 +61,7 @@ public class ManagerUserAccountsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return -1;
 		}
 	}
@@ -82,7 +82,7 @@ public class ManagerUserAccountsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return -1;
 		}
 	}
@@ -91,25 +91,21 @@ public class ManagerUserAccountsScreen {
 	 * change the password of a manager
 	 * @param managerId the manager whose password is being changed
 	 * @param newPassword the new password
+	 * @return if it succeeded
 	 */
-	public void changePassword( int managerId, String newPassword ) {
+	public boolean changePassword( int managerId, String newPassword ) {
 		try
 		{
 			Manager manny = db.getManagerById( managerId );
 			manny.setPassword( newPassword );
 			db.updateOrCreateManager( manny );
 			managers = db.getManagersAll();
+			return true;
 		}
 		catch(Exception databaseProblem)
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return false;
 		}
-	}
-
-	/**
-	 * exits the current screen
-	 */
-	public void exit() {
-		//TODO determine what this does
 	}
 }
