@@ -24,13 +24,13 @@ public class ManagerCLI
 				{
 					try
 					{
-						id = Integer.parseInt(CLIUtilities.prompt("Enter your id:\n"));
+						id = Integer.parseInt(CLIUtilities.prompt("Enter your id"));
 					}
 					catch(NumberFormatException ex) {}
 					if (id < 1)
 						System.out.println("Invalid id");
 				}
-				String password = CLIUtilities.prompt("Enter your password:\n");
+				String password = CLIUtilities.prompt("Enter your password");
 				homeScreen = loginScreen.tryLogin(id, password);
 				if (homeScreen == null)
 					System.out.println("Invalid id/password combo");
@@ -62,7 +62,10 @@ public class ManagerCLI
 				case 1:
 					preAlterLayout(home);
 					break;
-				case 6:
+				case 2:
+					ManagerStockedItemsScreen itemsScreen = home.manageItems();
+					manageItems(itemsScreen);
+				case 5:
 					return;
 			}
 		}
@@ -219,6 +222,92 @@ public class ManagerCLI
 				case 2:
 					return;
 			}
+		}
+	}
+
+	private static void manageItems(ManagerStockedItemsScreen screen)
+	{
+		while (true)
+		{
+			int choice = CLIUtilities.option(
+				"View Items",
+				"Add Item",
+				"Modify Item",
+				"Exit");
+			switch (choice)
+			{
+				case 0:
+					System.out.println("Items:");
+					CLIUtilities.printCollection(screen.listItems());
+					break;
+				case 1:
+					addItem(screen);
+					break;
+				case 2:
+					editItem(screen);
+					break;
+				case 3:
+					return;
+			}
+		}
+	}
+
+	private static void addItem(ManagerStockedItemsScreen screen)
+	{
+		String name = CLIUtilities.prompt("New item name");
+		int price = CLIUtilities.moneyPrompt("New item price");
+		long freshLength = -1;
+		while (freshLength <= 0)
+			freshLength = CLIUtilities.promptInt("New item fresh length (days)");
+		boolean failure = screen.addItem(name, price, freshLength) == ManagerStockedItemsScreen.FAILURE_KEY;
+		if (!failure)
+			System.out.println("New item added successfully");
+		else
+			System.out.println("An error occurred while trying to add a new item");
+	}
+
+	private static void editItem(ManagerStockedItemsScreen screen)
+	{
+		FoodItem item = foodItemChooser(screen.listItems());
+		while (true)
+		{
+			System.out.println(item);
+			int choice = CLIUtilities.option(
+				"Change name",
+				"Change price",
+				"Change fresh length",
+				"Change activation status",
+				"Done");
+			boolean success = false;
+			switch (choice)
+			{
+				case 0:
+					String name = CLIUtilities.prompt("New name");
+					success = screen.changeItemName(item, name);
+					break;
+				case 1:
+					int price = CLIUtilities.moneyPrompt("New price");
+					success = screen.changeItemPrice(item, price);
+					break;
+				case 2:
+					long freshLength = -1;
+					while (freshLength <= 0)
+						freshLength = CLIUtilities.promptInt("New item fresh length (days)");
+					success = screen.changeItemFreshLength(item, freshLength);
+					break;
+				case 3:
+					boolean active = CLIUtilities.option(
+						"Active",
+						"Inactive") != 1;
+					success = screen.changeItemStatus(item, active);
+					break;
+				case 4:
+					return;
+			}
+			if (success)
+				System.out.println("Item changed successfully");
+			else
+				System.out.println("An error occurred while attempting to change item");
 		}
 	}
 
