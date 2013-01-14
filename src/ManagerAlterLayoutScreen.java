@@ -4,6 +4,8 @@
  * 
  */
 
+import java.util.Collection;
+
 public class ManagerAlterLayoutScreen {
 
 	/** the database */
@@ -33,6 +35,25 @@ public class ManagerAlterLayoutScreen {
 			}
 		}
 		return items;
+	}
+
+	/**
+	 * Lists the food items in the database.
+	 * Note: we may want to change this to list only active items
+	 * @return A collection of food items upon success or null on any type of
+	 * failure.
+	 **/
+	public Collection<FoodItem> listItems()
+	{
+		try
+		{
+			return db.getFoodItemsAll();
+		}
+		catch (Exception generalFault)
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, generalFault);
+			return null;
+		}
 	}
 
 	/**
