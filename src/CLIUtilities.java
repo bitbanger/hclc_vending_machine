@@ -59,6 +59,11 @@ public class CLIUtilities {
 		return selectedOption;
 	}
 
+	/**
+	 * Provies a method for users to select from a list of objects.
+	 * @param options The array list of objects the user will select from
+	 * @return The index of the item (0 based) the user selected
+	 **/
 	public static int option(ArrayList<? extends Object> options) {
 		for(int i = 0; i < options.size(); ++i) {
 			System.out.println((i+1) + ". " + options.get(i));
