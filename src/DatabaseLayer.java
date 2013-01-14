@@ -653,6 +653,9 @@ public class DatabaseLayer
 	 **/
 	public Customer getCustomerById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		if(id==Customer.CASH_ID) //lock out cash customers specially, since they're not database-backed
+			return new Customer();
+		
 		Customer returnValue = null;
 		Statement stmt = db.createStatement();
 		String query = "SELECT customerId, money, name FROM Customer WHERE customerId=" + id;

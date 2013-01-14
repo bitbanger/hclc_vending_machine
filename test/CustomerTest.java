@@ -20,14 +20,14 @@ public class CustomerTest {
 		assertTrue(krutz.getMoney() == 512);
 	}
 
-	@Test(expected=UnsupportedOperationException.class)
+	@Test
 	public void testCashCustomerConstruction() throws BadArgumentException, BadStateException
 	{
 		Customer moneyBags=new Customer();
 		
 		assertTrue(moneyBags.isCashCustomer());
 		assertEquals(moneyBags.getMoney(), 0);
-		moneyBags.getId();
+		assertTrue(moneyBags.isCashCustomer());
 	}
 
 	@Test
