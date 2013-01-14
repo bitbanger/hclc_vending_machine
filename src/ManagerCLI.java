@@ -1,4 +1,3 @@
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
@@ -111,63 +110,38 @@ public class ManagerCLI
 	 **/
 	private static void viewStatsAll(ManagerReportStatsScreen screen)
 	{
-		Collection<Transaction> sales = screen.listSalesAll();
+		ArrayList<Transaction> sales = screen.listSalesAll();
 		System.out.println("\n\nAll Sales:");
 		CLIUtilities.printCollection(sales);
 	}
 
-	private static VendingMachine vmChooser(Collection<VendingMachine> machines)
+	/**
+	 * Handles the dialog for choosing a vending machine from a collection
+	 * @param machines An array list of machines you want the user to select from
+	 * @return The vending machine the user selected
+	 **/
+	private static VendingMachine vmChooser(ArrayList<VendingMachine> machines)
 	{
-		CLIUtilities.printCollection(machines);
-		VendingMachine selected = null;
-		while (selected == null)
-		{
-			int choice = CLIUtilities.promptInt("Input machine id");
-			for (VendingMachine machine : machines)
-			{
-				try
-				{
-					if (choice == machine.getId())
-					{
-						selected = machine;
-						break;
-					}
-				}
-				catch (Exception wtf)
-				{
-					ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, wtf);
-				}
-			}
-		}
-		return selected;
+		int choice = CLIUtilities.option(machines);
+		return machines.get(choice);
 	}
 
-	private static FoodItem foodItemChooser(Collection<FoodItem> items)
+	/**
+	 * Handles the dialog for choosing a food item from a collection
+	 * @param items An array list of machines you want the user to select from
+	 * @return The food item the user selected
+	 **/
+	private static FoodItem foodItemChooser(ArrayList<FoodItem> items)
 	{
-		CLIUtilities.printCollection(items);
-		FoodItem selected = null;
-		while (selected == null)
-		{
-			int choice = CLIUtilities.promptInt("Input food item id");
-			for (FoodItem item : items)
-			{
-				try
-				{
-					if (choice == item.getId())
-					{
-						selected = item;
-						break;
-					}
-				}
-				catch (Exception wtf)
-				{
-					ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, wtf);
-				}
-			}
-		}
-		return selected;
+		int choice = CLIUtilities.option(items);
+		return items.get(choice);
 	}
 
+	/**
+	 * Handles the dialog for choosing a manager from a collection
+	 * @param managers An array list  of managers you want the user to select from
+	 * @return The manager the user selected
+	 **/
 	private static Manager managerChooser(ArrayList<Manager> managers)
 	{
 		int choice = CLIUtilities.option(managers);
@@ -179,9 +153,9 @@ public class ManagerCLI
 	 **/
 	private static void viewStatsMachine(ManagerReportStatsScreen screen)
 	{
-		Collection<VendingMachine> machines = screen.listMachines();
+		ArrayList<VendingMachine> machines = screen.listMachines();
 		VendingMachine selected = vmChooser(machines);
-		Collection<Transaction> sales = screen.listMachineSales(selected);
+		ArrayList<Transaction> sales = screen.listMachineSales(selected);
 		System.out.printf("\n\nSales from vending machine %s:\n", selected.toString());
 		CLIUtilities.printCollection(sales);
 	}
@@ -191,7 +165,7 @@ public class ManagerCLI
 	 **/
 	private static void preAlterLayout(ManagerHomeScreen screen)
 	{
-		Collection<VendingMachine> machines = screen.displayVendingMachines();
+		ArrayList<VendingMachine> machines = screen.displayVendingMachines();
 		VendingMachine selected = vmChooser(machines);
 		ManagerAlterLayoutScreen alterLayout = new ManagerAlterLayoutScreen(selected);
 		alterLayout(alterLayout);
@@ -221,7 +195,7 @@ public class ManagerCLI
 						y = CLIUtilities.promptInt("Y Value:");
 					}
 					System.out.println(layout[y][x]);
-					Collection<FoodItem> items = alterLayout.listItems();
+					ArrayList<FoodItem> items = alterLayout.listItems();
 					FoodItem item = foodItemChooser(items);
 					boolean success = alterLayout.queueRowChange(new Pair<Integer, Integer>(y,x), item);
 					if (success)
@@ -241,6 +215,9 @@ public class ManagerCLI
 		}
 	}
 
+	/**
+	 * Handles the screen to manage food items
+	 **/
 	private static void manageItems(ManagerStockedItemsScreen screen)
 	{
 		while (true)
@@ -268,6 +245,9 @@ public class ManagerCLI
 		}
 	}
 
+	/**
+	 * Handles the scree to manage vending machines
+	 **/
 	private static void manageMachines(ManagerMachineManagementScreen screen)
 	{
 		while (true)
@@ -303,6 +283,9 @@ public class ManagerCLI
 		}
 	}
 
+	/**
+	 * Handles adding a machine
+	 **/
 	private static void addMachine(ManagerMachineManagementScreen screen)
 	{
 		String state = CLIUtilities.prompt("State"); // TODO: better location picker
@@ -328,6 +311,9 @@ public class ManagerCLI
 			System.out.println("An error occured while attempting to add the vending machine");
 	}
 
+	/**
+	 * Handles reactivating a machine
+	 **/
 	private static void reactivateMachine(ManagerMachineManagementScreen screen)
 	{
 		VendingMachine machine = vmChooser(screen.listDeactiveMachines());
@@ -338,6 +324,9 @@ public class ManagerCLI
 			System.out.println("An error occurred while trying to reactivate the machine");
 	}
 
+	/**
+	 * Handles deactivating a machine
+	 **/
 	private static void deactivateMachine(ManagerMachineManagementScreen screen)
 	{
 		VendingMachine machine = vmChooser(screen.listActiveMachines());
@@ -348,6 +337,9 @@ public class ManagerCLI
 			System.out.println("An error occurred while trying to deactivate the machine");
 	}
 
+	/**
+	 * Handles changing a machine's location
+	 **/
 	private static void changeMachineLocation(ManagerMachineManagementScreen screen)
 	{
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
@@ -371,6 +363,9 @@ public class ManagerCLI
 			System.out.println("An error occurred while attempting to change the location");
 	}
 
+	/**
+	 * Handles adding a food item the the system
+	 **/
 	private static void addItem(ManagerStockedItemsScreen screen)
 	{
 		String name = CLIUtilities.prompt("New item name");
@@ -385,6 +380,9 @@ public class ManagerCLI
 			System.out.println("An error occurred while trying to add a new item");
 	}
 
+	/**
+	 * Handles modifying an item in the system
+	 **/
 	private static void editItem(ManagerStockedItemsScreen screen)
 	{
 		FoodItem item = foodItemChooser(screen.listItems());
@@ -430,6 +428,9 @@ public class ManagerCLI
 		}
 	}
 
+	/**
+	 * Handles the user management screen
+	 **/
 	private static void manageUsers(ManagerUserAccountsScreen screen)
 	{
 		while (true)
@@ -452,6 +453,9 @@ public class ManagerCLI
 		}
 	}
 
+	/**
+	 * Handles managing customers
+	 **/
 	private static void manageCustomers(ManagerUserAccountsScreen screen)
 	{
 		while (true)
@@ -481,6 +485,9 @@ public class ManagerCLI
 		}
 	}
 
+	/**
+	 * Handles managing managers
+	 **/
 	private static void manageManagers(ManagerUserAccountsScreen screen)
 	{
 		while (true)
