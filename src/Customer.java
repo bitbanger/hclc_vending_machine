@@ -8,7 +8,7 @@ public class Customer extends User
 	public static final String CASH_NAME="Anonymous"; //if this is null, constructor will fail
 
 	/** The ID reserved for cash customers. */
-	private static final int CASH_ID=Integer.MAX_VALUE;
+	public static final int CASH_ID=Integer.MAX_VALUE;
 
 	/** The person's account balance. */
 	private int money;
@@ -65,21 +65,6 @@ public class Customer extends User
 	}
 
 	/**
-	 * This method may only be used to obtain the primary key of a <i>non-cash</i> customer if such a key has actually been set.
-	 * @return the primary key
-	 * @throws BadStateException if the instance has never been assigned a primary key
-	 * @throws UnsupportedOperationException if the instance is a cash customer
-	 */
-	@Override
-	public int getId() throws BadStateException, UnsupportedOperationException
-	{
-		if(super.getId()==CASH_ID)
-			throw new UnsupportedOperationException("Cash customers refuse to show their IDs");
-		
-		return super.getId();
-	}
-	
-	/**
 	 * Note that <tt>deductMoney(int)</tt> is more appropriate for fulfilling purchases.
 	 * @param money the new balance
 	 * @throws BadArgumentException if a negative value is supplied
@@ -126,15 +111,11 @@ public class Customer extends User
 	{
 		try
 		{
-			return getId()==CASH_ID; //always false if it doesn't fail
+			return getId()==CASH_ID;
 		}
 		catch(BadStateException noneSet) //ID was unset
 		{
 			return false; //not a cash customer
-		}
-		catch(UnsupportedOperationException informationWithheld) //no reply
-		{
-			return true; //must be a cash customer
 		}
 	}
 
