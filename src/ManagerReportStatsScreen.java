@@ -12,9 +12,6 @@ public class ManagerReportStatsScreen {
 	/** the database */
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
-	/** all the transactions */
-	private Collection<Transaction> transactions;
-
 	/** all the machines */
 	private Collection<VendingMachine> machines;
 
@@ -26,7 +23,6 @@ public class ManagerReportStatsScreen {
 	 */
 	public ManagerReportStatsScreen () {
 		try {
-			transactions = db.getTransactionsAll();
 			machines = db.getVendingMachinesAll();
 			locations = db.getLocationsAll();
 		} catch ( Exception databaseProblem ) {
@@ -74,15 +70,28 @@ public class ManagerReportStatsScreen {
 	 */
 	public Collection<Transaction> listLocationSales( Location place ) {
 		ArrayList<Transaction> trans = new ArrayList<Transaction>();
+		try {
+			Collection<Transaction> transactions = db.getTransactionsAll();
+		
 		for ( Transaction cur : transactions ) {
 			if (cur.getMachine().getLocation().equals( place ) )
 				trans.add( cur );
+		}} catch (Exception databaseProblem){
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
 		}
+
 		return trans;
 	}
 
 	public Collection<Transaction> listSalesAll()
 	{
-		return transactions;
+		try {
+			Collection<Transaction> transactions = db.getTransactionsAll();
+			return transactions;
+		} catch (Exception databaseProblem){
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			return null;
+		}
+
 	}
 }
