@@ -152,6 +152,28 @@ public class VMLayout extends ModelBase
 	}
 
 	/**
+	 * @return a visual representation of the contents of the machine
+	 */
+	public String vmContents() {
+		String contents = "";
+
+		for(int i = 0; i < rows.length; ++i) {
+			for(int j = 0; j < rows[0].length; ++j) {
+				if(rows[i][j] == null) {
+					contents += "Empty row";
+				} else {
+					contents += rows[i][j].getProduct().getName() + " x " + rows[i][j].getRemainingQuantity();
+				}
+
+				contents += "\t";
+			}
+			contents += "\n\n";
+		}
+
+		return contents;
+	}
+
+	/**
 	 * Checks whether two instances contain the same data.
 	 * Note: instances sharing a deep-copy operation are<b>n't</b> <tt>equal</tt>.
 	 * @param another another instance
