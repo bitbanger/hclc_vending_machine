@@ -54,7 +54,7 @@ public class CustomerPurchaseScreen {
 	 * @param product the location (as a Pair of Integers) of the product
 	 * @return a reason why it either succeded or failed.  If success, returns "GOOD"
  	 */
-	public String tryPurchase( Pair<Integer, Integer> product ) throws IllegalArgumentException, SQLException {
+	public String tryPurchase( Pair<Integer, Integer> product ) {
 		VMLayout locs = machine.getCurrentLayout();
 		Row[][] rows = locs.getRows();
 		if ( product.first < 0 || rows.length < product.first ||
