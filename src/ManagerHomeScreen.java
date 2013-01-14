@@ -22,27 +22,19 @@ public class ManagerHomeScreen {
 		manny = man;
 	}
 
-	/**
-	 * Fetches a list of active vending machines.
-	 * @return the machine instance, which are not to be modified ( or null on error )
-	 */
-	public static Collection<VendingMachine> listActiveMachines() {
-		try {
-			Collection<VendingMachine> allMachs = db.getVendingMachinesAll();
-
-			Iterator<VendingMachine> trimmer = allMachs.iterator();
-			while ( trimmer.hasNext() ) {
-				if ( !trimmer.next().isActive() ) 
-					trimmer.remove();
-			}
-			return allMachs;
-		} 
-		catch ( Exception uhOh ) {
-			ControllerExceptionHandler.registerConcern(
-				ControllerExceptionHandler.Verbosity.WARN, uhOh);
+	public Collection<VendingMachine> displayVendingMachines()
+	{
+		try
+		{
+			return db.getVendingMachinesAll();
+		}
+		catch (Exception generalFailure)
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFailure);
 			return null;
 		}
 	}
+
 
 	/**
 	 * create a screen to view stats

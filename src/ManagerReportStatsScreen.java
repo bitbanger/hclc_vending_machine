@@ -80,4 +80,9 @@ public class ManagerReportStatsScreen {
 		}
 		return trans;
 	}
+
+	public Collection<Transaction> listSalesAll()
+	{
+		return transactions;
+	}
 }
