@@ -109,7 +109,7 @@ public class RestockerTaskListScreen {
 	/**
 	 * updates the necessary machinery that the stocking is complete
 	 */
-	public void completeStocking() throws SQLException {
+	public void completeStocking() {
 		vm.swapInNextLayout();
 		try
 		{
