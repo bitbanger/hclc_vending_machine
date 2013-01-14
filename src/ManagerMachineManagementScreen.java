@@ -12,7 +12,7 @@ public class ManagerMachineManagementScreen {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	/** the machines */
-	private ArrayList<VendingMachine> storefronts;
+	private ArrayList<VendingMachine> storefronts; // are we running a bank making operation in the back or something?
 
 	/**
 	 * base constructor
@@ -46,6 +46,28 @@ public class ManagerMachineManagementScreen {
 		return vms;
 	}
 
+	public ArrayList<VendingMachine> listDeactiveMachines()
+	{
+		ArrayList<VendingMachine> machines = new ArrayList<VendingMachine>();
+		for (VendingMachine vm : storefronts)
+		{
+			if (!vm.isActive())
+				machines.add(vm);
+		}
+		return machines;
+	}
+
+	public ArrayList<VendingMachine> listActiveMachines()
+	{
+		ArrayList<VendingMachine> machines = new ArrayList<VendingMachine>();
+		for (VendingMachine vm : storefronts)
+		{
+			if (vm.isActive())
+				machines.add(vm);
+		}
+		return machines;
+	}
+
 	/**
 	 * adds a new machine
 	 * @param location the loc of the machine
@@ -53,8 +75,9 @@ public class ManagerMachineManagementScreen {
 	 * @param layout the initial layout to use
 	 * @return the id of the machine
 	 */
-	public int addMachine( Location location, int interval, VMLayout layout ) {
+	public int addMachine( int zipCode, String state, String[] nearbyBusinesses, int interval, VMLayout layout ) {
 		try {
+			Location location = new Location(zipCode, state, nearbyBusinesses);
 			VendingMachine machine = new VendingMachine( location, interval, layout );
 			db.updateOrCreateVendingMachine( machine );
 			storefronts.add( machine );
@@ -69,14 +92,15 @@ public class ManagerMachineManagementScreen {
 	 * deactivate a machine
 	 * @param id the id of the machine
 	 */
-	public void deactivateMachine( int id ) {
+	public boolean deactivateMachine( VendingMachine vm ) {
 		try {
-			VendingMachine vm = db.getVendingMachineById( id );
 			vm.makeActive( false );
 			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
+			return true;
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return false;
 		}
 	}
 
@@ -84,14 +108,15 @@ public class ManagerMachineManagementScreen {
 	 * reactivates a machine
 	 * @param id the id of the machine
 	 */
-	public void reactivateMachine( int id ) {
+	public boolean reactivateMachine( VendingMachine vm ) {
 		try {
-			VendingMachine vm = db.getVendingMachineById( id );
 			vm.makeActive( true );
 			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
+			return true;
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return false;
 		}
 	}
 	
@@ -101,9 +126,9 @@ public class ManagerMachineManagementScreen {
 	 * @param location the new location
 	 * @return whether it succeeded
 	 */
-	public boolean changeMachineLocation( int id, Location location ) {
+	public boolean changeMachineLocation( VendingMachine vm, int zipCode, String state, String[] nearbyBusinesses ) {
 		try {
-			VendingMachine vm = db.getVendingMachineById( id );
+			Location location = new Location(zipCode, state, nearbyBusinesses);
 			vm.setLocation( location );
 			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
