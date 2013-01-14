@@ -119,7 +119,7 @@ public class CLIUtilities {
 	public static boolean yesOrNo(String prompt) {
 		String response;
 		do {
-			response = CLIUtilities.prompt(prompt + " (Y/N): ");
+			response = CLIUtilities.prompt(prompt + " (Y/N)");
 		} while(!response.toLowerCase().equals("y") && !response.toLowerCase().equals("n"));
 
 		return response.toLowerCase().equals("y");
