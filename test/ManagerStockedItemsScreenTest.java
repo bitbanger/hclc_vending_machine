@@ -37,13 +37,14 @@ public class ManagerStockedItemsScreenTest {
 			id ).getName().equals( "Now gone :(" ) );
 	}
 
-	@Test(expected=BadArgumentException.class)
+	@Test
 	public void changeNameBadTest() throws SQLException, BadArgumentException, 
 		BadStateException {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		test.changeItemName( id, null );
+		boolean result = test.changeItemName( id, null );
+		Assert.assertFalse( result );
 	}
 
 	@Test
@@ -57,13 +58,14 @@ public class ManagerStockedItemsScreenTest {
 			id ).getPrice() == 900 );
 	}
 
-	@Test(expected=BadArgumentException.class)
+	@Test
 	public void changePriceBadTest() throws SQLException, BadArgumentException, 
 		BadStateException {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		test.changeItemPrice( id, -1 );
+		boolean result = test.changeItemPrice( id, -1 );
+		Assert.assertFalse( result );
 	}
 
 	@Test
@@ -77,12 +79,13 @@ public class ManagerStockedItemsScreenTest {
 			id ).getFreshLength() == 900 );
 	}
 
-	@Test(expected=BadArgumentException.class)
+	@Test
 	public void changeFreshTestBad() throws SQLException, BadArgumentException, 
 		BadStateException {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		test.changeItemFreshLength( id, -1 );
+		boolean result = test.changeItemFreshLength( id, -1 );
+		Assert.assertFalse( result );
 	}
 }

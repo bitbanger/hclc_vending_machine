@@ -48,7 +48,7 @@ public class ManagerStockedItemsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return FAILURE_KEY;
 		}
 	}
@@ -66,7 +66,7 @@ public class ManagerStockedItemsScreen {
 			db.updateOrCreateFoodItem( item );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return false;
 		}
 	}
@@ -84,7 +84,7 @@ public class ManagerStockedItemsScreen {
 			db.updateOrCreateFoodItem( item );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return false;
 		}
 	}
@@ -102,15 +102,8 @@ public class ManagerStockedItemsScreen {
 			db.updateOrCreateFoodItem( item );
 			return true;
 		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return false;
 		}
-	}
-
-	/** 
-	 * exit the screen
-	 */
-	public void exit() {
-
 	}
 }
