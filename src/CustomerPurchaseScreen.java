@@ -92,13 +92,6 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
-	 * cancels the current purchase
-	 */
-	public void cancel() {
-		//TODO determine what this should do
-	}
-
-	/**
 	 * This method is <i>not</i> intended for use by the view.
 	 * @return the customer logged into the vending machine
 	 */
