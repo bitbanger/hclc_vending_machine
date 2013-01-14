@@ -14,7 +14,10 @@ public class CustomerCLI
 
 	public static void main(String[] args) {
 		if(args.length!=1)
+		{
 			usage();
+			System.exit(1);
+		}
 		
 		CustomerLoginScreen backend=null;
 		try
