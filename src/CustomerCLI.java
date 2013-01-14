@@ -4,6 +4,8 @@ import java.util.Scanner;
  * CLI for the Customer's perspective.
  * Provides an entry point for the system.
  * @author Lane Lawley <lxl5734@rit.edu>
+ * @contributors Kyle Savarese <kms7341@rit.edu>
+ *		 Sol Boucher 
  */
 public class CustomerCLI
 {
@@ -47,7 +49,12 @@ public class CustomerCLI
 					anonymousConnection(backend.cashLogin());
 					break;
 				case 1:
-					System.out.println("This is not yet implemented.");
+					CustomerPurchaseScreen next = null;
+					do {
+						int id = CLIUtilities.promptInt("Please enter your customer ID");
+						next = backend.tryLogin( id );
+					} while ( next == null );
+					productSelection( next );
 					break;
 				case 2:
 					break program;
