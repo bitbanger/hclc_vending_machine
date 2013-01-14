@@ -71,7 +71,7 @@ public class ManagerUserAccountsScreenTest {
 		BadArgumentException {
 		ManagerUserAccountsScreen test = new ManagerUserAccountsScreen();
 		int id = test.addManager("Krutz", "password");
-		test.changePassword(id, "password2");
+		test.changePassword(DatabaseLayer.getInstance().getManagerById(id), "password2");
 		Assert.assertTrue( DatabaseLayer.getInstance().getManagerById( 
 			id ).getPassword().equals("password2") );
 	}
@@ -81,7 +81,7 @@ public class ManagerUserAccountsScreenTest {
 		BadArgumentException {
 		ManagerUserAccountsScreen test = new ManagerUserAccountsScreen();
 		int id = test.addManager("Krutz", "password");
-		boolean success = test.changePassword(id, null);
+		boolean success = test.changePassword(DatabaseLayer.getInstance().getManagerById(id), null);
 		Assert.assertFalse( success );
 	}
 }
