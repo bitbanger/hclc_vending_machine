@@ -32,7 +32,8 @@ public class ManagerStockedItemsScreenTest {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		test.changeItemName( id, "Now gone :(" );
+		test.changeItemName( DatabaseLayer.getInstance().getFoodItemById( 
+			id ), "Now gone :(" );
 		Assert.assertTrue( DatabaseLayer.getInstance().getFoodItemById( 
 			id ).getName().equals( "Now gone :(" ) );
 	}
@@ -43,7 +44,8 @@ public class ManagerStockedItemsScreenTest {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		boolean result = test.changeItemName( id, null );
+		boolean result = test.changeItemName( DatabaseLayer.getInstance().
+			getFoodItemById( id ), null );
 		Assert.assertFalse( result );
 	}
 
@@ -53,7 +55,8 @@ public class ManagerStockedItemsScreenTest {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		test.changeItemPrice( id, 900 );
+		test.changeItemPrice( DatabaseLayer.getInstance().getFoodItemById(
+			 id ), 900 );
 		Assert.assertTrue( DatabaseLayer.getInstance().getFoodItemById( 
 			id ).getPrice() == 900 );
 	}
@@ -64,7 +67,8 @@ public class ManagerStockedItemsScreenTest {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		boolean result = test.changeItemPrice( id, -1 );
+		boolean result = test.changeItemPrice( DatabaseLayer.getInstance().
+			getFoodItemById( id ), -1 );
 		Assert.assertFalse( result );
 	}
 
@@ -74,7 +78,8 @@ public class ManagerStockedItemsScreenTest {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		test.changeItemFreshLength( id, 900 );
+		test.changeItemFreshLength( DatabaseLayer.getInstance().getFoodItemById(
+			id ), 900 );
 		Assert.assertTrue( DatabaseLayer.getInstance().getFoodItemById( 
 			id ).getFreshLength() == 900 );
 	}
@@ -85,7 +90,8 @@ public class ManagerStockedItemsScreenTest {
 		ManagerStockedItemsScreen test = new ManagerStockedItemsScreen(
 			DatabaseLayer.getInstance().getFoodItemsAll() );
 		int id = test.addItem("TWINKIES", 50, 9000);
-		boolean result = test.changeItemFreshLength( id, -1 );
+		boolean result = test.changeItemFreshLength( DatabaseLayer.getInstance().
+			getFoodItemById( id ), -1 );
 		Assert.assertFalse( result );
 	}
 }
