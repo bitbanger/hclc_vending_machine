@@ -31,6 +31,16 @@ public class ManagerMachineManagementScreenTest {
 		Assert.assertTrue( vms.equals( comp ) );
 	}
 
+	@Test(expected=NullPointerException.class)
+	public void listLocTestBad() throws SQLException, BadArgumentException,
+		BadStateException {
+		TestUtilities helper = new TestUtilities( true );
+		ArrayList<VendingMachine> vms = helper.machines;
+		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
+		ArrayList<VendingMachine> comp = new ArrayList<VendingMachine>(
+			test.listMachinesByLocation( null ) );
+	}
+
 	@Test
 	public void addMachineTest() throws SQLException, BadArgumentException,
 		BadStateException {	
@@ -42,6 +52,18 @@ public class ManagerMachineManagementScreenTest {
 		int id = test.addMachine( loc, 5, cur );
 		Assert.assertTrue( DatabaseLayer.getInstance().
 			getVendingMachineById( id ) != null );
+	}
+
+	@Test
+	public void addMachineTestBad() throws SQLException, BadArgumentException,
+		BadStateException {	
+		TestUtilities helper = new TestUtilities( true );
+		ArrayList<VendingMachine> vms = helper.machines;
+		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
+		Location loc = vms.get(1).getLocation();
+		VMLayout cur = vms.get(0).getCurrentLayout();
+		int id = test.addMachine( loc, -1, cur );
+		Assert.assertTrue( id == -1 );
 	}
 
 	@Test
@@ -69,5 +91,15 @@ public class ManagerMachineManagementScreenTest {
 		test.changeMachineLocation( vms.get(0).getId(), loc );
 		Assert.assertTrue( DatabaseLayer.getInstance().getVendingMachineById( 
 			vms.get(0).getId() ).getLocation().equals( loc ) );
+	}
+
+	@Test
+	public void changeLocTestBad() throws SQLException, BadArgumentException,
+		BadStateException {	
+		TestUtilities helper = new TestUtilities( true );
+		ArrayList<VendingMachine> vms = helper.machines;
+		ManagerMachineManagementScreen test = new ManagerMachineManagementScreen( vms );
+		boolean result = test.changeMachineLocation( vms.get(0).getId(), null );
+		Assert.assertTrue( result == false );
 	}
 }

@@ -33,9 +33,11 @@ public class ManagerMachineManagementScreen {
 	/**
 	 * lists machines by location
 	 * @param loc the location to find machines from
-	 * @return lists the machines
+	 * @return lists the machines, return null if null is input
 	 */
 	public Collection<VendingMachine> listMachinesByLocation( Location loc ) {
+		if ( loc == null )
+			return null;
 		ArrayList<VendingMachine> vms = new ArrayList<VendingMachine>();
 		for ( VendingMachine vm : storefronts ) {
 			if ( vm.getLocation().equals( loc ) ) 
@@ -58,8 +60,7 @@ public class ManagerMachineManagementScreen {
 			storefronts.add( machine );
 			return machine.getId();
 		} catch ( Exception databaseProblem ) {
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return -1;
 		}
 	}
@@ -75,7 +76,7 @@ public class ManagerMachineManagementScreen {
 			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 		}
 	}
 
@@ -90,7 +91,7 @@ public class ManagerMachineManagementScreen {
 			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 		}
 	}
 	
@@ -107,18 +108,9 @@ public class ManagerMachineManagementScreen {
 			db.updateOrCreateVendingMachine( vm );
 			storefronts = db.getVendingMachinesAll();
 		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
-			System.err.println("ERROR: Database problem encountered!");
-			System.err.println("     : Dump details ... " + databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * exits the screen
-	 */
-	public void exit() {
-
 	}
 }
