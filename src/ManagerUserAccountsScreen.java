@@ -89,7 +89,7 @@ public class ManagerUserAccountsScreen {
 
 	/**
 	 * change the password of a manager
-	 * @param managerId the manager whose password is being changed
+	 * @param manny The manager to change
 	 * @param newPassword the new password
 	 * @return if it succeeded
 	 */

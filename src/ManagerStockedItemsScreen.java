@@ -19,6 +19,8 @@ public class ManagerStockedItemsScreen {
 
 	/**
  	 * constructor
+	 * @param items The items this screen should handle. Should always be all
+	 * of the items.
 	 */
 	public ManagerStockedItemsScreen( Collection<FoodItem> items ) {
 		stockpile = new ArrayList<FoodItem> ( items );
@@ -26,6 +28,7 @@ public class ManagerStockedItemsScreen {
 
 	/**
 	 * lists the available items
+	 * @return An array list containing the items this screen handles.
 	 */
 	public ArrayList<FoodItem> listItems() {
 		return stockpile;
@@ -55,7 +58,7 @@ public class ManagerStockedItemsScreen {
 
 	/**
 	 * change an item's activation level
-	 * @param id the id of the item
+	 * @param item The food item to change
 	 * @param val the new value of the item
 	 * @return whether it succeeded
 	 */
@@ -72,7 +75,7 @@ public class ManagerStockedItemsScreen {
 	
 	/**
 	 * changes an item name
-	 * @param id the id of the item
+	 * @param item The food item to change
 	 * @param name the new name
 	 * @return boolean whether it succeeded
 	 */
@@ -89,7 +92,7 @@ public class ManagerStockedItemsScreen {
 
 	/** 
 	 * change an item's price
- 	 * @param id the id of the item
+ 	 * @param item The food item to change
 	 * @param price the new price
 	 * @return boolean whether it succeeded
 	 */
@@ -105,8 +108,8 @@ public class ManagerStockedItemsScreen {
 	}
 
 	/**
-	 * change item length
-	 * @param id the id of the item
+	 * change the length (in days) the item is good for
+	 * @param item The food item to change
 	 * @param freshLength the new length
 	 * @return boolean whether it succeeded
 	 */
