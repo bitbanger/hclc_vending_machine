@@ -1,4 +1,5 @@
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * CLI for the Customer's perspective.
@@ -65,6 +66,11 @@ public class ManagerCLI
 				case 2:
 					ManagerStockedItemsScreen itemsScreen = home.manageItems();
 					manageItems(itemsScreen);
+					break;
+				case 3:
+					ManagerMachineManagementScreen machinesScreen = home.manageMachines();
+					manageMachines(machinesScreen);
+					break;
 				case 5:
 					return;
 			}
@@ -250,6 +256,109 @@ public class ManagerCLI
 					return;
 			}
 		}
+	}
+
+	private static void manageMachines(ManagerMachineManagementScreen screen)
+	{
+		while (true)
+		{
+			int choice = CLIUtilities.option(
+				"View Machines",
+				"Add Machine",
+				"Reactivate Machine",
+				"Deacivate Machine",
+				"Change Machine Location",
+				"Exit");
+			switch (choice)
+			{
+				case 0:
+					System.out.println("Machines:");
+					CLIUtilities.printCollection(screen.listMachinessAll());
+					break;
+				case 1:
+					addMachine(screen);
+					break;
+				case 2:
+					reactivateMachine(screen);
+					break;
+				case 3:
+					deactivateMachine(screen);
+					break;
+				case 4:
+					changeMachineLocation(screen);
+					break;
+				case 5:
+					return;
+			}
+		}
+	}
+
+	private static void addMachine(ManagerMachineManagementScreen screen)
+	{
+		String state = CLIUtilities.prompt("State"); // TODO: better location picker
+		int zipcode = CLIUtilities.promptInt("Zip Code");
+		LinkedList<String> businesses = new LinkedList<String>();
+		while (true)
+		{
+			String bus = CLIUtilities.prompt("Enter nearby business (or type DONE to finish)");
+			if (bus.equals("DONE"))
+				break;
+			businesses.add(bus);
+		}
+		String[] busArray = businesses.toArray(new String[0]);
+		
+		int restocking = -1;
+		while (restocking <= 0)
+			restocking = CLIUtilities.promptInt("Restocking Interval (days)");
+		VMLayout layout = screen.listMachinessAll().get(0).getNextLayout(); // TODO: only works if at least one machine is in database. we need to make default
+		boolean success = screen.addMachine(zipcode, state, busArray, restocking, layout) != -1;
+		if (success)
+			System.out.println("Vendng machine added successfully");
+		else
+			System.out.println("An error occured while attempting to add the vending machine");
+	}
+
+	private static void reactivateMachine(ManagerMachineManagementScreen screen)
+	{
+		VendingMachine machine = vmChooser(screen.listDeactiveMachines());
+		boolean success = screen.reactivateMachine(machine);
+		if (success)
+			System.out.println("Machine reactivated successfully");
+		else
+			System.out.println("An error occurred while trying to reactivate the machine");
+	}
+
+	private static void deactivateMachine(ManagerMachineManagementScreen screen)
+	{
+		VendingMachine machine = vmChooser(screen.listActiveMachines());
+		boolean success = screen.deactivateMachine(machine);
+		if (success)
+			System.out.println("Machine deactivated successfully");
+		else
+			System.out.println("An error occurred while trying to deactivate the machine");
+	}
+
+	private static void changeMachineLocation(ManagerMachineManagementScreen screen)
+	{
+		VendingMachine machine = vmChooser(screen.listMachinessAll());
+
+		String state = CLIUtilities.prompt("State"); // TODO: better location picker
+		int zipcode = CLIUtilities.promptInt("Zip Code");
+		LinkedList<String> businesses = new LinkedList<String>();
+		while (true)
+		{
+			String bus = CLIUtilities.prompt("Enter nearby business (or type DONE to finish)");
+			if (bus.equals("DONE"))
+				break;
+			businesses.add(bus);
+		}
+		String[] busArray = businesses.toArray(new String[0]);
+
+		boolean success = screen.changeMachineLocation(machine, zipcode, state, busArray);
+		if (success)
+			System.out.println("Location changed successfully");
+		else
+			System.out.println("An error occurred while attempting to change the location");
 	}
 
 	private static void addItem(ManagerStockedItemsScreen screen)
