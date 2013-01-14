@@ -103,16 +103,7 @@ public class CustomerCLI
 					if(display[r][c]!=null)
 						System.out.println("<"+r+","+c+">: "+display[r][c]);
 			
-			String message=null;
-			try
-			{
-				message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter major coordinate"), CLIUtilities.promptInt("Enter minor coordinate")));
-			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
-				System.exit(1);
-			}
+			String message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter major coordinate"), CLIUtilities.promptInt("Enter minor coordinate")));
 			if(message.equals("GOOD"))
 			{
 				System.out.println("Purchase complete: remaining balance is $"+(double)account.getBalance()/100);
