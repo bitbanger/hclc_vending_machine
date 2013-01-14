@@ -3,6 +3,8 @@ import java.util.GregorianCalendar;
 /**
  * Represents a row of products in a vending machine.
  * Each such row contains a certain number of the same product.
+ * A null row means that the row is meant to have nothing in it
+ * A quantity of zero means that the item has been sold out
  * @author Sol Boucher <slb1566@rit.edu>
  */
 public class Row extends ModelBase
