@@ -101,14 +101,19 @@ public class CustomerLoginScreen {
 	 */
 	public static CustomerLoginScreen buildInstance(int id)
 	{
+		VendingMachine mach=null;
 		try
 		{
-			return new CustomerLoginScreen(db.getVendingMachineById(id));
+			mach=db.getVendingMachineById(id);
 		}
 		catch(Exception problem)
 		{
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, problem);
 			return null;
 		}
+		if(mach==null)
+			return null;
+		else
+			return new CustomerLoginScreen(mach);
 	}
 }

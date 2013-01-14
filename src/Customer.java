@@ -152,4 +152,10 @@ public class Customer extends User
 		
 		return super.equals(another) && this.money==other.money;
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString() + " " + String.format("%.2f", ((double)money) / 100);
+	}
 }

@@ -11,6 +11,9 @@ public abstract class ModelBase
 	/** The sentinel indicating a temporary ID value. */
 	private static final int TEMP_ID=-1;
 
+	/** Number of decimal spaces to use in printing the ID field */
+	public static final int ID_SPACES = 5;
+
 	/** The instance's primary key. */
 	private int id;
 
@@ -81,5 +84,16 @@ public abstract class ModelBase
 	public boolean equals(Object another)
 	{
 		return another instanceof ModelBase && this.id==((ModelBase)another).id;
+	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		if(id == TEMP_ID) {
+			// Return ID_SPACES spaces, since the ID hasn't been set yet
+			return new String(new char[ID_SPACES]).replace("\0", " ");
+		} else {
+			return String.format("%" + ID_SPACES + "d", id);
+		}
 	}
 }

@@ -79,4 +79,10 @@ public class Manager extends User
 		
 		return super.equals(another) && password.equals(other.password);
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 }
