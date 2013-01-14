@@ -51,7 +51,7 @@ documents:
 
 launchers:
 	echo "export CLASSPATH=${BINDIR}$(foreach library,${LIBS},:${LIBDIR}/${library})" > vars${INCPOSTFIX}
-	$(foreach class,${EXEC},echo -e "#!${SHELLPATH}\n. ./vars.include\n${JAVA} ${class}" > ${RUNPREFIX}${class}${POSTFIX} ; chmod +x ${RUNPREFIX}${class}${POSTFIX})
+	$(foreach class,${EXEC},echo -e '#!${SHELLPATH}\n. ./vars.include\n${JAVA} ${class} "$$@"' > ${RUNPREFIX}${class}${POSTFIX} ; chmod +x ${RUNPREFIX}${class}${POSTFIX})
 
 clean: cleanbin cleandoc cleantbin
 	- rm ${RUNPREFIX}*${POSTFIX}
