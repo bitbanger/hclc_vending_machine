@@ -22,7 +22,7 @@ public class ManagerHomeScreen {
 		manny = man;
 	}
 
-	public Collection<VendingMachine> displayVendingMachines()
+	public ArrayList<VendingMachine> displayVendingMachines()
 	{
 		try
 		{

@@ -43,9 +43,9 @@ public class RestockerMachinePickerScreen {
 	 * Fetches a list of active vending machines.
 	 * @return the machine instances, which are not to be modified ( or null on an error )
 	 */
-	public static Collection<VendingMachine> listActiveMachines() {
+	public static ArrayList<VendingMachine> listActiveMachines() {
 		try {
-			Collection<VendingMachine> allMach = db.getVendingMachinesAll();
+			ArrayList<VendingMachine> allMach = db.getVendingMachinesAll();
 			Iterator<VendingMachine> trimmer = allMach.iterator();
 			while ( trimmer.hasNext() ) {
 				if ( !trimmer.next().isActive() )

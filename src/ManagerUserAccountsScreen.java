@@ -12,10 +12,10 @@ public class ManagerUserAccountsScreen {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	/** the customers */
-	private Collection<Customer> customers;
+	private ArrayList<Customer> customers;
 
 	/** the managers */
-	private Collection<Manager> managers;
+	private ArrayList<Manager> managers;
 
 	/**
 	 * base constructor
@@ -33,7 +33,7 @@ public class ManagerUserAccountsScreen {
 	 * a list of all customers
 	 * @return a collection of the customers
 	 */
-	public Collection<Customer> listCustomers() {
+	public ArrayList<Customer> listCustomers() {
 		return customers;
 	}
 
@@ -41,7 +41,7 @@ public class ManagerUserAccountsScreen {
 	 * lists the managers
 	 * @return a collection of the managers
 	 */
-	public Collection<Manager> listManagers() {
+	public ArrayList<Manager> listManagers() {
 		return managers;
 	}
 
