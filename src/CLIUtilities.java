@@ -110,6 +110,21 @@ public class CLIUtilities {
 		return theInt;
 	}
 
+	/**
+	 * Prompts the user (Y/N) for a message.
+	 *
+	 * @param  prompt	The message to display to the user before they select Y/N
+	 * @return			True if the user said yes, else no
+	 */
+	public static boolean yesOrNo(String prompt) {
+		String response;
+		do {
+			response = CLIUtilities.prompt(prompt + " (Y/N): ");
+		} while(!response.toLowerCase().equals("y") && !response.toLowerCase().equals("n"));
+
+		return response.toLowerCase().equals("y");
+	}
+
 	/** 
 	 * Provides a way to print a collection
 	 * @param col the collection to print
