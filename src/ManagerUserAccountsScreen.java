@@ -93,10 +93,9 @@ public class ManagerUserAccountsScreen {
 	 * @param newPassword the new password
 	 * @return if it succeeded
 	 */
-	public boolean changePassword( int managerId, String newPassword ) {
+	public boolean changePassword( Manager manny, String newPassword ) {
 		try
 		{
-			Manager manny = db.getManagerById( managerId );
 			manny.setPassword( newPassword );
 			db.updateOrCreateManager( manny );
 			managers = db.getManagersAll();
