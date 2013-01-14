@@ -53,4 +53,10 @@ public class Pair<L,R> {
 		
 		return first.equals(other.first) && second.equals(other.second);
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return String.format("<%s, %s>", first.toString(), second.toString());
+	}
 }

@@ -237,4 +237,14 @@ public class VendingMachine extends ModelBase
 		
 		return super.equals(another) && this.active==other.active && location.equals(other.location) && this.stockingInterval==other.stockingInterval && currentLayout.equals(other.currentLayout) && nextLayout.equals(other.nextLayout);
 	}
+
+	/** @inheritDoc */
+	@Override
+	public String toString() {
+		return super.toString() + " " + 
+			   String.format("%s vending machine in %s, restocked every %d days", 
+			   				 active ? "Active" : "Inactive",
+			   				 location.toString().substring(ModelBase.ID_SPACES + 1),
+			   				 stockingInterval);
+	}
 }
