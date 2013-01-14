@@ -38,4 +38,11 @@ public class ManagerReportStatsScreenTest {
 		Assert.assertTrue( result.equals( against ) );
 	}
 
+	@Test
+	public void testSalesByLocationBad() throws SQLException, BadStateException,
+		BadArgumentException {
+		ManagerReportStatsScreen test = new ManagerReportStatsScreen();
+		Collection<Transaction> result = test.listLocationSales( null );
+		Assert.assertTrue( result == null );
+	}
 }

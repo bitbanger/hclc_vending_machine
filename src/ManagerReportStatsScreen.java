@@ -50,7 +50,7 @@ public class ManagerReportStatsScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return null;
 		}
 	}
@@ -69,15 +69,17 @@ public class ManagerReportStatsScreen {
 	 * @return the transactions made at that location
 	 */
 	public Collection<Transaction> listLocationSales( Location place ) {
+		if ( place == null )
+			return null;
 		ArrayList<Transaction> trans = new ArrayList<Transaction>();
 		try {
 			Collection<Transaction> transactions = db.getTransactionsAll();
-		
-		for ( Transaction cur : transactions ) {
-			if (cur.getMachine().getLocation().equals( place ) )
-				trans.add( cur );
-		}} catch (Exception databaseProblem){
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			for ( Transaction cur : transactions ) {
+				if (cur.getMachine().getLocation().equals( place ) )
+					trans.add( cur );
+			}
+		} catch (Exception databaseProblem){
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 		}
 
 		return trans;
