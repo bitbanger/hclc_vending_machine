@@ -22,8 +22,12 @@ public class CustomerLoginScreen {
 	/**
 	 * Constructor for LoginScreen
 	 * @param curr the VendingMachine that is being logged into
+	 * @throws InstantiationException if <tt>curr</tt> is <tt>null</tt> or inactive
  	 */
-	public CustomerLoginScreen ( VendingMachine curr ) {
+	public CustomerLoginScreen ( VendingMachine curr ) throws InstantiationException
+	{
+		if(curr==null || !curr.isActive()) //machine null or inactive
+			throw new InstantiationException("Vending machine must be non-null and active");
 		vm = curr;
 	}	
 
@@ -104,16 +108,17 @@ public class CustomerLoginScreen {
 		VendingMachine mach=null;
 		try
 		{
-			mach=db.getVendingMachineById(id);
+			return new CustomerLoginScreen(db.getVendingMachineById(id));
 		}
-		catch(Exception problem)
+		catch(InstantiationException absentInactive) //not found in database (null) or inactive
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, problem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, absentInactive);
 			return null;
 		}
-		if(mach==null)
+		catch(Exception databaseError) //more serious error came from database
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseError);
 			return null;
-		else
-			return new CustomerLoginScreen(mach);
+		}
 	}
 }
