@@ -141,6 +141,78 @@ public class DatabaseLayer
 		stmt.close();
 	}
 
+	private boolean isFoodItemValid(FoodItem item)
+	{
+		if(item.isTempId()) {
+			return false;
+		}
+
+		try {
+			if(getFoodItemById(item.getId()) == null) {
+				return false;
+			}
+		} catch(BadStateException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a food item was in the database");
+			return false;
+		} catch(SQLException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a food item was in the database");
+			return false;
+		} catch(BadArgumentException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a food item was in the database");
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isVendingMachineValid(VendingMachine vm)
+	{
+		if(vm.isTempId()) {
+			return false;
+		}
+
+		try {
+			if(getVendingMachineById(vm.getId()) == null) {
+				return false;
+			}
+		} catch(BadStateException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a vending machine was in the database");
+			return false;
+		} catch(SQLException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a vending machine was in the database");
+			return false;
+		} catch(BadArgumentException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a vending machine was in the database");
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isCustomerValid(Customer cust)
+	{
+		if(cust.isTempId()) {
+			return false;
+		}
+
+		try {
+			if(getCustomerById(cust.getId()) == null) {
+				return false;
+			}
+		} catch(BadStateException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a customer was in the database");
+			return false;
+		} catch(SQLException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a customer was in the database");
+			return false;
+		} catch(BadArgumentException e) {
+			System.err.println("A previously-thought impossible error occurred when checking if a customer was in the database");
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Fetches the item with a given id from the database.
 	 * @param id The id of the item to fetch.
@@ -352,6 +424,10 @@ public class DatabaseLayer
 	{
 		if (row != null)
 		{
+			if(!isFoodItemValid(row.getProduct())) {
+				throw new BadArgumentException("FoodItem in Row is not in database, but it must be before the Row can be added");
+			}
+
 			if (row.isTempId())
 			{
 				Statement rowStmt = db.createStatement();
@@ -981,6 +1057,17 @@ public class DatabaseLayer
 	 **/
 	public void updateOrCreateTransaction(Transaction transaction) throws SQLException, BadStateException, BadArgumentException
 	{
+		if(!isVendingMachineValid(transaction.getMachine())) {
+			throw new BadArgumentException("VendingMachine in Transaction is not in database, but it must be before the Transaction can be added");
+		}
+		if(!isCustomerValid(transaction.getCustomer())) {
+			throw new BadArgumentException("Customer in Transaction is not in database, but it must be before the Transaction can be added");
+		}
+		if(!isFoodItemValid(transaction.getProduct())) {
+			throw new BadArgumentException("FoodItem in Transaction is not in database, but it must be before the Transaction can be added");
+		}
+
+
 		if (transaction.isTempId())
 		{
 			String query = String.format("INSERT INTO VMTransaction(timestamp, machineId, customerId, productId, rowX, rowY, balance) VALUES(%d, %d, %d, %d, %d, %d, %d)", transaction.getTimestamp().getTimeInMillis(), transaction.getMachine().getId(), transaction.getCustomer().getId(), transaction.getProduct().getId(), transaction.getRow().first, transaction.getRow().second, transaction.getBalance());
