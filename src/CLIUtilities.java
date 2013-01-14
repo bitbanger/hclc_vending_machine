@@ -50,7 +50,7 @@ public class CLIUtilities {
 		int selectedOption = -1;
 		do {
 			try {
-				selectedOption = Integer.parseInt(prompt("Select an option: ")) - 1;
+				selectedOption = Integer.parseInt(prompt("Select an option")) - 1;
 			} catch(NumberFormatException e) {
 				continue;
 			}
@@ -132,5 +132,14 @@ public class CLIUtilities {
 	public static void printCollection( Collection<? extends Object> col ) {
 		for ( Object next : col )
 			System.out.println( next.toString() );
+	}
+
+	/**
+	 * Allows easily formatting quantities of money.
+	 * @param amount the amount of money, in cents
+	 */
+	public static String formatMoney(int amount)
+	{
+		return "$"+String.format("%.2f", (double)amount/100);
 	}
 }

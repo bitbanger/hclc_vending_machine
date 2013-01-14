@@ -59,13 +59,14 @@ public class CustomerCLI
 	/**
 	 * Facility allowing someone without an account to use the machine.
 	 * @param wallet the backend connection
+	 * @param whether a purchase was made (meaning the session must end)
 	 */
 	private static void anonymousConnection(CashCustomerPurchaseScreen wallet)
 	{
 		screen:while(true)
 		{
 			CLIUtilities.printTitle("Cash Payment");
-			System.out.println("You've added $"+(double)wallet.getBalance()/100+" to this machine.");
+			System.out.println("You've added "+CLIUtilities.formatMoney(wallet.getBalance())+" to this machine.");
 			int addOrSubtract=CLIUtilities.option("I want to insert cash", "I'm ready to purchase an item", "Return to main menu");
 			
 			switch(addOrSubtract)
@@ -74,10 +75,10 @@ public class CustomerCLI
 					wallet.addCash(CLIUtilities.moneyPrompt("Insert money"));
 					break;
 				case 1:
-					loggedInSuccessfully(wallet);
+					productSelection(wallet);
 					break;
 				case 2:
-					System.out.println("Your change is $"+wallet.getBalance());
+					System.out.println("Your change is "+CLIUtilities.formatMoney(wallet.getBalance()));
 					break screen;
 			}
 		}
@@ -86,8 +87,9 @@ public class CustomerCLI
 	/**
 	 * Facility allowing someone with an account to login.
 	 * @param account the backend connection
+	 * @return whether a purchase was made (meaning the session must end)
 	 */
-	private static void loggedInSuccessfully(CustomerPurchaseScreen account)
+	private static void productSelection(CustomerPurchaseScreen account)
 	{
 		FoodItem[][] display=account.listLayout();
 		screen:while(true)
