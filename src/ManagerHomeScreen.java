@@ -48,10 +48,9 @@ public class ManagerHomeScreen {
 	 * @param vm The vending machine
 	 * @return the alter layout screen for the machine, or <tt>null</tt> on failure
 	 */
-	public ManagerAlterLayoutScreen alterLayout(VendingMachine vm) {
+	public ManagerAlterLayoutScreen alterLayout() {
 		try {
-			return new ManagerAlterLayoutScreen( 
-				db.getVendingMachineById(vm.getId()) );
+			return new ManagerAlterLayoutScreen();
 		} catch ( Exception generalFailure ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFailure);
 			return null;
