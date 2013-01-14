@@ -142,4 +142,70 @@ public class CLIUtilities {
 	{
 		return "$"+String.format("%.2f", (double)amount/100);
 	}
+
+	/**
+	 * Provides a nice way to print a layout
+	 * @param rows The layout to print
+	 **/
+	public static void printLayout(FoodItem[][] rows)
+	{
+		for (int i=0;i<rows.length;++i)
+		{
+			FoodItem[] column = rows[i];
+			for (int j=0;j<column.length;++j)
+			{
+				FoodItem item = column[j];
+				String name = "EMPTY";
+				if (item != null)
+					name = item.getName();
+				System.out.printf("%-10s ", name);
+			}
+			System.out.println();
+			for (int j=0;j<column.length;++j)
+			{
+				FoodItem item = column[j];
+				String price = "";
+				if (item != null)
+					price = String.format("$%-8.2f ", item.getPrice()/100.0);
+				System.out.printf("%10s ", price);
+			}
+			System.out.println();
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Provides a nice way to print a layout
+	 * Note: Not tested
+	 * @param rows The layout to print
+	 **/
+	public static void printLayout(Row[][] rows)
+	{
+		if (rows.length == 0 || rows[0].length == 0)
+			return;
+		FoodItem[][] temp = new FoodItem[rows.length][rows[0].length];
+		for (int i=0;i<rows.length;++i)
+		{
+			Row[] column = rows[i];
+			for (int j=0;j<column.length;++j)
+			{
+				Row row = column[j];
+				FoodItem item = null;
+				if (row != null)
+					item = row.getProduct();
+				temp[i][j] = item;
+			}
+		}
+		printLayout(temp);
+	}
+
+	/**
+	 * Provies a nice way to print a layout
+	 * Note: Not tested
+	 * @param layout The layout to print
+	 **/
+	public static void printLayout(VMLayout layout)
+	{
+		printLayout(layout.getRows());
+	}
 }
