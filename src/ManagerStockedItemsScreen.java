@@ -27,7 +27,7 @@ public class ManagerStockedItemsScreen {
 	/**
 	 * lists the available items
 	 */
-	public Collection<FoodItem> listItems() {
+	public ArrayList<FoodItem> listItems() {
 		return stockpile;
 	}
 	
@@ -50,6 +50,24 @@ public class ManagerStockedItemsScreen {
 		{
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return FAILURE_KEY;
+		}
+	}
+
+	/**
+	 * change an item's activation level
+	 * @param id the id of the item
+	 * @param val the new value of the item
+	 * @return whether it succeeded
+	 */
+	public boolean changeItemStatus( int id, boolean val ) {
+		try {
+			FoodItem item = db.getFoodItemById( id );
+			item.makeActive( val );
+			db.updateOrCreateFoodItem( item );
+			return true;
+		} catch ( Exception databaseProblem ) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return false;
 		}
 	}
 	

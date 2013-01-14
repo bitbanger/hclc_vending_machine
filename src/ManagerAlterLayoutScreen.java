@@ -5,6 +5,7 @@
  */
 
 import java.util.Collection;
+import java.util.ArrayList;
 
 public class ManagerAlterLayoutScreen {
 
@@ -43,7 +44,7 @@ public class ManagerAlterLayoutScreen {
 	 * @return A collection of food items upon success or null on any type of
 	 * failure.
 	 **/
-	public Collection<FoodItem> listItems()
+	public ArrayList<FoodItem> listItems()
 	{
 		try
 		{

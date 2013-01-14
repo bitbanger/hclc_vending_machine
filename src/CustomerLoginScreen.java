@@ -1,7 +1,7 @@
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
-
+import java.util.ArrayList;
 /**
  * 1/3/2012
  * 
@@ -76,11 +76,11 @@ public class CustomerLoginScreen {
 	 * Fetches a list of active vending machines.
 	 * @return the machine instances, which are not to be modified (or <tt>null</tt> on error)
 	 */
-	public static Collection<VendingMachine> listActiveMachines()
+	public static ArrayList<VendingMachine> listActiveMachines()
 	{
 		try
 		{
-			Collection<VendingMachine> ourUniverse=db.getVendingMachinesAll();
+			ArrayList<VendingMachine> ourUniverse=db.getVendingMachinesAll();
 			
 			//only keep active machines:
 			Iterator<VendingMachine> trimmer=ourUniverse.iterator();

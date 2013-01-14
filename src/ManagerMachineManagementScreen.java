@@ -12,21 +12,21 @@ public class ManagerMachineManagementScreen {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	/** the machines */
-	private Collection<VendingMachine> storefronts;
+	private ArrayList<VendingMachine> storefronts;
 
 	/**
 	 * base constructor
 	 * @param vms the machines
 	 */
 	public ManagerMachineManagementScreen( Collection<VendingMachine> vms ) {
-		storefronts = vms;
+		storefronts = new ArrayList<VendingMachine>( vms );
 	}
 
 	/**
 	 * lists all machines
 	 * @return a collection of all machines
 	 */
-	public Collection<VendingMachine> listMachinessAll() {
+	public ArrayList<VendingMachine> listMachinessAll() {
 		return storefronts;
 	}
 
@@ -35,7 +35,7 @@ public class ManagerMachineManagementScreen {
 	 * @param loc the location to find machines from
 	 * @return lists the machines, return null if null is input
 	 */
-	public Collection<VendingMachine> listMachinesByLocation( Location loc ) {
+	public ArrayList<VendingMachine> listMachinesByLocation( Location loc ) {
 		if ( loc == null )
 			return null;
 		ArrayList<VendingMachine> vms = new ArrayList<VendingMachine>();

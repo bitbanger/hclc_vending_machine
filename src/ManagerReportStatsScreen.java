@@ -13,10 +13,10 @@ public class ManagerReportStatsScreen {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	/** all the machines */
-	private Collection<VendingMachine> machines;
+	private ArrayList<VendingMachine> machines;
 
 	/** all the locations */
-	private Collection<Location> locations;
+	private ArrayList<Location> locations;
 
 	/**
 	 * base constructor
@@ -34,7 +34,7 @@ public class ManagerReportStatsScreen {
 	 * get a collection of all machines
 	 * @return a collection of the machines present when screen was launched
 	 */
-	public Collection<VendingMachine> listMachines() {
+	public ArrayList<VendingMachine> listMachines() {
 		return machines;
 	}
 
@@ -43,7 +43,7 @@ public class ManagerReportStatsScreen {
 	 * @param machine the machine in question
 	 * @return the transactions made at that machine
 	 */
-	public Collection<Transaction> listMachineSales( VendingMachine machine ) {
+	public ArrayList<Transaction> listMachineSales( VendingMachine machine ) {
 		try
 		{
 			return db.getTransactionsByVendingMachine( machine );
@@ -59,7 +59,7 @@ public class ManagerReportStatsScreen {
 	 * get a collection of all locations
 	 * @return a collection of the locations present when screen was launched
 	 */
-	public Collection<Location> listLocations() {
+	public ArrayList<Location> listLocations() {
 		return locations;
 	}
 
@@ -68,12 +68,12 @@ public class ManagerReportStatsScreen {
 	 * @param place the location in question
 	 * @return the transactions made at that location
 	 */
-	public Collection<Transaction> listLocationSales( Location place ) {
+	public ArrayList<Transaction> listLocationSales( Location place ) {
 		if ( place == null )
 			return null;
 		ArrayList<Transaction> trans = new ArrayList<Transaction>();
 		try {
-			Collection<Transaction> transactions = db.getTransactionsAll();
+			ArrayList<Transaction> transactions = db.getTransactionsAll();
 			for ( Transaction cur : transactions ) {
 				if (cur.getMachine().getLocation().equals( place ) )
 					trans.add( cur );
@@ -85,10 +85,10 @@ public class ManagerReportStatsScreen {
 		return trans;
 	}
 
-	public Collection<Transaction> listSalesAll()
+	public ArrayList<Transaction> listSalesAll()
 	{
 		try {
-			Collection<Transaction> transactions = db.getTransactionsAll();
+			ArrayList<Transaction> transactions = db.getTransactionsAll();
 			return transactions;
 		} catch (Exception databaseProblem){
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
