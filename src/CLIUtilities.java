@@ -114,7 +114,7 @@ public class CLIUtilities {
 	 * Prompts the user (Y/N) for a message.
 	 *
 	 * @param  prompt	The message to display to the user before they select Y/N
-	 * @return			True if the user said yes, else no
+	 * @return			True if the user said "y" or "Y", false if the user said "n" or "N"
 	 */
 	public static boolean yesOrNo(String prompt) {
 		String response;
