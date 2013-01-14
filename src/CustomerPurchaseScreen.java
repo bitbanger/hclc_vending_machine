@@ -57,8 +57,8 @@ public class CustomerPurchaseScreen {
 	public String tryPurchase( Pair<Integer, Integer> product ) {
 		VMLayout locs = machine.getCurrentLayout();
 		Row[][] rows = locs.getRows();
-		if ( product.first < 0 || rows.length < product.first ||
-			product.second < 0 || rows[product.first].length < product.second )
+		if ( product.first < 0 || rows.length <= product.first ||
+			product.second < 0 || rows[product.first].length <= product.second )
 			return "INVALID LOCATION"; //not a valid location
 		if ( rows[product.first][product.second] == null)
 			return "NO PRODUCT"; //nothing to see here
