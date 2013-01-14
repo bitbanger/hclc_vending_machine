@@ -33,7 +33,7 @@ public class CustomerCLI
 		if(backend==null)
 		{
 			usage();
-			System.err.println("Supplied <machine ID> invalid; please ensure it is nonnegative");
+			System.err.println("Supplied <machine ID> is either invalid or inactive");
 			System.exit(1);
 		}
 		
@@ -65,7 +65,7 @@ public class CustomerCLI
 		screen:while(true)
 		{
 			CLIUtilities.printTitle("Cash Payment");
-			System.out.println("You've added $"+wallet.getBalance()/100+" to this machine.");
+			System.out.println("You've added $"+(double)wallet.getBalance()/100+" to this machine.");
 			int addOrSubtract=CLIUtilities.option("I want to insert cash", "I'm ready to purchase an item", "Return to main menu");
 			
 			switch(addOrSubtract)
@@ -89,11 +89,35 @@ public class CustomerCLI
 	 */
 	private static void loggedInSuccessfully(CustomerPurchaseScreen account)
 	{
-		/*screen:while(true)
-		{*/
+		FoodItem[][] display=account.listLayout();
+		screen:while(true)
+		{
 			CLIUtilities.printTitle("Product Selection");
 			System.out.println("Welcome, "+account.getUser().getName()+"!");
-			System.out.println("Available funds: "+account.getBalance()/100);
-		//}
+			System.out.println("Available funds: "+(double)account.getBalance()/100);
+			
+			for(int r=0; r<display.length; ++r)
+				for(int c=0; c<display[r].length; ++c)
+					if(display[r][c]!=null)
+						System.out.println("<"+r+","+c+">: "+display[r][c]);
+			
+			String message=null;
+			try
+			{
+				message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter major coordinate"), CLIUtilities.promptInt("Enter minor coordinate")));
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+				System.exit(1);
+			}
+			if(message.equals("GOOD"))
+			{
+				System.out.println("Purchase complete: remaining balance is $"+(double)account.getBalance()/100);
+				break screen;
+			}
+			else
+				System.out.println(message);
+		}
 	}
 }
