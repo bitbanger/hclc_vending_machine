@@ -67,4 +67,38 @@ public class ManagerAlterLayoutScreenTest
 			}
 		}
 	}
+	
+	@Test
+	public void listItemsTest() throws BadStateException, BadArgumentException,
+		SQLException {
+		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen();
+		assertTrue( dbl.getFoodItemsAll().equals( test.listItems() ) );
+	}
+
+	@Test
+	public void queueRowChangeTestSuccess() throws BadStateException, BadArgumentException {
+		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen();
+		FoodItem[][] layout = test.listRows();
+		FoodItem next = new FoodItem( "Twinkies", 387, Integer.MAX_VALUE );
+		assertTrue( test.queueRowChange( new 
+			Pair<Integer, Integer>( 0, 0 ), next ) == 0 );
+	}
+
+	@Test
+	public void queueRowChangeToSoon() throws BadStateException, BadArgumentException {
+		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen();
+		FoodItem[][] layout = test.listRows();
+		FoodItem next = new FoodItem( "Twinkies", 387, 1 );
+		assertTrue( test.queueRowChange( new 
+			Pair<Integer, Integer>( 0, 0 ), next ) == 1);
+	}
+
+	@Test
+	public void commitChangesTestSuccess() throws BadStateException, BadArgumentException {
+		ManagerAlterLayoutScreen test = new ManagerAlterLayoutScreen();
+		FoodItem[][] layout = test.listRows();
+		FoodItem next = new FoodItem( "Twinkies", 387, 900000 );
+		test.queueRowChange( new Pair<Integer, Integer>( 0, 0 ), next );
+		assertTrue( test.commitRowChanges() );
+	}
 }

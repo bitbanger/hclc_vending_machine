@@ -39,7 +39,10 @@ public class ManagerAlterLayoutScreen {
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
-				items[i][j] = rows[i][j].getProduct();
+				if (rows[i][j] == null)
+					items[i][j] = null;
+				else
+					items[i][j] = rows[i][j].getProduct();
 			}
 		}
 		return items;
@@ -74,16 +77,22 @@ public class ManagerAlterLayoutScreen {
 	 * @return 0 on success, 1 if the item expires too soon, and -1 on failure
 	 */
 	public int queueRowChange( Pair<Integer, Integer> row, FoodItem it ) {
-		for (VendingMachine machine : machines)
+		if (it != null)
 		{
-			if (machine.getStockingInterval() > it.getFreshLength())
-				return 1;
+			for (VendingMachine machine : machines)
+			{
+				if (machine.getStockingInterval() > it.getFreshLength())
+					return 1;
+			}
 		}
 		for (VendingMachine machine : machines)
 		{
 			Row[][] rows = machine.getNextLayout().getRows();
 			try {
-				rows[row.first][row.second] = new Row(it, machine.getNextLayout().getDepth(), new GregorianCalendar());
+				if (it == null)
+					rows[row.first][row.second] = null;
+				else
+					rows[row.first][row.second] = new Row(it, machine.getNextLayout().getDepth(), new GregorianCalendar());
 			} catch ( Exception generalFault ) {
 				ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFault);
 				return -1;
