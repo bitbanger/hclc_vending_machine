@@ -17,7 +17,7 @@ public class RestockerCLI {
 	 * @param args Arguments required to create String arrays in Java
 	 */
 	public static void main(String[] args) {
-		CLIUtilities.printTitle("Welcome to the Restocker interface!");
+		System.out.println("Welcome to HCLC, LLC's Smart Vending Machine Restocker Interface!\n---\n");
 		pickMachine(restockerMachinePickerScreen);
 	}
 
