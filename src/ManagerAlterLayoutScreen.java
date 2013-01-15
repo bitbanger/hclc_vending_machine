@@ -6,6 +6,7 @@
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class ManagerAlterLayoutScreen {
 
@@ -13,14 +14,20 @@ public class ManagerAlterLayoutScreen {
 	private static DatabaseLayer db = DatabaseLayer.getInstance();
 
 	/** the current machine */
-	VendingMachine machine;
+	ArrayList<VendingMachine> machines;
 
 	/**
 	 * base constructor
-	 * @param vm the machine to be operated on
  	 */
-	public ManagerAlterLayoutScreen( VendingMachine vm ) {
-		machine = vm;
+	public ManagerAlterLayoutScreen() {
+		try
+		{
+			machines = db.getVendingMachinesAll();
+		}
+		catch (Exception generalFault)
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, generalFault);
+		}
 	}
 
 	/**
@@ -28,7 +35,7 @@ public class ManagerAlterLayoutScreen {
 	 * @return the Food in the rows
 	 */
 	public FoodItem[][] listRows() {
-		Row[][] rows = machine.getNextLayout().getRows();
+		Row[][] rows = machines.get(0).getNextLayout().getRows();
 		FoodItem[][] items = new FoodItem[rows.length][rows[0].length];
 		for ( int i = 0; i < rows.length; i++ ) {
 			for ( int j = 0; j < rows[i].length; j++ ) {
@@ -64,19 +71,25 @@ public class ManagerAlterLayoutScreen {
 	 * 	until the commitRowChanges()
 	 * @param row the row to change
 	 * @param it the fooditem in question
-	 * @return True iff the row change was queued successfully
+	 * @return 0 on success, 1 if the item expires too soon, and -1 on failure
 	 */
-	public boolean queueRowChange( Pair<Integer, Integer> row, FoodItem it ) {
-		Row[][] rows = machine.getNextLayout().getRows();
-		try {
-			rows[row.first][row.second].setProduct( it );
-			rows[row.first][row.second].setRemainingQuantity( 
-				machine.getNextLayout().getDepth() );
-			return true;
-		} catch ( Exception generalFault ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFault);
-			return false;
+	public int queueRowChange( Pair<Integer, Integer> row, FoodItem it ) {
+		for (VendingMachine machine : machines)
+		{
+			if (machine.getStockingInterval() > it.getFreshLength())
+				return 1;
 		}
+		for (VendingMachine machine : machines)
+		{
+			Row[][] rows = machine.getNextLayout().getRows();
+			try {
+				rows[row.first][row.second] = new Row(it, machine.getNextLayout().getDepth(), new GregorianCalendar());
+			} catch ( Exception generalFault ) {
+				ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, generalFault);
+				return -1;
+			}
+		}
+		return 0;
 	}
 
 	/**
@@ -84,12 +97,15 @@ public class ManagerAlterLayoutScreen {
 	 * @return whether the changes succeeded
 	 */
 	public boolean commitRowChanges() {
-		try {
-			db.updateOrCreateVendingMachine( machine );
-			return true;
-		} catch ( Exception databaseProblem ) {
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
-			return false;
+		for (VendingMachine machine : machines)
+		{
+			try {
+				db.updateOrCreateVendingMachine( machine );
+			} catch ( Exception databaseProblem ) {
+				ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+				return false;
+			}
 		}
+		return true;
 	}
 }
