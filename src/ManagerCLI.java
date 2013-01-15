@@ -244,8 +244,8 @@ public class ManagerCLI
 		int y = -1;
 		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
 		{
-			x = CLIUtilities.promptInt("X Value", true);
-			y = CLIUtilities.promptInt("Y Value", true);
+			x = CLIUtilities.promptInt("Enter X value", true);
+			y = CLIUtilities.promptInt("Enter Y value", true);
 		}
 		printRow(layout[x][y]);
 		ArrayList<FoodItem> items = alterLayout.listItems();
@@ -272,8 +272,8 @@ public class ManagerCLI
 		int y = -1;
 		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
 		{
-			x = CLIUtilities.promptInt("X Value", true);
-			y = CLIUtilities.promptInt("Y Value", true);
+			x = CLIUtilities.promptInt("Enter X value", true);
+			y = CLIUtilities.promptInt("Enter Y value", true);
 		}
 		int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), null);
 		if (success == 0)
@@ -367,19 +367,19 @@ public class ManagerCLI
 	 **/
 	private static void addMachine(ManagerMachineManagementScreen screen)
 	{
-		String state = CLIUtilities.prompt("State"); // TODO: better location picker
-		int zipcode = CLIUtilities.promptInt("Zip Code", true);
+		String state = CLIUtilities.prompt("Enter the state where the machine resides"); // TODO: better location picker
+		int zipcode = CLIUtilities.promptInt("Enter the ZIP code of the machine", true);
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{
-			String bus = CLIUtilities.prompt("Enter Nearby Business (or type DONE to finish)");
+			String bus = CLIUtilities.prompt("Enter a nearby business (or type DONE to finish)");
 			if (bus.equals("DONE"))
 				break;
 			businesses.add(bus);
 		}
 		String[] busArray = businesses.toArray(new String[0]);
 		
-		int restocking = CLIUtilities.promptInt("Restocking Interval (days)");
+		int restocking = CLIUtilities.promptInt("Restocking interval (days)");
 		
 		ArrayList<VendingMachine> machs=screen.listMachinessAll();
 		VMLayout layout=null;
@@ -462,7 +462,7 @@ public class ManagerCLI
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{
-			String bus = CLIUtilities.prompt("Enter a Nearby Business (or type DONE to finish)");
+			String bus = CLIUtilities.prompt("Enter a nearby business (or type DONE to finish)");
 			if (bus.equals("DONE"))
 				break;
 			businesses.add(bus);
@@ -489,7 +489,7 @@ public class ManagerCLI
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
 
 		System.out.println("Current stocking interval: " + machine.getStockingInterval() + " days");
-		int newInterval = CLIUtilities.promptInt("New Stocking Interval (in days)");
+		int newInterval = CLIUtilities.promptInt("New stocking interval (in days)");
 
 		int returnCode = screen.changeMachineStockingInterval(machine, newInterval);
 
@@ -514,11 +514,11 @@ public class ManagerCLI
 	 **/
 	private static void addItem(ManagerStockedItemsScreen screen)
 	{
-		String name = CLIUtilities.prompt("New Item Name");
-		int price = CLIUtilities.moneyPrompt("New Item Price");
+		String name = CLIUtilities.prompt("New item name");
+		int price = CLIUtilities.moneyPrompt("New item price");
 		long freshLength = -1;
 		while (freshLength <= 0)
-			freshLength = CLIUtilities.promptInt("New Item Fresh Length (days)");
+			freshLength = CLIUtilities.promptInt("New item fresh length (days)");
 		boolean failure = screen.addItem(name, price, freshLength) == ManagerStockedItemsScreen.FAILURE_KEY;
 		if (!failure)
 			System.out.println("New item added successfully");
@@ -553,17 +553,17 @@ public class ManagerCLI
 			switch (choice)
 			{
 				case 0:
-					String name = CLIUtilities.prompt("New Name");
+					String name = CLIUtilities.prompt("New name");
 					success = screen.changeItemName(item, name);
 					break;
 				case 1:
-					int price = CLIUtilities.moneyPrompt("New Price");
+					int price = CLIUtilities.moneyPrompt("New price");
 					success = screen.changeItemPrice(item, price);
 					break;
 				case 2:
 					long freshLength = -1;
 					while (freshLength <= 0)
-						freshLength = CLIUtilities.promptInt("New Item Fresh Length (days)");
+						freshLength = CLIUtilities.promptInt("New jtem fresh length (days)");
 					success = screen.changeItemFreshLength(item, freshLength);
 					break;
 				case 3:
@@ -632,7 +632,7 @@ public class ManagerCLI
 					break;
 				case 1:
 					String name = CLIUtilities.prompt("Name");
-					int balance = CLIUtilities.moneyPrompt("Initial Balance");
+					int balance = CLIUtilities.moneyPrompt("Initial balance");
 					boolean success = screen.addCustomer(name, balance) != -1;
 					if (success)
 						System.out.println("Customer added successfully");
