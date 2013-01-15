@@ -216,11 +216,11 @@ public class ManagerCLI
 		}
 	}
 
-	private static void printRow( Row row ) {
+	private static void printRow( FoodItem row ) {
 		if ( row == null )
 			System.out.println("Empty row");
 		else
-			System.out.prinltn( row );
+			System.out.println( row );
 	}
 
 	private static void changeRow(ManagerAlterLayoutScreen alterLayout)
