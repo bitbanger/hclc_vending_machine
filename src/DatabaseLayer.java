@@ -756,7 +756,7 @@ public class DatabaseLayer
 		Statement stmt = db.createStatement();
 		String query = "SELECT customerId, money, name FROM Customer";
 		ResultSet results = stmt.executeQuery(query);
-		if (results.next())
+		while (results.next())
 		{
 			Customer returnValue = new Customer(results.getString(3), results.getInt(2));
 			returnValue.setId(results.getInt(1));
