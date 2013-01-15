@@ -11,14 +11,14 @@ import java.util.GregorianCalendar;
  */
 @RunWith(JUnit4.class)
 public class FoodItemTest {
-	private TestUtilities util=null;
+	private TestUtilitiesSimple util=null;
 
 	private void noTestReadyUtilities()
 	{
 		if(util==null)
 			try
 			{
-				util=new TestUtilities();
+				util=new TestUtilitiesSimple();
 			}
 			catch(Exception checked)
 			{
