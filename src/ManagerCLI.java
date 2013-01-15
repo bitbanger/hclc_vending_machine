@@ -413,8 +413,8 @@ public class ManagerCLI
 	 **/
 	private static void reactivateMachine(ManagerMachineManagementScreen screen)
 	{
-		if(screen.listMachinessAll().size() == 0) {
-			System.out.println("No machines currently exist! Please add one to continue.");
+		if(screen.listDeactiveMachines().size() == 0) {
+			System.out.println("No machines are currently inactive! Please add one to continue.");
 			return;
 		}
 
@@ -431,8 +431,8 @@ public class ManagerCLI
 	 **/
 	private static void deactivateMachine(ManagerMachineManagementScreen screen)
 	{
-		if(screen.listMachinessAll().size() == 0) {
-			System.out.println("No machines currently exist! Please add one to continue.");
+		if(screen.listActiveMachines().size() == 0) {
+			System.out.println("No machines are currently active! Please add one to continue.");
 			return;
 		}
 
@@ -623,7 +623,7 @@ public class ManagerCLI
 			int choice = CLIUtilities.option(
 				"View Customers",
 				"Add Customer",
-				"Return To User Management Home");
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -659,7 +659,7 @@ public class ManagerCLI
 				"View Managers",
 				"Add Manager",
 				"Change Manager's Password",
-				"Return To User Management Home");
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
