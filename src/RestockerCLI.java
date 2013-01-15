@@ -35,13 +35,20 @@ public class RestockerCLI {
 		for (String task : tasks)
 			System.out.println(task);
 
-		while(!CLIUtilities.yesOrNo("Have you completed all tasks yet?")) {
+		while(true) {
+			String response = CLIUtilities.prompt("Please enter DONE when the tasks are completed, or QUIT to quit");
 
+			if(response.toLowerCase().equals("done")) {
+				restockerTaskListScreen.completeStocking();
+				System.out.println("========\nRestocking completed.");
+				break;
+			}
+
+			if(response.toLowerCase().equals("quit")) {
+				System.out.println("========\nRestocking NOT completed.");
+				break;
+			}
 		}
-
-		restockerTaskListScreen.completeStocking();
-
-		System.out.println("========\nRestocking completed.");
 	}
 	
 	/**
