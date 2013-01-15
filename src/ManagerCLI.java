@@ -244,8 +244,8 @@ public class ManagerCLI
 		int y = -1;
 		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
 		{
-			x = CLIUtilities.promptInt("X Value");
-			y = CLIUtilities.promptInt("Y Value");
+			x = CLIUtilities.promptInt("X Value", true);
+			y = CLIUtilities.promptInt("Y Value", true);
 		}
 		printRow(layout[x][y]);
 		ArrayList<FoodItem> items = alterLayout.listItems();
@@ -272,8 +272,8 @@ public class ManagerCLI
 		int y = -1;
 		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
 		{
-			x = CLIUtilities.promptInt("X Value");
-			y = CLIUtilities.promptInt("Y Value");
+			x = CLIUtilities.promptInt("X Value", true);
+			y = CLIUtilities.promptInt("Y Value", true);
 		}
 		int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), null);
 		if (success == 0)
@@ -368,7 +368,7 @@ public class ManagerCLI
 	private static void addMachine(ManagerMachineManagementScreen screen)
 	{
 		String state = CLIUtilities.prompt("State"); // TODO: better location picker
-		int zipcode = CLIUtilities.promptInt("Zip Code");
+		int zipcode = CLIUtilities.promptInt("Zip Code", true);
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{
@@ -379,31 +379,15 @@ public class ManagerCLI
 		}
 		String[] busArray = businesses.toArray(new String[0]);
 		
-		int restocking = -1;
-		while (restocking <= 0)
-			restocking = CLIUtilities.promptInt("Restocking Interval (days)");
+		int restocking = CLIUtilities.promptInt("Restocking Interval (days)");
 		
 		ArrayList<VendingMachine> machs=screen.listMachinessAll();
 		VMLayout layout=null;
 		if(machs.size()==0)
 		{
-			int rows=0, cols=0, deep=0;
-			
-			do
-			{
-				rows=CLIUtilities.promptIntDefault("Enter machine's height (in product rows)", VMLayout.DEFAULT_HEIGHT);
-			}
-			while(rows<=0);
-			do
-			{
-				cols=CLIUtilities.promptIntDefault("Enter machine's width (in product columns)" , VMLayout.DEFAULT_WIDTH);
-			}
-			while(cols<=0);
-			do
-			{
-				deep=CLIUtilities.promptIntDefault("Enter machine's depth (products per compartment)", VMLayout.DEFAULT_DEPTH);
-			}
-			while(deep<=0);
+			int rows=CLIUtilities.promptInt("Enter machine's height (in product rows)");
+			int cols=CLIUtilities.promptInt("Enter machine's width (in product columns)");
+			int deep=CLIUtilities.promptInt("Enter machine's depth (products per compartment)");
 			
 			try
 			{
@@ -473,7 +457,8 @@ public class ManagerCLI
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
 
 		String state = CLIUtilities.prompt("Enter the state where the machine resides"); // TODO: better location picker
-		int zipcode = CLIUtilities.promptInt("Enter the ZIP code of the machine");
+		int zipcode = CLIUtilities.promptInt("Enter the ZIP code of the machine", true);
+		
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{

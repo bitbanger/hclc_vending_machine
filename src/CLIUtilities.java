@@ -50,11 +50,7 @@ public class CLIUtilities {
 
 		int selectedOption = -1;
 		do {
-			try {
-				selectedOption = Integer.parseInt(prompt("Select An Option")) - 1;
-			} catch(NumberFormatException e) {
-				continue;
-			}
+			selectedOption = promptInt("Select an option") - 1;
 		} while(selectedOption < 0 || selectedOption >= options.length);
 
 		return selectedOption;
@@ -74,11 +70,7 @@ public class CLIUtilities {
 
 		int selectedOption = -1;
 		do {
-			try {
-				selectedOption = Integer.parseInt(prompt("Select An Option")) - 1;
-			} catch(NumberFormatException e) {
-				continue;
-			}
+			selectedOption = promptInt("Select an option") - 1;
 		} while(selectedOption < 0 || selectedOption >= options.size());
 
 		return selectedOption;
@@ -119,21 +111,51 @@ public class CLIUtilities {
 	} 
 
 	/**
-	 * Provides a simple way to get a number of ints
+	 * Provides a simple way to get a <b>positive</b> integer.
 	 * @param prompt the prompt to the screen
-	 * @return the int
+	 * @return the integer, which is guaranteed to be valid
 	 */
-	public static int promptInt( String prompt ) {
-		int theInt = -1;
-		do {
-			try {
-				theInt = Integer.parseInt(prompt(prompt));
-			} catch(NumberFormatException e) {
-				theInt = -1;
-				continue;
+	public static int promptInt(String prompt)
+	{
+		return promptInt(prompt, false);
+	}
+
+	/**
+	 * Provides a way to get a nonnegative integer, optionally including zero.
+	 * @param prompt the prompt to the screen
+	 * @param allowZero whether to allow zero
+	 * @return the integer, which is guaranteed to be valid
+	 */
+	public static int promptInt(String prompt, boolean allowZero)
+	{
+		return promptInt(prompt, allowZero ? MinValueNumberFormat.ZERO : MinValueNumberFormat.ONE);
+	}
+
+	/**
+	 * Provides a flexible way to get a valid integer.
+	 * @param prompt the prompt to the screen
+	 * @param condition the condition satisfied for valid inputs
+	 * @return the integer, which is guaranteed to be valid
+	 */
+	public static int promptInt(String prompt, NumberFormat condition)
+	{
+		int choice=-1;
+		
+		do
+		{
+			try
+			{
+				choice=Integer.parseInt(prompt(prompt));
 			}
-		} while(theInt < 0);
-		return theInt;
+			catch(NumberFormatException nai)
+			{
+				System.out.println("Please enter only an integral number");
+				continue; //we can't allow this to check the condition, since -1 might be valid
+			}
+		}
+		while(!condition.checkLoudly(choice));
+		
+		return choice;
 	}
 
 	public static int promptIntDefault(String prompt, int defVal) {
@@ -292,5 +314,84 @@ public class CLIUtilities {
 	public static void printLayout(VMLayout layout)
 	{
 		printLayout(layout, true);
+	}
+
+	/**
+	 * Base class for number format functors.
+	 * These are used to customize integral input validation.
+	 */
+	private static abstract class NumberFormat
+	{
+		/**
+		 * Checks whether the specified number classifies as valid input.
+		 * @param input the guess to validate
+		 * @return whether it is considered valid
+		 */
+		public abstract boolean validate(int input);
+
+		/**
+		 * Prints the validation error associated with a bad value.
+		 * @return a message to be printed on bad input
+		 */
+		public abstract String toString();
+
+		/**
+		 * Checks the input and maybe prints the output.
+		 * Validates a number and prints the validation error only on failure.
+		 * @param input the number to be validated
+		 * @return the result of the validation
+		 */
+		public final boolean checkLoudly(int input)
+		{
+			boolean valid=validate(input);
+			
+			if(!valid)
+				System.out.println(this);
+			
+			return valid;
+		}
+	}
+
+	/**
+	 * Number format functor specifying a particular minimum acceptable number.
+	 */
+	public static class MinValueNumberFormat extends NumberFormat
+	{
+		/** An instance allowing any nonnegative number. */
+		public static final MinValueNumberFormat ZERO=new MinValueNumberFormat(0);
+
+		/** An instance allowing only positive numbers. */
+		public static final MinValueNumberFormat ONE=new MinValueNumberFormat(1);
+
+		/** The lowest number allowed to validate successfully. */
+		private final int MINIMUM;
+
+		/**
+		 * Constructor.
+		 * Sets the minimum value to be used.
+		 * @param minimum the lowest number to be accepted
+		 */
+		public MinValueNumberFormat(int minimum)
+		{
+			this.MINIMUM=minimum;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public boolean validate(int input)
+		{
+			return input>=MINIMUM;
+		}
+
+		/** {@inheritDoc} */
+		public String toString()
+		{
+			if(this.MINIMUM==ZERO.MINIMUM)
+				return "Please enter only a nonnegative number";
+			else if(this.MINIMUM==ONE.MINIMUM)
+				return "Please enter only a positive number";
+			else
+				return "Please enter only a number greater than or equal to "+MINIMUM;
+		}
 	}
 }
