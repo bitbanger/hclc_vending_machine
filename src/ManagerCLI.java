@@ -180,42 +180,71 @@ public class ManagerCLI
 		{
 			int choice = CLIUtilities.option(
 				"Change another row",
+				"Make a row empty",
 				"Commit changes",
 				"Exit");
 			switch (choice)
 			{
 				case 0:
-					FoodItem[][] layout = alterLayout.listRows();
-					CLIUtilities.printLayout(layout, false);
-					int x = -1;
-					int y = -1;
-					while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
-					{
-						x = CLIUtilities.promptInt("Enter X");
-						y = CLIUtilities.promptInt("Enter Y");
-					}
-					System.out.println(layout[x][y]);
-					ArrayList<FoodItem> items = alterLayout.listItems();
-					FoodItem item = foodItemChooser(items);
-					int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), item);
-					if (success == 0)
-						System.out.println("Change queued successfully.\nYou still need to commit the changes before the changes become permanent");
-					else if (success == 1)
-						System.out.println("This change will cause items to expire quicker than the longest restocking interval. I prevented this change from being made. :)");
-					else
-						System.out.println("An error occurred while attempting to queue the change");
+					changeRow(alterLayout);
 					break;
 				case 1:
+					makeRowEmpty(alterLayout);
+					break;
+				case 2:
 					boolean commitSuccess = alterLayout.commitRowChanges();
 					if (commitSuccess)
 						System.out.println("Changes committed successfully");
 					else
 						System.out.println("An error occurred while attempting to commit the changes");
 					break;
-				case 2:
+				case 3:
 					return;
 			}
 		}
+	}
+
+	private static void changeRow(ManagerAlterLayoutScreen alterLayout)
+	{
+		FoodItem[][] layout = alterLayout.listRows();
+		CLIUtilities.printLayout(layout, false);
+		int x = -1;
+		int y = -1;
+		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
+		{
+			x = CLIUtilities.promptInt("X Value:");
+			y = CLIUtilities.promptInt("Y Value:");
+		}
+		System.out.println(layout[x][y]);
+		ArrayList<FoodItem> items = alterLayout.listItems();
+		FoodItem item = foodItemChooser(items);
+		int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), item);
+		if (success == 0)
+			System.out.println("Change queued successfully.\nYou still need to commit the changes before the changes become permanent");
+		else if (success == 1)
+			System.out.println("This change will cause items to expire quicker than the longest restocking interval. I prevented this change from being made. :)");
+		else
+			System.out.println("An error occurred while attempting to queue the change");
+	}
+
+	private static void makeRowEmpty(ManagerAlterLayoutScreen alterLayout)
+	{
+		FoodItem[][] layout = alterLayout.listRows();
+		CLIUtilities.printLayout(layout, false);
+		int x = -1;
+		int y = -1;
+		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
+		{
+			x = CLIUtilities.promptInt("X Value:");
+			y = CLIUtilities.promptInt("Y Value:");
+		}
+		int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), null);
+		if (success == 0)
+			System.out.println("Change queued successfully.\nYou still need to commit the changes before the changes become permanent");
+		else if (success == 1)
+			System.out.println("This change will cause items to expire quicker than the longest restocking interval. I prevented this change from being made. :)");
+		else
+			System.out.println("An error occurred while attempting to queue the change");
 	}
 
 	/**
