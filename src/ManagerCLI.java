@@ -14,6 +14,7 @@ public class ManagerCLI
 	 **/
 	private static void login()
 	{
+
 		while (true)
 		{
 			System.out.println("Welcome to HCLC, LLC's Smart Vending Machine Manager Interface!\n---\n");
@@ -48,8 +49,12 @@ public class ManagerCLI
 	 **/
 	private static void home(ManagerHomeScreen home)
 	{
+
 		while (true)
 		{
+
+			CLIUtilities.printTitle("Home Screen");
+
 			int choice = CLIUtilities.option(
 				"View Machine Statistics",
 				"Alter Vending Machine Layout",
@@ -88,6 +93,9 @@ public class ManagerCLI
 	 **/
 	private static void viewStats(ManagerReportStatsScreen screen)
 	{
+
+		CLIUtilities.printTitle("Machine Statistic Options");
+
 		while (true)
 		{
 			int choice = CLIUtilities.option(
@@ -177,8 +185,11 @@ public class ManagerCLI
 	 **/
 	private static void alterLayout(ManagerAlterLayoutScreen alterLayout)
 	{
+
 		while (true)
 		{
+			CLIUtilities.printTitle("Alter Layout Screen");
+
 			int choice = CLIUtilities.option(
 				"Change Row",
 				"Empty Row",
@@ -262,6 +273,9 @@ public class ManagerCLI
 	{
 		while (true)
 		{
+			
+			CLIUtilities.printTitle("Manage Items Screen");
+
 			int choice = CLIUtilities.option(
 				"View Items",
 				"Add Item",
@@ -292,6 +306,9 @@ public class ManagerCLI
 	{
 		while (true)
 		{
+
+			CLIUtilities.printTitle("Manage Machines Screen");
+
 			int choice = CLIUtilities.option(
 				"View Machines",
 				"Add Machine",
@@ -494,6 +511,9 @@ public class ManagerCLI
 		FoodItem item = foodItemChooser(screen.listItems());
 		while (true)
 		{
+			
+			CLIUtilities.printTitle("Edit Item Screen");
+
 			System.out.println(item);
 			int choice = CLIUtilities.option(
 				"Change Name",
@@ -541,6 +561,9 @@ public class ManagerCLI
 	{
 		while (true)
 		{
+
+			CLIUtilities.printTitle("Manage Users Screen");
+
 			int choice = CLIUtilities.option(
 				"Manage Customers",
 				"Manage Managers",
@@ -566,6 +589,9 @@ public class ManagerCLI
 	{
 		while (true)
 		{
+
+			CLIUtilities.printTitle("Manage Customers Screen");
+
 			int choice = CLIUtilities.option(
 				"View Customers",
 				"Add Customer",
@@ -598,6 +624,9 @@ public class ManagerCLI
 	{
 		while (true)
 		{
+
+			CLIUtilities.printTitle("Manage Managers Screen");
+
 			int choice = CLIUtilities.option(
 				"View Managers",
 				"Add Manager",

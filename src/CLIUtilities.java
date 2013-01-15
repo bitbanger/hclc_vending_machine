@@ -93,7 +93,6 @@ public class CLIUtilities {
 		System.out.println("========");
 		System.out.println(name);
 		System.out.println("========");
-		System.out.println("        ");
 	}
 
 	/**
