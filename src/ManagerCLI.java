@@ -443,11 +443,22 @@ public class ManagerCLI
 		System.out.println("Current stocking interval: " + machine.getStockingInterval() + " days");
 		int newInterval = CLIUtilities.promptInt("Enter new stocking interval (in days)");
 
-		boolean success = screen.changeMachineStockingInterval(machine, newInterval);
-		if(success)
-			System.out.println("Stocking interval changed successfully");
-		else
-			System.out.println("An error occurred while attempting to change the stocking interval");
+		int returnCode = screen.changeMachineStockingInterval(machine, newInterval);
+
+		switch(returnCode) {
+			case -1:
+				System.out.println("\nAn error occurred while attempting to change the stocking interval\n");
+				break;
+			case 0:
+				System.out.println("\nStocking interval changed successfully\n");
+				break;
+			default:
+				System.out.println("\nThat stocking interval would cause one of your vending machine items to expire. I've prevented you from setting it :)");
+				System.out.println("To fix this, the interval should be <= " + returnCode + " days.\n");
+				break;
+
+		}
+			
 	}
 
 	/**
