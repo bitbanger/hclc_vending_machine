@@ -80,15 +80,34 @@ public class ManagerMachineManagementScreen {
 	 *
 	 * @return	true if success, else false
 	 */
-	public boolean changeMachineStockingInterval(VendingMachine vm, int interval) {
+	public int changeMachineStockingInterval(VendingMachine vm, int interval) {
 		try {
+			Row[][] rows = vm.getNextLayout().getRows();
+			int shortestConflictingFreshLength = -1;
+
+			for(int i = 0; i < rows.length; ++i) {
+				for(int j = 0; j < rows[0].length; ++j) {
+					// If any item's fresh length is less than the restocking interval, the item can expire
+					// In this case, the new stocking interval is invalid and will be rejected
+					long freshLength = rows[i][j].getProduct().getFreshLength();
+
+					if(freshLength < interval && (freshLength < shortestConflictingFreshLength || shortestConflictingFreshLength == -1)) {
+						shortestConflictingFreshLength = (int)freshLength;
+					}
+				}
+			}
+
+			if(shortestConflictingFreshLength > -1) {
+				return shortestConflictingFreshLength;
+			}
+
 			vm.setStockingInterval(interval);
 			db.updateOrCreateVendingMachine(vm);
 			storefronts = db.getVendingMachinesAll();
-			return true;
+			return 0;
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
-			return false;
+			return -1;
 		}
 	}
 
