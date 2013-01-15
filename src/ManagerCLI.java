@@ -281,6 +281,7 @@ public class ManagerCLI
 					break;
 				case 5:
 					changeMachineStockingInterval(screen);
+					break;
 				case 6:
 					return;
 			}
