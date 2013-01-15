@@ -385,9 +385,9 @@ public class ManagerCLI
 		VMLayout layout=null;
 		if(machs.size()==0)
 		{
-			int rows=CLIUtilities.promptInt("Enter machine's height (in product rows)");
-			int cols=CLIUtilities.promptInt("Enter machine's width (in product columns)");
-			int deep=CLIUtilities.promptInt("Enter machine's depth (products per compartment)");
+			int rows=CLIUtilities.promptIntDefault("Enter machine's height (in product rows)", VMLayout.DEFAULT_HEIGHT);
+			int cols=CLIUtilities.promptIntDefault("Enter machine's width (in product columns)", VMLayout.DEFAULT_WIDTH);
+			int deep=CLIUtilities.promptIntDefault("Enter machine's depth (products per compartment)", VMLayout.DEFAULT_DEPTH);
 			
 			try
 			{
