@@ -391,17 +391,17 @@ public class ManagerCLI
 			
 			do
 			{
-				rows=CLIUtilities.promptInt("Enter machine's height (in product rows)");
+				rows=CLIUtilities.promptIntDefault("Enter machine's height (in product rows)", VMLayout.DEFAULT_HEIGHT);
 			}
 			while(rows<=0);
 			do
 			{
-				cols=CLIUtilities.promptInt("Enter machine's width (in product columns)");
+				cols=CLIUtilities.promptIntDefault("Enter machine's width (in product columns)" , VMLayout.DEFAULT_WIDTH);
 			}
 			while(cols<=0);
 			do
 			{
-				deep=CLIUtilities.promptInt("Enter machine's depth (products per compartment)");
+				deep=CLIUtilities.promptIntDefault("Enter machine's depth (products per compartment)", VMLayout.DEFAULT_DEPTH);
 			}
 			while(deep<=0);
 			
@@ -472,12 +472,12 @@ public class ManagerCLI
 
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
 
-		String state = CLIUtilities.prompt("State"); // TODO: better location picker
-		int zipcode = CLIUtilities.promptInt("Zip Code");
+		String state = CLIUtilities.prompt("Enter the state where the machine resides"); // TODO: better location picker
+		int zipcode = CLIUtilities.promptInt("Enter the ZIP code of the machine");
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{
-			String bus = CLIUtilities.prompt("Enter Nearby Business (or type DONE to finish)");
+			String bus = CLIUtilities.prompt("Enter a Nearby Business (or type DONE to finish)");
 			if (bus.equals("DONE"))
 				break;
 			businesses.add(bus);
