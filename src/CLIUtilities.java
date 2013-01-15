@@ -149,10 +149,12 @@ public class CLIUtilities {
 	 */
 	public static int promptInt(String prompt, NumberFormat condition)
 	{
+		boolean invalid=false;
 		int choice=-1;
 		
 		do
 		{
+			invalid=false;
 			try
 			{
 				choice=Integer.parseInt(prompt(prompt));
@@ -160,10 +162,11 @@ public class CLIUtilities {
 			catch(NumberFormatException nai)
 			{
 				System.out.println("Please enter only an integral number");
+				invalid=true;
 				continue; //we can't allow this to check the condition, since -1 might be valid
 			}
 		}
-		while(!condition.checkLoudly(choice));
+		while(!condition.checkLoudly(choice, invalid));
 		
 		return choice;
 	}
@@ -350,10 +353,14 @@ public class CLIUtilities {
 		 * Checks the input and maybe prints the output.
 		 * Validates a number and prints the validation error only on failure.
 		 * @param input the number to be validated
+		 * @param cont whether to skip the check and return false
 		 * @return the result of the validation
 		 */
-		public final boolean checkLoudly(int input)
+		public final boolean checkLoudly(int input, boolean cont)
 		{
+			if(cont)
+				return false;
+			
 			boolean valid=validate(input);
 			
 			if(!valid)
