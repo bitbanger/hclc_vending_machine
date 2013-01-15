@@ -75,6 +75,24 @@ public class ManagerMachineManagementScreen {
 	}
 
 	/**
+	 * @param vm		Vending machine whose interval to change
+	 * @param interval	New restocking interval
+	 *
+	 * @return	true if success, else false
+	 */
+	public boolean changeMachineStockingInterval(VendingMachine vm, int interval) {
+		try {
+			vm.setStockingInterval(interval);
+			db.updateOrCreateVendingMachine(vm);
+			storefronts = db.getVendingMachinesAll();
+			return true;
+		} catch ( Exception databaseProblem ) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return false;
+		}
+	}
+
+	/**
 	 * adds a new machine
 	 * @param zipCode The zip code for the new machine
 	 * @param state The state for the new machines
