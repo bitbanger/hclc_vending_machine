@@ -310,7 +310,41 @@ public class ManagerCLI
 		int restocking = -1;
 		while (restocking <= 0)
 			restocking = CLIUtilities.promptInt("Restocking Interval (days)");
-		VMLayout layout = screen.listMachinessAll().get(0).getNextLayout(); // TODO: only works if at least one machine is in database. we need to make default
+		
+		ArrayList<VendingMachine> machs=screen.listMachinessAll();
+		VMLayout layout=null;
+		if(machs.size()==0)
+		{
+			int rows=0, cols=0, deep=0;
+			
+			do
+			{
+				rows=CLIUtilities.promptInt("Enter machine's height (in product rows)");
+			}
+			while(rows<=0);
+			do
+			{
+				cols=CLIUtilities.promptInt("Enter machine's width (in product columns)");
+			}
+			while(cols<=0);
+			do
+			{
+				deep=CLIUtilities.promptInt("Enter machine's depth (products per compartment)");
+			}
+			while(deep<=0);
+			
+			try
+			{
+				layout=new VMLayout(rows, cols, deep);
+			}
+			catch(BadArgumentException no)
+			{
+				System.err.println("addMachine caught invalid row/col/dep?!");
+			}
+		}
+		else
+			layout = screen.listMachinessAll().get(0).getNextLayout();
+		
 		boolean success = screen.addMachine(zipcode, state, busArray, restocking, layout) != -1;
 		if (success)
 			System.out.println("Vendng machine added successfully");
