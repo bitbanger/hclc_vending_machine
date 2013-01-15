@@ -42,6 +42,7 @@ public class CLIUtilities {
 	 * @return selectedOption	The selected option (numbered from 0, not 1)
 	 */
 	public static int option(String... options) {
+		System.out.println();
 		for(int i = 0; i < options.length; ++i) {
 			System.out.println((i+1) + ". " + options[i]);
 		}
@@ -65,6 +66,7 @@ public class CLIUtilities {
 	 * @return The index of the item (0 based) the user selected
 	 **/
 	public static int option(ArrayList<? extends Object> options) {
+		System.out.println();
 		for(int i = 0; i < options.size(); ++i) {
 			System.out.println((i+1) + ". " + options.get(i));
 		}
