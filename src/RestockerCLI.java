@@ -49,6 +49,8 @@ public class RestockerCLI {
 				break;
 			}
 		}
+
+		System.out.println("Goodbye!");
 	}
 	
 	/**
