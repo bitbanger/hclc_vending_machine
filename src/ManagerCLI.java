@@ -94,7 +94,6 @@ public class ManagerCLI
 	 **/
 	private static void viewStats(ManagerReportStatsScreen screen)
 	{
-		CLIUtilities.printTitle("Machine Statistic Options");
 		if(screen.listMachines().size() == 0) {
 			System.out.println("No machines currently exist! Please add one to continue.");
 			return;
@@ -102,6 +101,7 @@ public class ManagerCLI
 
 		while (true)
 		{
+			CLIUtilities.printTitle("Machine Statistic Options");
 			int choice = CLIUtilities.option(
 				"View Statistics For All Machines",
 				"View Statistics For Single Machine",
