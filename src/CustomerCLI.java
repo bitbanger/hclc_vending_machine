@@ -103,7 +103,7 @@ public class CustomerCLI {
 					break screen;
 				}
 				else
-					System.out.println(message);
+					CLIUtilities.prompt(message + " please press enter to continue");
 			} else {
 				break screen; // BREAK THE SCREEN
 			}
