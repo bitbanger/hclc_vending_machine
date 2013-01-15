@@ -97,7 +97,7 @@ public class CustomerCLI {
 
 			if(CLIUtilities.yesOrNo("Would you like to proceed with your purchase?")) {
 				
-				String message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter major coordinate"), CLIUtilities.promptInt("Enter minor coordinate")));
+				String message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter X"), CLIUtilities.promptInt("Enter Y")));
 				if(message.equals("GOOD")) {
 					System.out.println("Purchase complete: remaining balance is " + CLIUtilities.formatMoney(account.getBalance()));
 					break screen;

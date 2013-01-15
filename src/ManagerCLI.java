@@ -191,13 +191,13 @@ public class ManagerCLI
 					int y = -1;
 					while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
 					{
-						x = CLIUtilities.promptInt("X Value:");
-						y = CLIUtilities.promptInt("Y Value:");
+						x = CLIUtilities.promptInt("Enter X");
+						y = CLIUtilities.promptInt("Enter Y");
 					}
-					System.out.println(layout[y][x]);
+					System.out.println(layout[x][y]);
 					ArrayList<FoodItem> items = alterLayout.listItems();
 					FoodItem item = foodItemChooser(items);
-					int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(y,x), item);
+					int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), item);
 					if (success == 0)
 						System.out.println("Change queued successfully.\nYou still need to commit the changes before the changes become permanent");
 					else if (success == 1)
