@@ -28,14 +28,14 @@ public class RestockerTaskListScreenTest {
 			help1.getCurrentLayout(), help1.getNextLayout(), true );
 		
 		ArrayList<String> counter = new ArrayList<String>();
-		counter.add("Remove all from 0, 0");
+		/*counter.add("Remove all from 0, 0");
 		counter.add("Add 7 Twix to location 0, 0");
 		counter.add("Remove all from 0, 1");
 		counter.add("Add 7 Snickers to location 0, 1");
 		counter.add("Remove all from 1, 0");
 		counter.add("Add 7 Chips to location 1, 0");
 		counter.add("Remove all from 1, 1");
-		counter.add("Add 7 Fish Sandwich to location 1, 1");
+		counter.add("Add 7 Fish Sandwich to location 1, 1");*/
 		RestockerTaskListScreen hope = new RestockerTaskListScreen( vm );
 		String[] bla = hope.assembleStockingList();
 		ArrayList<String> inst = new ArrayList<String>();
