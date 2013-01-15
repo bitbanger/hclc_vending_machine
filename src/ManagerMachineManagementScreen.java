@@ -89,10 +89,12 @@ public class ManagerMachineManagementScreen {
 				for(int j = 0; j < rows[0].length; ++j) {
 					// If any item's fresh length is less than the restocking interval, the item can expire
 					// In this case, the new stocking interval is invalid and will be rejected
-					long freshLength = rows[i][j].getProduct().getFreshLength();
+					if(rows[i][j] != null) {
+						long freshLength = rows[i][j].getProduct().getFreshLength();
 
-					if(freshLength < interval && (freshLength < shortestConflictingFreshLength || shortestConflictingFreshLength == -1)) {
-						shortestConflictingFreshLength = (int)freshLength;
+						if(freshLength < interval && (freshLength < shortestConflictingFreshLength || shortestConflictingFreshLength == -1)) {
+							shortestConflictingFreshLength = (int)freshLength;
+						}
 					}
 				}
 			}
@@ -106,6 +108,7 @@ public class ManagerMachineManagementScreen {
 			storefronts = db.getVendingMachinesAll();
 			return 0;
 		} catch ( Exception databaseProblem ) {
+			databaseProblem.printStackTrace();
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return -1;
 		}
