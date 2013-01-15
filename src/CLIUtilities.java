@@ -51,7 +51,7 @@ public class CLIUtilities {
 		int selectedOption = -1;
 		do {
 			try {
-				selectedOption = Integer.parseInt(prompt("Select an option")) - 1;
+				selectedOption = Integer.parseInt(prompt("Select An Option")) - 1;
 			} catch(NumberFormatException e) {
 				continue;
 			}
@@ -75,7 +75,7 @@ public class CLIUtilities {
 		int selectedOption = -1;
 		do {
 			try {
-				selectedOption = Integer.parseInt(prompt("Select an option")) - 1;
+				selectedOption = Integer.parseInt(prompt("Select An Option")) - 1;
 			} catch(NumberFormatException e) {
 				continue;
 			}

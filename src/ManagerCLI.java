@@ -26,18 +26,18 @@ public class ManagerCLI
 				{
 					try
 					{
-						id = Integer.parseInt(CLIUtilities.prompt("Enter your id (or 0 to quit)"));
+						id = Integer.parseInt(CLIUtilities.prompt("Enter Your ID (or 0 to quit)"));
 					}
 					catch(NumberFormatException ex) {}
 					if (id < 0)
-						System.out.println("Invalid id");
+						System.out.println("Invalid ID");
 				}
 				if (id == 0)
 					return;
-				String password = CLIUtilities.prompt("Enter your password");
+				String password = CLIUtilities.prompt("Enter Your Password");
 				homeScreen = loginScreen.tryLogin(id, password);
 				if (homeScreen == null)
-					System.out.println("Invalid id/password combo");
+					System.out.println("Invalid ID/password combo");
 			}
 			home(homeScreen);
 		}
@@ -91,9 +91,9 @@ public class ManagerCLI
 		while (true)
 		{
 			int choice = CLIUtilities.option(
-				"View statistics for all vending machines",
-				"View statistics for a single vending machine",
-				"Return to home");
+				"View Statistics For All Machines",
+				"View Statistics For Single Machine",
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -180,10 +180,10 @@ public class ManagerCLI
 		while (true)
 		{
 			int choice = CLIUtilities.option(
-				"Change another row",
-				"Make a row empty",
-				"Commit changes",
-				"Exit");
+				"Change Row",
+				"Empty Row",
+				"Commit Changes",
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -236,8 +236,8 @@ public class ManagerCLI
 		int y = -1;
 		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
 		{
-			x = CLIUtilities.promptInt("X Value:");
-			y = CLIUtilities.promptInt("Y Value:");
+			x = CLIUtilities.promptInt("X Value");
+			y = CLIUtilities.promptInt("Y Value");
 		}
 		int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), null);
 		if (success == 0)
@@ -259,7 +259,7 @@ public class ManagerCLI
 				"View Items",
 				"Add Item",
 				"Modify Item",
-				"Exit");
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -292,7 +292,7 @@ public class ManagerCLI
 				"Deacivate Machine",
 				"Change Machine Location",
 				"Change Machine Stocking Interval",
-				"Exit");
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -330,7 +330,7 @@ public class ManagerCLI
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{
-			String bus = CLIUtilities.prompt("Enter nearby business (or type DONE to finish)");
+			String bus = CLIUtilities.prompt("Enter Nearby Business (or type DONE to finish)");
 			if (bus.equals("DONE"))
 				break;
 			businesses.add(bus);
@@ -420,7 +420,7 @@ public class ManagerCLI
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{
-			String bus = CLIUtilities.prompt("Enter nearby business (or type DONE to finish)");
+			String bus = CLIUtilities.prompt("Enter Nearby Business (or type DONE to finish)");
 			if (bus.equals("DONE"))
 				break;
 			businesses.add(bus);
@@ -442,7 +442,7 @@ public class ManagerCLI
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
 
 		System.out.println("Current stocking interval: " + machine.getStockingInterval() + " days");
-		int newInterval = CLIUtilities.promptInt("Enter new stocking interval (in days)");
+		int newInterval = CLIUtilities.promptInt("New Stocking Interval (in days)");
 
 		int returnCode = screen.changeMachineStockingInterval(machine, newInterval);
 
@@ -467,11 +467,11 @@ public class ManagerCLI
 	 **/
 	private static void addItem(ManagerStockedItemsScreen screen)
 	{
-		String name = CLIUtilities.prompt("New item name");
-		int price = CLIUtilities.moneyPrompt("New item price");
+		String name = CLIUtilities.prompt("New Item Name");
+		int price = CLIUtilities.moneyPrompt("New Item Price");
 		long freshLength = -1;
 		while (freshLength <= 0)
-			freshLength = CLIUtilities.promptInt("New item fresh length (days)");
+			freshLength = CLIUtilities.promptInt("New Item Fresh Length (days)");
 		boolean failure = screen.addItem(name, price, freshLength) == ManagerStockedItemsScreen.FAILURE_KEY;
 		if (!failure)
 			System.out.println("New item added successfully");
@@ -489,26 +489,26 @@ public class ManagerCLI
 		{
 			System.out.println(item);
 			int choice = CLIUtilities.option(
-				"Change name",
-				"Change price",
-				"Change fresh length",
-				"Change activation status",
+				"Change Name",
+				"Change Price",
+				"Change Fresh Length",
+				"Change Activation Status",
 				"Done");
 			boolean success = false;
 			switch (choice)
 			{
 				case 0:
-					String name = CLIUtilities.prompt("New name");
+					String name = CLIUtilities.prompt("New Name");
 					success = screen.changeItemName(item, name);
 					break;
 				case 1:
-					int price = CLIUtilities.moneyPrompt("New price");
+					int price = CLIUtilities.moneyPrompt("New Price");
 					success = screen.changeItemPrice(item, price);
 					break;
 				case 2:
 					long freshLength = -1;
 					while (freshLength <= 0)
-						freshLength = CLIUtilities.promptInt("New item fresh length (days)");
+						freshLength = CLIUtilities.promptInt("New Item Fresh Length (days)");
 					success = screen.changeItemFreshLength(item, freshLength);
 					break;
 				case 3:
@@ -537,7 +537,7 @@ public class ManagerCLI
 			int choice = CLIUtilities.option(
 				"Manage Customers",
 				"Manage Managers",
-				"Exit");
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -562,7 +562,7 @@ public class ManagerCLI
 			int choice = CLIUtilities.option(
 				"View Customers",
 				"Add Customer",
-				"Exit");
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -571,7 +571,7 @@ public class ManagerCLI
 					break;
 				case 1:
 					String name = CLIUtilities.prompt("Name");
-					int balance = CLIUtilities.moneyPrompt("Initial balance");
+					int balance = CLIUtilities.moneyPrompt("Initial Balance");
 					boolean success = screen.addCustomer(name, balance) != -1;
 					if (success)
 						System.out.println("Customer added successfully");
@@ -594,8 +594,8 @@ public class ManagerCLI
 			int choice = CLIUtilities.option(
 				"View Managers",
 				"Add Manager",
-				"Change A Manager's Password",
-				"Exit");
+				"Change Manager's Password",
+				"Return Home");
 			switch (choice)
 			{
 				case 0:
@@ -613,7 +613,7 @@ public class ManagerCLI
 					break;
 				case 2:
 					Manager manny = managerChooser(screen.listManagers());
-					String newPassword = CLIUtilities.prompt("New password");
+					String newPassword = CLIUtilities.prompt("New Password");
 					boolean changeSuccess = screen.changePassword(manny, newPassword);
 					if (changeSuccess)
 						System.out.println("Password changed successfully");
