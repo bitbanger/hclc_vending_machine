@@ -82,6 +82,7 @@ public class ManagerCLI
 				case 4:
 					ManagerUserAccountsScreen userAccount = home.manageUsers();
 					manageUsers(userAccount);
+					break;
 				case 5:
 					return;
 			}
@@ -93,8 +94,11 @@ public class ManagerCLI
 	 **/
 	private static void viewStats(ManagerReportStatsScreen screen)
 	{
-
 		CLIUtilities.printTitle("Machine Statistic Options");
+		if(screen.listMachines().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
 
 		while (true)
 		{
@@ -185,6 +189,10 @@ public class ManagerCLI
 	 **/
 	private static void alterLayout(ManagerAlterLayoutScreen alterLayout)
 	{
+		if(alterLayout.listMachines().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
 
 		while (true)
 		{
@@ -225,6 +233,11 @@ public class ManagerCLI
 
 	private static void changeRow(ManagerAlterLayoutScreen alterLayout)
 	{
+		if(alterLayout.listMachines().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
+		
 		FoodItem[][] layout = alterLayout.listRows();
 		CLIUtilities.printLayout(layout, false);
 		int x = -1;
@@ -248,6 +261,11 @@ public class ManagerCLI
 
 	private static void makeRowEmpty(ManagerAlterLayoutScreen alterLayout)
 	{
+		if(alterLayout.listMachines().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
+
 		FoodItem[][] layout = alterLayout.listRows();
 		CLIUtilities.printLayout(layout, false);
 		int x = -1;
@@ -411,6 +429,11 @@ public class ManagerCLI
 	 **/
 	private static void reactivateMachine(ManagerMachineManagementScreen screen)
 	{
+		if(screen.listMachinessAll().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
+
 		VendingMachine machine = vmChooser(screen.listDeactiveMachines());
 		boolean success = screen.reactivateMachine(machine);
 		if (success)
@@ -424,6 +447,11 @@ public class ManagerCLI
 	 **/
 	private static void deactivateMachine(ManagerMachineManagementScreen screen)
 	{
+		if(screen.listMachinessAll().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
+
 		VendingMachine machine = vmChooser(screen.listActiveMachines());
 		boolean success = screen.deactivateMachine(machine);
 		if (success)
@@ -437,6 +465,11 @@ public class ManagerCLI
 	 **/
 	private static void changeMachineLocation(ManagerMachineManagementScreen screen)
 	{
+		if(screen.listMachinessAll().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
+
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
 
 		String state = CLIUtilities.prompt("State"); // TODO: better location picker
@@ -463,6 +496,11 @@ public class ManagerCLI
 	 **/
 	private static void changeMachineStockingInterval(ManagerMachineManagementScreen screen)
 	{
+		if(screen.listMachinessAll().size() == 0) {
+			System.out.println("No machines currently exist! Please add one to continue.");
+			return;
+		}
+
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
 
 		System.out.println("Current stocking interval: " + machine.getStockingInterval() + " days");
@@ -508,6 +546,11 @@ public class ManagerCLI
 	 **/
 	private static void editItem(ManagerStockedItemsScreen screen)
 	{
+		if(screen.listItems().size() == 0) {
+			System.out.println("No food items currently exist! Please add one to continue.");
+			return;
+		}
+
 		FoodItem item = foodItemChooser(screen.listItems());
 		while (true)
 		{
