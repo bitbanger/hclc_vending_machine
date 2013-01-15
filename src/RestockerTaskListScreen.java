@@ -78,6 +78,9 @@ public class RestockerTaskListScreen {
 						+ " " + items.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}
+				else if ( items.getId() == nextItems.getId() ) {
+					continue; // Manager didn't update the row and other conditions are fine
+				}
 				else if ( !items.getProduct().equals( 
 					nextItems.getProduct() ) ) {
 					// next products not the same	
