@@ -65,14 +65,14 @@ public class RestockerTaskListScreen {
 					instructions.add("Remove all from " +
 						i + ", " + j);	
 					instructions.add("Add " + 
-						nextItems.getRemainingQuantity()
+						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}
 				else if ( items.getRemainingQuantity() == 0 
 					&& items.getId() == nextItems.getId() ) {
 					// Manager didn't change this row and it's empty
-					instructions.add("Add " + vm.getNextLayout().getDepth()
+					instructions.add("Add " + vm.getCurrentLayout().getDepth()
 						+ " " + items.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}
@@ -82,7 +82,7 @@ public class RestockerTaskListScreen {
 					instructions.add("Remove all from " +
 						i + ", " + j);	
 					instructions.add("Add " + 
-						nextItems.getRemainingQuantity()
+						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}
@@ -93,7 +93,7 @@ public class RestockerTaskListScreen {
 					instructions.add("Remove all from " +
 						i + ", " + j);	
 					instructions.add("Add " + 
-						nextItems.getRemainingQuantity()
+						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}

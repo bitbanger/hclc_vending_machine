@@ -29,11 +29,11 @@ public class RestockerTaskListScreenTest {
 		
 		ArrayList<String> counter = new ArrayList<String>();
 		counter.add("Remove all from 0, 0");
-		counter.add("Add 3 Twix to location 0, 0");
+		counter.add("Add 7 Twix to location 0, 0");
 		counter.add("Remove all from 0, 1");
-		counter.add("Add 4 Snickers to location 0, 1");
+		counter.add("Add 7 Snickers to location 0, 1");
 		counter.add("Remove all from 1, 0");
-		counter.add("Add 6 Chips to location 1, 0");
+		counter.add("Add 7 Chips to location 1, 0");
 		counter.add("Remove all from 1, 1");
 		counter.add("Add 7 Fish Sandwich to location 1, 1");
 		RestockerTaskListScreen hope = new RestockerTaskListScreen( vm );
