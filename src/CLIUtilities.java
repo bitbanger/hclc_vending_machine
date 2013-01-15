@@ -219,13 +219,14 @@ public class CLIUtilities {
 	 **/
 	public static void printLayout(FoodItem[][] rows, boolean hideInactive)
 	{
-		for (int i=0;i<rows.length;++i)
+		int height = rows[0].length;
+		int width = rows.length;
+		for (int i=0;i<height;++i)
 		{
-			FoodItem[] column = rows[i];
-			for (int j=0;j<column.length;++j)
+			for (int j=0;j<width;++j)
 			{
-				System.out.printf("(%d, %d) ", i, j);
-				FoodItem item = column[j];
+				System.out.printf("(%d, %d) ", j, i);
+				FoodItem item = rows[j][i];
 				String name = "EMPTY";
 				if (item != null) {
 					if(item.isActive() || !hideInactive) {
@@ -237,9 +238,9 @@ public class CLIUtilities {
 				System.out.printf("%-10s ", name);
 			}
 			System.out.println();
-			for (int j=0;j<column.length;++j)
+			for (int j=0;j<width;++j)
 			{
-				FoodItem item = column[j];
+				FoodItem item = rows[j][i];
 				String price = "";
 				if (item != null && item.isActive())
 					price = String.format("$%-8.2f ", item.getPrice()/100.0);

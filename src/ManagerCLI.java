@@ -331,7 +331,7 @@ public class ManagerCLI
 				"View Machines",
 				"Add Machine",
 				"Reactivate Machine",
-				"Deacivate Machine",
+				"Deactivate Machine",
 				"Change Machine Location",
 				"Change Machine Stocking Interval",
 				"Return Home");
@@ -391,7 +391,7 @@ public class ManagerCLI
 			
 			try
 			{
-				layout=new VMLayout(rows, cols, deep);
+				layout=new VMLayout(cols, rows, deep);
 			}
 			catch(BadArgumentException no)
 			{
@@ -399,13 +399,13 @@ public class ManagerCLI
 			}
 		}
 		else
-			layout = screen.listMachinessAll().get(0).getNextLayout();
+			layout = new VMLayout(screen.listMachinessAll().get(0).getNextLayout());
 		
 		boolean success = screen.addMachine(zipcode, state, busArray, restocking, layout) != -1;
 		if (success)
-			System.out.println("Vendng machine added successfully");
+			System.out.println("Vending machine added successfully");
 		else
-			System.out.println("An error occured while attempting to add the vending machine");
+			System.out.println("An error occurred while attempting to add the vending machine");
 	}
 
 	/**
