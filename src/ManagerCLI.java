@@ -20,17 +20,19 @@ public class ManagerCLI
 			ManagerHomeScreen homeScreen = null;
 			while (homeScreen == null)
 			{
-				int id = 0;
-				while (id < 1)
+				int id = -1;
+				while (id < 0)
 				{
 					try
 					{
-						id = Integer.parseInt(CLIUtilities.prompt("Enter your id"));
+						id = Integer.parseInt(CLIUtilities.prompt("Enter your id (or 0 to quit)"));
 					}
 					catch(NumberFormatException ex) {}
-					if (id < 1)
+					if (id < 0)
 						System.out.println("Invalid id");
 				}
+				if (id == 0)
+					return;
 				String password = CLIUtilities.prompt("Enter your password");
 				homeScreen = loginScreen.tryLogin(id, password);
 				if (homeScreen == null)
@@ -555,5 +557,6 @@ public class ManagerCLI
 	public static void main(String[] args)
 	{
 		login();
+		System.out.println("Goodbye");
 	}
 }
