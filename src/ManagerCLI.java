@@ -205,6 +205,13 @@ public class ManagerCLI
 		}
 	}
 
+	private static void printRow( Row row ) {
+		if ( row == null )
+			System.out.println("Empty row");
+		else
+			System.out.prinltn( row );
+	}
+
 	private static void changeRow(ManagerAlterLayoutScreen alterLayout)
 	{
 		FoodItem[][] layout = alterLayout.listRows();
@@ -216,7 +223,7 @@ public class ManagerCLI
 			x = CLIUtilities.promptInt("X Value");
 			y = CLIUtilities.promptInt("Y Value");
 		}
-		System.out.println(layout[x][y]);
+		printRow(layout[x][y]);
 		ArrayList<FoodItem> items = alterLayout.listItems();
 		FoodItem item = foodItemChooser(items);
 		int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(x,y), item);
