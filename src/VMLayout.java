@@ -8,13 +8,13 @@ import java.util.GregorianCalendar;
 public class VMLayout extends ModelBase
 {
 	/** The default height for the vending machine */
-	public static final DEFAULT_HEIGHT = 8;
+	public static final int DEFAULT_HEIGHT = 8;
 
 	/** The default width for the vending machine */
-	public static final DEFAULT_WIDTH = 5;
+	public static final int DEFAULT_WIDTH = 5;
 
 	/** The default depth for the vending machine */
-	public static final DEFAULT_DEPTH = 15;
+	public static final int DEFAULT_DEPTH = 15;
 
 	/** The rows of products. */
 	private Row[][] rows; 
