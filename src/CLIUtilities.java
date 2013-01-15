@@ -87,9 +87,11 @@ public class CLIUtilities {
 	 * @param name the name of the new title
 	 */
 	public static void printTitle( String name ) {
+		System.out.println("        ");
 		System.out.println("========");
 		System.out.println(name);
 		System.out.println("========");
+		System.out.println("        ");
 	}
 
 	/**
