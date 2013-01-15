@@ -98,12 +98,22 @@ public class CLIUtilities {
 			try {
 				moneys = Float.parseFloat(prompt(prompt) );
 				moneys *= 100;
-				if ( Math.abs(moneys - (int)moneys) > (Math.pow(10, -23)) ) {
+				
+				if(moneys<0)
+				{
 					moneys = -1;
-					System.out.println("Please have only two places after the decimal");
+					System.out.println("Please don't enter negative monetary amounts");
+					continue;
+				}
+				else if(Math.abs(moneys-(int)moneys)>Math.pow(10, -23))
+				{
+					moneys = -1;
+					System.out.println("Please use only two places after the decimal");
+					continue;
 				}
 			} catch (NumberFormatException e) {
 				moneys = -1;
+				System.out.println("Please only enter valid real numbers");
 				continue;
 			}
 		} while (moneys < 0);
