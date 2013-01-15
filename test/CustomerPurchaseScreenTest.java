@@ -43,7 +43,7 @@ public class CustomerPurchaseScreenTest {
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
 		Assert.assertTrue( "GOOD".equals( screen.tryPurchase( 
-			new Pair (0, 0) ) ) );
+			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class CustomerPurchaseScreenTest {
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
 		Assert.assertTrue( "INVALID LOCATION".equals( screen.tryPurchase( 
-			new Pair (0, 15) ) ) );
+			new Pair<Integer, Integer> (0, 15) ) ) );
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class CustomerPurchaseScreenTest {
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
 		Assert.assertTrue( "NO PRODUCT".equals( screen.tryPurchase( 
-			new Pair (0, 0) ) ) );
+			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class CustomerPurchaseScreenTest {
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
 		Assert.assertTrue( "ITEM SOLD OUT".equals( screen.tryPurchase( 
-			new Pair (0, 0) ) ) );
+			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class CustomerPurchaseScreenTest {
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
 		Assert.assertTrue( "ITEM INACTIVE".equals( screen.tryPurchase( 
-			new Pair (0, 0) ) ) );
+			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
 	@Test
@@ -111,6 +111,6 @@ public class CustomerPurchaseScreenTest {
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
 		Assert.assertTrue( "INSUFFICIENT FUNDS".equals( 
-			screen.tryPurchase( new Pair (0, 0) ) ) );
+			screen.tryPurchase( new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 }
