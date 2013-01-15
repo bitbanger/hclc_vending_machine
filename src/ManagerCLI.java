@@ -563,7 +563,7 @@ public class ManagerCLI
 				case 2:
 					long freshLength = -1;
 					while (freshLength <= 0)
-						freshLength = CLIUtilities.promptInt("New jtem fresh length (days)");
+						freshLength = CLIUtilities.promptInt("New item fresh length (days)");
 					success = screen.changeItemFreshLength(item, freshLength);
 					break;
 				case 3:
@@ -677,7 +677,7 @@ public class ManagerCLI
 					break;
 				case 2:
 					Manager manny = managerChooser(screen.listManagers());
-					String newPassword = CLIUtilities.prompt("New Password");
+					String newPassword = CLIUtilities.prompt("New password");
 					boolean changeSuccess = screen.changePassword(manny, newPassword);
 					if (changeSuccess)
 						System.out.println("Password changed successfully");
