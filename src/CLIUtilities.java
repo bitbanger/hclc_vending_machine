@@ -136,6 +136,24 @@ public class CLIUtilities {
 		return theInt;
 	}
 
+	public static int promptIntDefault(String prompt, int defVal) {
+		int theInt = -1;
+		do {
+			try {
+				String thePrompt = prompt(prompt + " (default " + defVal + ")");
+				if(thePrompt.equals("")) {
+					return defVal;
+				}
+
+				theInt = Integer.parseInt(thePrompt);
+			} catch(NumberFormatException e) {
+				theInt = -1;
+				continue;
+			}
+		} while(theInt < 0);
+		return theInt;
+	}
+
 	/**
 	 * Prompts the user (Y/N) for a message.
 	 *
