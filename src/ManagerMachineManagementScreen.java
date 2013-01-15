@@ -108,7 +108,6 @@ public class ManagerMachineManagementScreen {
 			storefronts = db.getVendingMachinesAll();
 			return 0;
 		} catch ( Exception databaseProblem ) {
-			databaseProblem.printStackTrace();
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return -1;
 		}
