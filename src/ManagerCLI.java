@@ -620,6 +620,6 @@ public class ManagerCLI
 	public static void main(String[] args)
 	{
 		login();
-		System.out.println("Goodbye");
+		System.out.println("Goodbye!");
 	}
 }
