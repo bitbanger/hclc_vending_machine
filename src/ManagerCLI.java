@@ -5,6 +5,7 @@ import java.util.ArrayList;
  * CLI for the Customer's perspective.
  * Provides an entry point for the system.
  * @author Lane Lawley <lxl5734@rit.edu>
+ * @contributor Piper Chester <pwc1203@rit.edu>
  */
 public class ManagerCLI
 {
@@ -212,8 +213,8 @@ public class ManagerCLI
 		int y = -1;
 		while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
 		{
-			x = CLIUtilities.promptInt("X Value:");
-			y = CLIUtilities.promptInt("Y Value:");
+			x = CLIUtilities.promptInt("X Value");
+			y = CLIUtilities.promptInt("Y Value");
 		}
 		System.out.println(layout[x][y]);
 		ArrayList<FoodItem> items = alterLayout.listItems();
