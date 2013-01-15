@@ -42,8 +42,10 @@ public class RestockerTaskListScreen {
 		for ( int i = 0; i < cur.length; i++ ) {
 			for ( int j = 0; j < cur[i].length; j++ ) {
 				if ( next[i][j] == null ) {
-					instructions.add("Remove all from " + i
-						 + ", " + j);
+					if ( cur[i][j] != null && 
+						cur[i][j].getRemainingQuantity() != 0 )
+						instructions.add("Remove all from " + i
+							 + ", " + j);
 					continue;
 				}
 				if ( cur[i][j] == null ) {
