@@ -49,6 +49,13 @@ public class ManagerAlterLayoutScreen {
 	}
 
 	/**
+	 * Returns all machines
+	 **/
+	public ArrayList<VendingMachine> listMachines() {
+		return machines;
+	}
+
+	/**
 	 * Lists the food items in the database.
 	 * Note: we may want to change this to list only active items
 	 * @return A collection of food items upon success or null on any type of
