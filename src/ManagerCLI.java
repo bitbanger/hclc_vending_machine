@@ -165,9 +165,7 @@ public class ManagerCLI
 	 **/
 	private static void preAlterLayout(ManagerHomeScreen screen)
 	{
-		ArrayList<VendingMachine> machines = screen.displayVendingMachines();
-		VendingMachine selected = vmChooser(machines);
-		ManagerAlterLayoutScreen alterLayout = new ManagerAlterLayoutScreen(selected);
+		ManagerAlterLayoutScreen alterLayout = new ManagerAlterLayoutScreen();
 		alterLayout(alterLayout);
 	}
 
@@ -186,7 +184,7 @@ public class ManagerCLI
 			{
 				case 0:
 					FoodItem[][] layout = alterLayout.listRows();
-					CLIUtilities.printLayout(layout);
+					CLIUtilities.printLayout(layout, false);
 					int x = -1;
 					int y = -1;
 					while (x < 0 || y < 0 || x >= layout.length || y >= layout[0].length)
@@ -197,9 +195,11 @@ public class ManagerCLI
 					System.out.println(layout[y][x]);
 					ArrayList<FoodItem> items = alterLayout.listItems();
 					FoodItem item = foodItemChooser(items);
-					boolean success = alterLayout.queueRowChange(new Pair<Integer, Integer>(y,x), item);
-					if (success)
+					int success = alterLayout.queueRowChange(new Pair<Integer, Integer>(y,x), item);
+					if (success == 0)
 						System.out.println("Change queued successfully.\nYou still need to commit the changes before the changes become permanent");
+					else if (success == 1)
+						System.out.println("This change will cause items to expire quicker than the longest restocking interval. I prevented this change from being made. :)");
 					else
 						System.out.println("An error occurred while attempting to queue the change");
 					break;
@@ -209,6 +209,7 @@ public class ManagerCLI
 						System.out.println("Changes committed successfully");
 					else
 						System.out.println("An error occurred while attempting to commit the changes");
+					break;
 				case 2:
 					return;
 			}

@@ -169,8 +169,9 @@ public class CLIUtilities {
 	/**
 	 * Provides a nice way to print a layout
 	 * @param rows The layout to print
+	 * @param hideInactive Whether to hide inactive items
 	 **/
-	public static void printLayout(FoodItem[][] rows)
+	public static void printLayout(FoodItem[][] rows, boolean hideInactive)
 	{
 		for (int i=0;i<rows.length;++i)
 		{
@@ -181,7 +182,7 @@ public class CLIUtilities {
 				FoodItem item = column[j];
 				String name = "EMPTY";
 				if (item != null) {
-					if(item.isActive()) {
+					if(item.isActive() || !hideInactive) {
 						name = item.getName();
 					} else {
 						name = "INACTIVE";
@@ -196,6 +197,8 @@ public class CLIUtilities {
 				String price = "";
 				if (item != null && item.isActive())
 					price = String.format("$%-8.2f ", item.getPrice()/100.0);
+				else if (item != null && !hideInactive)
+					price = "(INACTIVE)";
 				System.out.printf("       %10s ", price);
 			}
 			System.out.println();
@@ -204,11 +207,21 @@ public class CLIUtilities {
 	}
 
 	/**
+	 * Provides a nice way to print a layout. Hides inactive items
+	 * @param rows The layout to print
+	 **/
+	public static void printLayout(FoodItem[][] rows)
+	{
+		printLayout(rows, true);
+	}
+
+	/**
 	 * Provides a nice way to print a layout
 	 * Note: Not tested
 	 * @param rows The layout to print
+	 * @param hideInactive Whether to hide inactive items
 	 **/
-	public static void printLayout(Row[][] rows)
+	public static void printLayout(Row[][] rows, boolean hideInactive)
 	{
 		if (rows.length == 0 || rows[0].length == 0)
 			return;
@@ -225,16 +238,35 @@ public class CLIUtilities {
 				temp[i][j] = item;
 			}
 		}
-		printLayout(temp);
+		printLayout(temp, hideInactive);
 	}
 
 	/**
-	 * Provies a nice way to print a layout
+	 * Provides a nice way to print a layout. Hides inactive items.
+	 * @param rows The layout to print
+	 **/
+	public static void printLayout(Row[][] rows)
+	{
+		printLayout(rows, true);
+	}
+
+	/**
+	 * Provides a nice way to print a layout
 	 * Note: Not tested
 	 * @param layout The layout to print
+	 * @param hideInactive Whether to hide inactive items
+	 **/
+	public static void printLayout(VMLayout layout, boolean hideInactive)
+	{
+		printLayout(layout.getRows(), hideInactive);
+	}
+
+	/**
+	 * Provides a nice way to print a layout. Hides inactive items.
+	 * @param hideInactive Whether to hide inactive items
 	 **/
 	public static void printLayout(VMLayout layout)
 	{
-		printLayout(layout.getRows());
+		printLayout(layout, true);
 	}
 }
