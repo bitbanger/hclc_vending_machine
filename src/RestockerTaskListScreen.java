@@ -71,9 +71,8 @@ public class RestockerTaskListScreen {
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j);
 				}
-				else if ( items.getRemainingQuantity() == 0 
-					&& items.getId() == nextItems.getId() ) {
-					// Manager didn't change this row and it's empty
+				else if ( items.getRemainingQuantity() == 0 ) {
+					// Manager didn't change this row's product and it's empty
 					instructions.add("Add " + vm.getCurrentLayout().getDepth()
 						+ " " + items.getProduct().getName() 
 						+ " to location " + i + ", " + j);
@@ -81,17 +80,6 @@ public class RestockerTaskListScreen {
 				else if ( !items.getProduct().equals( 
 					nextItems.getProduct() ) ) {
 					// next products not the same	
-					instructions.add("Remove all from " +
-						i + ", " + j);	
-					instructions.add("Add " + 
-						vm.getCurrentLayout().getDepth()
-						+ " " + nextItems.getProduct().getName() 
-						+ " to location " + i + ", " + j);
-				}
-				else if ( items.getRemainingQuantity() !=
-					nextItems.getRemainingQuantity() ) {
-					// differing remaining quantities 
-					// of the same product
 					instructions.add("Remove all from " +
 						i + ", " + j);	
 					instructions.add("Add " + 
