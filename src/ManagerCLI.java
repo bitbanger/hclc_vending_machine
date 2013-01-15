@@ -623,7 +623,7 @@ public class ManagerCLI
 			int choice = CLIUtilities.option(
 				"View Customers",
 				"Add Customer",
-				"Return Home");
+				"Return To User Management Home");
 			switch (choice)
 			{
 				case 0:
@@ -659,7 +659,7 @@ public class ManagerCLI
 				"View Managers",
 				"Add Manager",
 				"Change Manager's Password",
-				"Return Home");
+				"Return To User Management Home");
 			switch (choice)
 			{
 				case 0:
