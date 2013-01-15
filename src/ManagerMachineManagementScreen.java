@@ -124,7 +124,8 @@ public class ManagerMachineManagementScreen {
 	public int addMachine( int zipCode, String state, String[] nearbyBusinesses, int interval, VMLayout layout ) {
 		try {
 			Location location = new Location(zipCode, state, nearbyBusinesses);
-			VendingMachine machine = new VendingMachine( location, interval, layout );
+			VMLayout blank = new VMLayout(layout.getRows()[0].length, layout.getRows().length, layout.getDepth());
+			VendingMachine machine = new VendingMachine( location, interval, blank, layout, true);
 			db.updateOrCreateVendingMachine( machine );
 			storefronts.add( machine );
 			return machine.getId();
