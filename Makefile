@@ -43,7 +43,7 @@ distribution: classes
 	- mkdir ${DISTDIR}
 	$(foreach library,${LIBS},ln ${LIBDIR}/${library} ${DISTDIR})
 	echo Class-Path: ${LIBS} > Manifest
-	$(foreach class,${EXEC},${JAR} cfem ${DISTDIR}/${class}.jar ${class} Manifest -C ${BINDIR} .)
+	$(foreach class,${EXEC},${JAR} cfem ${DISTDIR}/${class}.jar ${class} Manifest -C ${BINDIR} .;)
 
 documents:
 	- mkdir ${DOCDIR}
