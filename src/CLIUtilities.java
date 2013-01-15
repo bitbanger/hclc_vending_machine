@@ -243,7 +243,7 @@ public class CLIUtilities {
 				FoodItem item = rows[j][i];
 				String price = "";
 				if (item != null && item.isActive())
-					price = String.format("$%-8.2f ", item.getPrice()/100.0);
+					price = formatMoney(item.getPrice());
 				else if (item != null && !hideInactive)
 					price = "(INACTIVE)";
 				System.out.printf("       %10s ", price);
