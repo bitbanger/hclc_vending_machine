@@ -163,7 +163,10 @@ public class CLIUtilities {
 	 */
 	public static String formatMoney(int amount)
 	{
-		return "$"+String.format("%.2f", (double)amount/100);
+		String amt=String.format("%03d", amount);
+		int split=amt.length()-2;
+		
+		return "$"+amt.substring(0, split)+'.'+amt.substring(split);
 	}
 
 	/**
