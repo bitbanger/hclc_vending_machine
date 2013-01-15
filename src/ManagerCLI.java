@@ -259,6 +259,7 @@ public class ManagerCLI
 				"Reactivate Machine",
 				"Deacivate Machine",
 				"Change Machine Location",
+				"Change Machine Stocking Interval",
 				"Exit");
 			switch (choice)
 			{
@@ -279,6 +280,8 @@ public class ManagerCLI
 					changeMachineLocation(screen);
 					break;
 				case 5:
+					changeMachineStockingInterval(screen);
+				case 6:
 					return;
 			}
 		}
@@ -362,6 +365,23 @@ public class ManagerCLI
 			System.out.println("Location changed successfully");
 		else
 			System.out.println("An error occurred while attempting to change the location");
+	}
+
+	/**
+	 * Handles changing a machine's stocking interval
+	 **/
+	private static void changeMachineStockingInterval(ManagerMachineManagementScreen screen)
+	{
+		VendingMachine machine = vmChooser(screen.listMachinessAll());
+
+		System.out.println("Current stocking interval: " + machine.getStockingInterval() + " days");
+		int newInterval = CLIUtilities.promptInt("Enter new stocking interval (in days)");
+
+		boolean success = screen.changeMachineStockingInterval(machine, newInterval);
+		if(success)
+			System.out.println("Stocking interval changed successfully");
+		else
+			System.out.println("An error occurred while attempting to change the stocking interval");
 	}
 
 	/**
