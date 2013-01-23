@@ -18,7 +18,7 @@ DOCDIR=doc
 LIBDIR=lib
 SRCDIR=src
 TBDIR=tbin
-TESTDIR=test
+TESTDIR=junit_test
 
 #launcher scripts
 INCPOSTFIX=.include
