@@ -13,6 +13,12 @@ Compile everything: $ make
 Run a main class: $ ./run-ClassName.sh
 Cleaning up (if desired): $ make clean
 
+Unit testing
+============
+Compile the tests: $ make tests
+Run the test handle: $ ./testsuite.sh
+Cleaning up (if desired): $ make clean
+
 Shipping a binary release
 =========================
 Build the release: $ make distribution
@@ -24,11 +30,13 @@ Directory structure
 bin #should not get committed
 dist #should not get committed
 doc #should not get committed
+junit_test
 lib
+license
 src
-test
+tbin #should not get committed
 
 NOTE: Please preserve the cases of these folder names!
-WARNING: The bin, dist, and doc areas are volatile, and are often wiped by the
-build system without any warning!  Avoid placing important files---including
-databases---in these locations.
+WARNING: The bin, dist, doc, and tbin areas are volatile, and are often wiped
+by the build system without any warning!  Avoid placing important
+files---including databases---in these locations.
