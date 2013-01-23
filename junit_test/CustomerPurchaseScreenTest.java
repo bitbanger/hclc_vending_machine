@@ -17,6 +17,12 @@ import java.util.ArrayList;
 
 public class CustomerPurchaseScreenTest {
 
+	@Before
+	public void setUp() throws Exception
+	{
+		DatabaseLayer.getInstance().nuke();
+	}
+
 	@Test
 	public void testLayoutList() throws BadArgumentException, 
 		BadStateException, SQLException {
@@ -130,7 +136,7 @@ public class CustomerPurchaseScreenTest {
 	 * Tests getting the frequently bought items
 	 **/
 	@Test
-	public void testFrequentlyBought() throws Exception
+	public void testFrequentlyBought1() throws Exception
 	{
 		TestUtilities helper=new TestUtilities(true);
 		DatabaseLayer dbl = DatabaseLayer.getInstance();
@@ -142,6 +148,38 @@ public class CustomerPurchaseScreenTest {
 			helper.transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), helper.machines.get(0), helper.customers.get(0), helper.items.get(1), new Pair<Integer, Integer>(0,0)));
 		for (int i=0;i<50;++i)
 			helper.transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), helper.machines.get(0), helper.customers.get(0), helper.items.get(3), new Pair<Integer, Integer>(0,0)));
+
+		for (Transaction trans : helper.transactions)
+			dbl.updateOrCreateTransaction(trans);
+		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
+		ArrayList<FoodItem> test1 = screen.getFrequentlyBought();
+		Assert.assertTrue(test1.size() == 3);
+		Assert.assertTrue(test1.get(0).equals(helper.items.get(3)));
+		Assert.assertTrue(test1.get(1).equals(helper.items.get(0)));
+		Assert.assertTrue(test1.get(2).equals(helper.items.get(1)));
+	}
+
+	/**
+	 * Tests getting the frequently bought items when not all of the items are
+	 * currently stocked.
+	 **/
+	@Test
+	public void testFrequentlyBought2() throws Exception
+	{
+		TestUtilities helper=new TestUtilities(true);
+		DatabaseLayer dbl = DatabaseLayer.getInstance();
+		VendingMachine help=helper.machines.get(1);
+		Customer user=helper.customers.get(0);
+		FoodItem howAboutW = new FoodItem("W", 125, 125, true);
+		dbl.updateOrCreateFoodItem(howAboutW);
+		for (int i=0;i<30;++i)
+			helper.transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), helper.machines.get(0), helper.customers.get(0), helper.items.get(0), new Pair<Integer, Integer>(0,0)));
+		for (int i=0;i<10;++i)
+			helper.transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), helper.machines.get(0), helper.customers.get(0), helper.items.get(1), new Pair<Integer, Integer>(0,0)));
+		for (int i=0;i<50;++i)
+			helper.transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), helper.machines.get(0), helper.customers.get(0), helper.items.get(3), new Pair<Integer, Integer>(0,0)));
+		for (int i=0;i<70;++i)
+			helper.transactions.add(new Transaction(new GregorianCalendar(2013, 1, 8, 14, 15, 3), helper.machines.get(0), helper.customers.get(0), howAboutW, new Pair<Integer, Integer>(0,0)));
 
 		for (Transaction trans : helper.transactions)
 			dbl.updateOrCreateTransaction(trans);

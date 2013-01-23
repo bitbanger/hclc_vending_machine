@@ -122,6 +122,24 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
+	 * Checks whether the given food item is stocked in the vending machine
+	 * @param item The item to check
+	 * @return True iff the item is in stock in the vending machine.
+	 **/
+	private boolean isStocked(FoodItem item)
+	{
+		for (Row[] column : machine.getCurrentLayout().getRows())
+		{
+			for (Row row : column)
+			{
+				if (row != null && row.getRemainingQuantity() > 0 && row.getProduct().equals(item))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Gets an ordered list of most frequently bought items by the current user
 	 * @return A list of items sorted in descending order of frequency the
 	 * current user has bought the item.
@@ -141,10 +159,13 @@ public class CustomerPurchaseScreen {
 		final HashMap<FoodItem, Integer> counts = new HashMap<FoodItem, Integer>();
 		for (Transaction trans : raw)
 		{
-			if (!counts.containsKey(trans.getProduct()))
-				counts.put(trans.getProduct(), 1);
-			else
-				counts.put(trans.getProduct(), counts.get(trans.getProduct()) + 1);
+			if (isStocked(trans.getProduct()))
+			{
+				if (!counts.containsKey(trans.getProduct()))
+					counts.put(trans.getProduct(), 1);
+				else
+					counts.put(trans.getProduct(), counts.get(trans.getProduct()) + 1);
+			}
 		}
 		ArrayList<FoodItem> favorites = new ArrayList<FoodItem>(counts.keySet());
 		Collections.sort(favorites, new Comparator<FoodItem>()
