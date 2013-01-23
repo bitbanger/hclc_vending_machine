@@ -113,4 +113,15 @@ public class CustomerPurchaseScreenTest {
 		Assert.assertTrue( "INSUFFICIENT FUNDS".equals( 
 			screen.tryPurchase( new Pair<Integer, Integer> (0, 0) ) ) );
 	}
+
+	@Test
+	public void testName() throws IllegalArgumentException,
+		SQLException, BadArgumentException, BadStateException
+	{
+		TestUtilities helper=new TestUtilities(true);
+		VendingMachine help=helper.machines.get(1);
+		Customer user=helper.customers.get(0);
+		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
+		Assert.assertEquals(screen.getUserName(), user.getName());
+	}
 }

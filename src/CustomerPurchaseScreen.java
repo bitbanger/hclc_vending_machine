@@ -92,6 +92,15 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
+	 * Reveals the name of the logged in user.
+	 * @return the name
+	 */
+	public String getUserName()
+	{
+		return user.getName();
+	}
+
+	/**
 	 * This method is <i>not</i> intended for use by the view.
 	 * @return the customer logged into the vending machine
 	 */
