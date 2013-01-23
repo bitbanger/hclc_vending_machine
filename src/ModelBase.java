@@ -96,4 +96,10 @@ public abstract class ModelBase
 			return String.format("%" + ID_SPACES + "d", id);
 		}
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return id;
+	}
 }
