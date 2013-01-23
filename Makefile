@@ -35,7 +35,7 @@ classes:
 
 tests: classes
 	- mkdir ${TBDIR}
-	${JAVAC} -d ${TBDIR} -cp ${TESTDIR}:${BINDIR}:$(foreach library,${TESTLIBS},:${LIBDIR}/${library}) ${TESTDIR}/*.java
+	${JAVAC} -d ${TBDIR} -cp ${TESTDIR}:${BINDIR}$(foreach library,${TESTLIBS},:${LIBDIR}/${library}) ${TESTDIR}/*.java
 	echo -e "#!${SHELLPATH}\ncd ${TBDIR}\n${JAVA} -cp ../${TBDIR}:../${BINDIR}$(foreach library,${TESTLIBS},:../${LIBDIR}/${library})$(foreach library,${LIBS},:../${LIBDIR}/${library}) ${TESTCHAIN} $(patsubst ${TESTDIR}/%.java,%,$(wildcard $(shell grep -le '@Test' ${TESTDIR}/*.java)))" > ${TESTSTEM}${POSTFIX}
 	chmod +x ${TESTSTEM}${POSTFIX}
 
