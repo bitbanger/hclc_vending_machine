@@ -1021,6 +1021,38 @@ public class DatabaseLayer
 	}
 
 	/**
+	 * Fetches all of the transactions the given customer has made.
+	 * @param item The item that was purchased in the transactions you
+	 * desire.
+	 * @return An ArrayList containing the transactions the given customer
+	 * performed.
+	 * @throws SQLException in case of a database error
+	 **/
+	public ArrayList<Transaction> getTransactionsByFoodItem(FoodItem item) throws SQLException, BadStateException, BadArgumentException
+	{
+		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+		Statement stmt = db.createStatement();
+		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE productId=" + item.getId();
+		ResultSet results = stmt.executeQuery(query);
+		while (results.next())
+		{
+			int id = results.getInt(1);
+			GregorianCalendar time = new GregorianCalendar();
+			time.setTimeInMillis(results.getLong(2));
+			VendingMachine machine = getVendingMachineById(results.getInt(3));
+			Customer cust = getCustomerById(results.getInt(4));
+			FoodItem product = getFoodItemById(results.getInt(5));
+			Pair<Integer, Integer> row = new Pair<Integer, Integer>(results.getInt(6), results.getInt(7));
+			int balance = results.getInt(8);
+			Transaction transaction = new Transaction(time, machine, cust, product, row, balance);
+			transaction.setId(id);
+			transactions.add(transaction);
+		}
+		results.close();
+		return transactions;
+	}
+
+	/**
 	 * Fetches all of the transactions that have ever occurred.
 	 * @return A collection of all of the transactions.
 	 * @throws SQLException in case of a database error
