@@ -32,7 +32,7 @@ devel: classes documents launchers
 
 classes:
 	- mkdir ${BINDIR}
-	${JAVAC} -d ${BINDIR} -cp ${SRCDIR} ${SRCDIR}/*.java
+	${JAVAC} -d ${BINDIR} -cp ${SRCDIR}$(subst $(empty) :$(empty),:,$(foreach library,${LIBS},:${LIBDIR}/${library})) ${SRCDIR}/*.java
 
 tests: classes
 	- mkdir ${TBDIR}
