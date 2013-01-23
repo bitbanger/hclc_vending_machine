@@ -876,6 +876,43 @@ public class TestDatabaseLayer
 	}
 
 	/**
+	 * Tests fetching transactions with a specific item
+	 **/
+	@Test
+	public void getTransactionItem() throws SQLException, BadStateException, BadArgumentException
+	{
+		testUtil.noTestAddFoodItems();
+		testUtil.noTestAddVendingMachines();
+		testUtil.noTestAddCustomers();
+		testUtil.noTestAddVendingMachines();
+		testUtil.noTestAddTransactions();
+
+		ArrayList<Transaction> test = dbl.getTransactionsByFoodItem(testUtil.items.get(0));
+		ArrayList<Transaction> compare = new ArrayList<Transaction>();
+		for (Transaction trans : transactions)
+		{
+			if (trans.getProduct().equals(testUtil.items.get(0)))
+				compare.add(trans);
+		}
+		for (Transaction trans : test)
+		{
+			assertTrue(compare.contains(trans));
+		}
+
+		test = dbl.getTransactionsByFoodItem(testUtil.items.get(2));
+		compare = new ArrayList<Transaction>();
+		for (Transaction trans : transactions)
+		{
+			if (trans.getProduct().equals(testUtil.items.get(2)))
+				compare.add(trans);
+		}
+		for (Transaction trans : test)
+		{
+			assertTrue(compare.contains(trans));
+		}
+	}
+
+	/**
 	 * Tests fetching all transactions
 	 **/
 	@Test
