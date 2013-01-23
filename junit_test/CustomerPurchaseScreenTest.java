@@ -190,4 +190,48 @@ public class CustomerPurchaseScreenTest {
 		Assert.assertTrue(test1.get(1).equals(helper.items.get(0)));
 		Assert.assertTrue(test1.get(2).equals(helper.items.get(1)));
 	}
+
+	/**
+	 * Tests purchasing and finding an item
+	 **/
+	@Test
+	public void testTryPurchaseProduct1() throws Exception
+	{
+		TestUtilities helper=new TestUtilities(true);
+		DatabaseLayer dbl = DatabaseLayer.getInstance();
+		VendingMachine help=helper.machines.get(1);
+		Customer user=helper.customers.get(0);
+		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
+		Assert.assertTrue(screen.tryPurchase(helper.items.get(0)).equals("GOOD"));
+	}
+
+	/**
+	 * Tests purchasing and finding an item failure
+	 **/
+	@Test
+	public void testTryPurchaseProduct2() throws Exception
+	{
+		TestUtilities helper=new TestUtilities(true);
+		DatabaseLayer dbl = DatabaseLayer.getInstance();
+		VendingMachine help=helper.machines.get(1);
+		Customer user=helper.customers.get(0);
+		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
+		FoodItem howAboutW = new FoodItem("W", 125, 125, true);
+		Assert.assertTrue(screen.tryPurchase(howAboutW).equals("ITEM NOT FOUND"));
+	}
+
+	/**
+	 * Tests purchasing and finding an item failure
+	 **/
+	@Test
+	public void testTryPurchaseProduct3() throws Exception
+	{
+		TestUtilities helper=new TestUtilities(true);
+		DatabaseLayer dbl = DatabaseLayer.getInstance();
+		VendingMachine help=helper.machines.get(1);
+		Customer user=helper.customers.get(0);
+		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
+		FoodItem howAboutW = null;
+		Assert.assertTrue(screen.tryPurchase(howAboutW).equals("ITEM NOT FOUND"));
+	}
 }

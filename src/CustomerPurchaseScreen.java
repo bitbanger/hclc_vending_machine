@@ -96,6 +96,34 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
+	 * Attempts to find and purchase the specified item
+	 * @param item The item to purchase
+	 * @return GOOD or a reason why this operation failed
+	 **/
+	public String tryPurchase(FoodItem item)
+	{
+		try
+		{
+			Row[][] rows = machine.getCurrentLayout().getRows();
+			for (int i=0;i<rows.length;++i)
+			{
+				for (int j=0;j<rows[i].length;++j)
+				{
+					Row row = rows[i][j];
+					if (row != null && row.getRemainingQuantity() > 0 && row.getProduct().equals(item))
+						return tryPurchase(new Pair<Integer,Integer>(i,j));
+				}
+			}
+		}
+		catch (Exception databaseProblem)
+		{
+
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+		}
+		return "ITEM NOT FOUND";
+	}
+
+	/**
 	 * Reveals the name of the logged in user.
 	 * @return the name
 	 */
