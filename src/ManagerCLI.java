@@ -104,8 +104,10 @@ public class ManagerCLI
 		{
 			CLIUtilities.printTitle("Machine Statistic Options");
 			int choice = CLIUtilities.option(
-				"View Statistics For All Machines",
-				"View Statistics For Single Machine",
+				"View all transactions",
+				"View transactions by machine",
+				"View transactions by purchaser",
+				"View transactions by product",
 				"Return Home");
 			switch (choice)
 			{
@@ -116,6 +118,12 @@ public class ManagerCLI
 					viewStatsMachine(screen);
 					break;
 				case 2:
+					viewStatsCustomer(screen);
+					break;
+				case 3:
+					viewStatsProduct(screen);
+					break;
+				case 4:
 					return;
 			}
 		}
@@ -165,6 +173,17 @@ public class ManagerCLI
 	}
 
 	/**
+	 * Handles the dialog for choosing a customer from an ArrayList
+	 * @param customers The customer to choose from
+	 * @return The chosen customer
+	 **/
+	private static Customer customerChooser(ArrayList<Customer> customers)
+	{
+		int choice = CLIUtilities.option(customers);
+		return customers.get(choice);
+	}
+
+	/**
 	 * Displays the statistics for a single vending machine
 	 **/
 	private static void viewStatsMachine(ManagerReportStatsScreen screen)
@@ -173,6 +192,30 @@ public class ManagerCLI
 		VendingMachine selected = vmChooser(machines);
 		ArrayList<Transaction> sales = screen.listMachineSales(selected);
 		System.out.printf("\n\nSales from vending machine %s:\n", selected.toString());
+		CLIUtilities.printCollection(sales);
+	}
+
+	/**
+	 * Displays the statistics for a single purchaser
+	 **/
+	private static void viewStatsCustomer(ManagerReportStatsScreen screen)
+	{
+		ArrayList<Customer> customers = screen.listCustomers();
+		Customer selected = customerChooser(customers);
+		ArrayList<Transaction> sales = screen.listCustomerSales(selected);
+		System.out.printf("\n\nSales by customer %s:\n", selected.toString());
+		CLIUtilities.printCollection(sales);
+	}
+
+	/**
+	 * Displays the statistics for a single product
+	 **/
+	private static void viewStatsProduct(ManagerReportStatsScreen screen)
+	{
+		ArrayList<FoodItem> items = screen.listFoodItems();
+		FoodItem selected = foodItemChooser(items);
+		ArrayList<Transaction> sales = screen.listFoodItemSales(selected);
+		System.out.printf("\n\nSales including item %s:\n", selected.toString());
 		CLIUtilities.printCollection(sales);
 	}
 
