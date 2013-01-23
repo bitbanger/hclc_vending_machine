@@ -15,8 +15,15 @@ public class ManagerReportStatsScreen {
 	/** all the machines */
 	private ArrayList<VendingMachine> machines;
 
-	/** all the locations */
-	private ArrayList<Location> locations;
+	/**
+	 * All of the customers
+	 **/
+	private ArrayList<Customer> customers;
+
+	/**
+	 * All of the items
+	 **/
+	private ArrayList<FoodItem> items;
 
 	/**
 	 * base constructor
@@ -24,7 +31,8 @@ public class ManagerReportStatsScreen {
 	public ManagerReportStatsScreen () {
 		try {
 			machines = db.getVendingMachinesAll();
-			locations = db.getLocationsAll();
+			customers = db.getCustomersAll();
+			items = db.getFoodItemsAll();
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, databaseProblem);
 		}
@@ -56,42 +64,72 @@ public class ManagerReportStatsScreen {
 	}
 
 	/**
-	 * get a collection of all locations
-	 * @return a collection of the locations present when screen was launched
-	 */
-	public ArrayList<Location> listLocations() {
-		return locations;
+	 * Gets all of the customers 
+	 * @return An ArrayList containing all the customers.
+	 **/
+	public ArrayList<Customer> listCustomers()
+	{
+		return customers;
 	}
 
 	/**
-	 * get a collection of transactions based on a specific location
-	 * @param place the location in question
-	 * @return the transactions made at that location
-	 */
-	public ArrayList<Transaction> listLocationSales( Location place ) {
-		if ( place == null )
-			return null;
-		ArrayList<Transaction> trans = new ArrayList<Transaction>();
-		try {
-			ArrayList<Transaction> transactions = db.getTransactionsAll();
-			for ( Transaction cur : transactions ) {
-				if (cur.getMachine().getLocation().equals( place ) )
-					trans.add( cur );
-			}
-		} catch (Exception databaseProblem){
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+	 * Gets all of the transactions by a specific customer
+	 * @param customer The customer that completed the transactions
+	 * @return An ArrayList containing all of the transactions by the given
+	 * customer.
+	 **/
+	public ArrayList<Transaction> listCustomerSales(Customer customer)
+	{
+		try
+		{
+			return db.getTransactionsByCustomer(customer);
 		}
-
-		return trans;
+		catch (Exception databaseProblem)
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return null;
+		}
 	}
 
+	/**
+	 * Gets all of the items
+	 * @return An ArrayList containing all the items
+	 **/
+	public ArrayList<FoodItem> listFoodItems()
+	{
+		return items;
+	}
+
+	/**
+	 * Gets all of the transactions during which a specific item was bought
+	 * @param item The item that was purchased in the transactions you desire
+	 * @return An ArrayList containing all of the transactions during which
+	 * the given item was bought
+	 **/
+	public ArrayList<Transaction> listFoodItemSales(FoodItem item)
+	{
+		try
+		{
+			return db.getTransactionsByFoodItem(item);
+		}
+		catch (Exception databaseProblem)
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return null;
+		}
+	}
+
+	/**
+	 * Gets all of the transactions from all VendingMachines.
+	 * @return An ArrayList of all of the transactions.
+	 **/
 	public ArrayList<Transaction> listSalesAll()
 	{
 		try {
 			ArrayList<Transaction> transactions = db.getTransactionsAll();
 			return transactions;
 		} catch (Exception databaseProblem){
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return null;
 		}
 
