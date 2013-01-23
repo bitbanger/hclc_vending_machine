@@ -1,5 +1,9 @@
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
+import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Collections;
 
 /**
  *
@@ -115,5 +119,41 @@ public class CustomerPurchaseScreen {
 	 */
 	public int getBalance() {
 		return user.getMoney();
+	}
+
+	/**
+	 * Gets an ordered list of most frequently bought items by the current user
+	 * @return A list of items sorted in descending order of frequency the
+	 * current user has bought the item.
+	 **/
+	public ArrayList<FoodItem> getFrequentlyBought()
+	{
+		ArrayList<Transaction> raw = null;
+		try
+		{
+			raw = db.getTransactionsByCustomer(user);
+		}
+		catch (Exception databaseProblem)
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
+			return null;
+		}
+		final HashMap<FoodItem, Integer> counts = new HashMap<FoodItem, Integer>();
+		for (Transaction trans : raw)
+		{
+			if (!counts.containsKey(trans.getProduct()))
+				counts.put(trans.getProduct(), 1);
+			else
+				counts.put(trans.getProduct(), counts.get(trans.getProduct()) + 1);
+		}
+		ArrayList<FoodItem> favorites = new ArrayList<FoodItem>(counts.keySet());
+		Collections.sort(favorites, new Comparator<FoodItem>()
+		{
+			public int compare(FoodItem item1, FoodItem item2)
+			{
+				return -counts.get(item1).compareTo(counts.get(item2));
+			}
+		});
+		return favorites;
 	}
 }
