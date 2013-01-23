@@ -32,12 +32,12 @@ devel: classes documents launchers
 
 classes:
 	- mkdir ${BINDIR}
-	${JAVAC} -d ${BINDIR} -cp ${SRCDIR} ${SRCDIR}/*.java
+	${JAVAC} -d ${BINDIR} -cp ${SRCDIR}$(subst $(empty) :$(empty),:,$(foreach library,${LIBS},:${LIBDIR}/${library})) ${SRCDIR}/*.java
 
 tests: classes
 	- mkdir ${TBDIR}
-	${JAVAC} -d ${TBDIR} -cp ${TESTDIR}:${BINDIR}$(foreach library,${TESTLIBS},:${LIBDIR}/${library}) ${TESTDIR}/*.java
-	echo -e "#!${SHELLPATH}\ncd ${TBDIR}\n${JAVA} -cp ../${TBDIR}:../${BINDIR}$(foreach library,${TESTLIBS},:../${LIBDIR}/${library})$(foreach library,${LIBS},:../${LIBDIR}/${library}) ${TESTCHAIN} $(patsubst ${TESTDIR}/%.java,%,$(wildcard $(shell grep -le '@Test' ${TESTDIR}/*.java)))" > ${TESTSTEM}${POSTFIX}
+	${JAVAC} -d ${TBDIR} -cp ${TESTDIR}:${BINDIR}$(subst $(empty) :$(empty),:,$(foreach library,${TESTLIBS},:${LIBDIR}/${library})) ${TESTDIR}/*.java
+	echo -e "#!${SHELLPATH}\ncd ${TBDIR}\n${JAVA} -cp ../${TBDIR}:../${BINDIR}$(subst $(empty) :$(empty),:,$(foreach library,${TESTLIBS},:../${LIBDIR}/${library})$(foreach library,${LIBS},:../${LIBDIR}/${library})) ${TESTCHAIN} $(patsubst ${TESTDIR}/%.java,%,$(wildcard $(shell grep -le '@Test' ${TESTDIR}/*.java)))" > ${TESTSTEM}${POSTFIX}
 	chmod +x ${TESTSTEM}${POSTFIX}
 
 distribution: classes
@@ -52,7 +52,7 @@ documents:
 	${JAVADOC} -d ${DOCDIR} -classpath ${SRCDIR} ${SRCDIR}/*.java
 
 launchers:
-	echo "export CLASSPATH=${BINDIR}$(foreach library,${LIBS},:${LIBDIR}/${library})" > vars${INCPOSTFIX}
+	echo "export CLASSPATH=${BINDIR}$(subst $(empty) :$(empty),:,$(foreach library,${LIBS},:${LIBDIR}/${library}))" > vars${INCPOSTFIX}
 	$(foreach class,${EXEC},echo -e '#!${SHELLPATH}\n. ./vars.include\n${JAVA} ${class} "$$@"' > ${RUNPREFIX}${class}${POSTFIX} ; chmod +x ${RUNPREFIX}${class}${POSTFIX};)
 
 clean: cleanbin cleandoc cleantbin
