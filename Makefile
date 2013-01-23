@@ -41,7 +41,7 @@ tests: classes
 
 distribution: classes
 	- mkdir ${DISTDIR}
-	$(foreach library,${LIBS},ln ${LIBDIR}/${library} ${DISTDIR})
+	$(foreach library,${LIBS},ln ${LIBDIR}/${library} ${DISTDIR};)
 	echo Class-Path: ${LIBS} > Manifest
 	$(foreach class,${EXEC},${JAR} cfem ${DISTDIR}/${class}.jar ${class} Manifest -C ${BINDIR} .;)
 
