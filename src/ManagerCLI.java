@@ -54,6 +54,7 @@ public class ManagerCLI
 		{
 
 			CLIUtilities.printTitle("Home Screen");
+			System.out.println("Welcome, " + home.getUserName() + "!");
 
 			int choice = CLIUtilities.option(
 				"View Machine Statistics",

@@ -90,7 +90,7 @@ public class CustomerCLI {
 		FoodItem[][] display = account.listLayout();
 		screen:while(true) {
 			CLIUtilities.printTitle("Product Selection");
-			System.out.println("Welcome, " + account.getUser().getName() + "!");
+			System.out.println("Welcome, " + account.getUserName() + "!");
 			System.out.println("Available funds: " + CLIUtilities.formatMoney(account.getBalance()));
 
 			CLIUtilities.printLayout(display);
