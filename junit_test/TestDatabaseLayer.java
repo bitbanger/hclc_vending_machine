@@ -894,6 +894,7 @@ public class TestDatabaseLayer
 			if (trans.getProduct().equals(testUtil.items.get(0)))
 				compare.add(trans);
 		}
+		assertTrue(test.size() == compare.size());
 		for (Transaction trans : test)
 		{
 			assertTrue(compare.contains(trans));
@@ -901,6 +902,7 @@ public class TestDatabaseLayer
 
 		test = dbl.getTransactionsByFoodItem(testUtil.items.get(2));
 		compare = new ArrayList<Transaction>();
+		assertTrue(test.size() == compare.size());
 		for (Transaction trans : transactions)
 		{
 			if (trans.getProduct().equals(testUtil.items.get(2)))
