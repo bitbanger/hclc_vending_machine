@@ -92,10 +92,12 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
-	 * cancels the current purchase
+	 * Reveals the name of the logged in user.
+	 * @return the name
 	 */
-	public void cancel() {
-		//TODO determine what this should do
+	public String getUserName()
+	{
+		return user.getName();
 	}
 
 	/**

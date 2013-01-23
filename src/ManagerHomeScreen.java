@@ -92,4 +92,13 @@ public class ManagerHomeScreen {
 	public ManagerUserAccountsScreen manageUsers() {
 		return new ManagerUserAccountsScreen();
 	}
+
+	/**
+	 * Reveals the name of the logged in user.
+	 * @return the name
+	 */
+	public String getUserName()
+	{
+		return manny.getName();
+	}
 }

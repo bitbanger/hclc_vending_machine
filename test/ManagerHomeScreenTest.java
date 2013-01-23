@@ -84,4 +84,12 @@ public class ManagerHomeScreenTest
 		ManagerUserAccountsScreen test1 = test.manageUsers();
 		assertTrue(test1 != null);
 	}
+
+	@Test
+	public void testName() throws IllegalArgumentException,
+		SQLException, BadArgumentException, BadStateException
+	{
+		ManagerHomeScreen screen=new ManagerHomeScreen(manny);
+		assertEquals(screen.getUserName(), manny.getName());
+	}
 }
