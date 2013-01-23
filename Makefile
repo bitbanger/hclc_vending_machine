@@ -16,6 +16,7 @@ BINDIR=bin
 DISTDIR=dist
 DOCDIR=doc
 LIBDIR=lib
+LICDIR=license
 SRCDIR=src
 TBDIR=tbin
 TESTDIR=junit_test
@@ -42,6 +43,7 @@ tests: classes
 distribution: classes
 	- mkdir ${DISTDIR}
 	$(foreach library,${LIBS},ln ${LIBDIR}/${library} ${DISTDIR};)
+	$(foreach license,$(wildcard ${LICDIR}/*),ln ${license} ${DISTDIR};)
 	echo Class-Path: ${LIBS} > Manifest
 	$(foreach class,${EXEC},${JAR} cfem ${DISTDIR}/${class}.jar ${class} Manifest -C ${BINDIR} .;)
 

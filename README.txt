@@ -32,6 +32,7 @@ dist #should not get committed
 doc #should not get committed
 junit_test
 lib
+license
 src
 tbin #should not get committed
 
