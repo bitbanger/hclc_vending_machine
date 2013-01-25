@@ -1,5 +1,5 @@
 #space-delimited lists of executable classes and libraries to ship
-EXEC=CustomerCLI RestockerCLI ManagerCLI
+EXEC=CustomerCLI RestockerCLI ManagerCLI CustomerLoginScreenGUI
 LIBS=sqlite-jdbc-3.7.2.jar
 TESTCHAIN=org.junit.runner.JUnitCore
 TESTLIBS=junit-4.11.jar
