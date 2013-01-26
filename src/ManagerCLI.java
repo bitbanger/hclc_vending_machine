@@ -281,6 +281,12 @@ public class ManagerCLI
 			System.out.println("No machines currently exist! Please add one to continue.");
 			return;
 		}
+
+		/* A potential fix to try and overcome the entrapment problem */
+		if (alterLayout.listItems() == null){
+			System.out.println("No items currently exist! Please add one to continue.");
+			return;
+		}
 		
 		FoodItem[][] layout = alterLayout.listRows();
 		CLIUtilities.printLayout(layout, false);

@@ -1,13 +1,12 @@
-/**
- *
- * @author Kyle Savarese
- * 
- */
-
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
+/**
+ * The screen for the manager to change the layout of vending machines.
+ * @author Kyle Savarese
+ * 
+ */
 public class ManagerAlterLayoutScreen {
 
 	/** the database */
