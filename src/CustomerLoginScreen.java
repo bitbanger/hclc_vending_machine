@@ -2,15 +2,12 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ArrayList;
-/**
- * 1/3/2012
- * 
- * @author Kyle Savarese
- *
- * CustomerLoginScreen.java
- * initial screen for a customer's transaction
- */
 
+/**
+ * Initial screen for a customer's transaction.
+ * @author Kyle Savarese
+ * @contributor Piper Chester <pwc1203@rit.edu>
+ */
 public class CustomerLoginScreen {
 
 	/** the Database instance */
@@ -20,7 +17,7 @@ public class CustomerLoginScreen {
 	private VendingMachine vm;
 
 	/**
-	 * Constructor for LoginScreen
+	 * Constructor for LoginScreen.
 	 * @param curr the VendingMachine that is being logged into
 	 * @throws InstantiationException if <tt>curr</tt> is <tt>null</tt> or inactive
  	 */
@@ -32,7 +29,7 @@ public class CustomerLoginScreen {
 	}	
 
 	/**
- 	 * attempts to use the provided id to login
+ 	 * Attempts to use the provided ID to login.
 	 * @param id the id to check
 	 * @return the CustomerPurchaseScreen associated with the 
 	 *  	Customer and the VendingMachine or null if the Customer
@@ -55,7 +52,7 @@ public class CustomerLoginScreen {
 	}
 	
 	/**
-	 * creates the CustomerPurchaseScreen state
+	 * Creates the CustomerPurchaseScreen state.
 	 * @return the CashCustomerPurchaseScreen
 	 */
 	public CashCustomerPurchaseScreen cashLogin ()

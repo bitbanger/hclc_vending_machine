@@ -6,12 +6,20 @@ import java.util.Scanner;
  * @author Lane Lawley <lxl5734@rit.edu>
  * @contributors Kyle Savarese <kms7341@rit.edu>
  *		 		 Sol Boucher <slb1566@rit.edu>
+ *		 		 Piper Chester <pwc1203@rit.edu>
  */
 public class CustomerCLI {
+	
+	/**
+	 * Prints out an error message if the user is trying to start a machine without an ID."
+	 */
 	private static void usage() {
 		System.err.println("In order to start a machine, you need to enter a valid ID.");
 	}
 
+	/**
+	 * The main entry point to the program.
+	 */
 	public static void main(String[] args) {
 		if(args.length != 1) {
 			usage();
@@ -59,7 +67,6 @@ public class CustomerCLI {
 	/**
 	 * Facility allowing someone without an account to use the machine.
 	 * @param wallet the backend connection
-	 * @param whether a purchase was made (meaning the session must end)
 	 */
 	private static void anonymousConnection(CashCustomerPurchaseScreen wallet) {
 		screen:while(true) {
@@ -84,7 +91,6 @@ public class CustomerCLI {
 	/**
 	 * Facility allowing someone with an account to login.
 	 * @param account the backend connection
-	 * @return whether a purchase was made (meaning the session must end)
 	 */
 	private static void productSelection(CustomerPurchaseScreen account) {
 		FoodItem[][] display = account.listLayout();

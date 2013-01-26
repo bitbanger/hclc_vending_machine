@@ -11,7 +11,6 @@ public class RestockerCLI {
 	/** Instantiating a new RestockerMachinePickerScreen */
 	private static RestockerMachinePickerScreen restockerMachinePickerScreen = new RestockerMachinePickerScreen();
 
-
 	/** The entry point to the program.
 	 * 
 	 * @param args Arguments required to create String arrays in Java
@@ -75,7 +74,6 @@ public class RestockerCLI {
 
 			restockerTaskListScreen = restockerMachinePickerScreen.tryMachine(idNumber);
 		}
-		
 
 		listTasks(restockerTaskListScreen);
 	}
