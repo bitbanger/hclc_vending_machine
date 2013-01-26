@@ -4,9 +4,9 @@ import java.util.Scanner;
  * CLI for the Customer's perspective.
  * Provides an entry point for the system.
  * @author Lane Lawley <lxl5734@rit.edu>
- * @contributors Kyle Savarese <kms7341@rit.edu>
- *		 		 Sol Boucher <slb1566@rit.edu>
- *		 		 Piper Chester <pwc1203@rit.edu>
+ * @author Kyle Savarese <kms7341@rit.edu>
+ * @author Sol Boucher <slb1566@rit.edu>
+ * @author Piper Chester <pwc1203@rit.edu>
  */
 public class CustomerCLI {
 	

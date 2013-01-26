@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * CLI for the Customer's perspective.
  * Provides an entry point for the system.
  * @author Lane Lawley <lxl5734@rit.edu>
- * @contributor Piper Chester <pwc1203@rit.edu>
+ * @author Piper Chester <pwc1203@rit.edu>
  */
 public class ManagerCLI
 {
