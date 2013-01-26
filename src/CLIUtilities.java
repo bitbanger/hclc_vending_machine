@@ -89,7 +89,7 @@ public class CLIUtilities {
 
 	/**
 	 * Provides a simple way to get the user to enter a float for cash amounts
-	 * @param prompt 
+	 * @param prompt the prompt to the user to enter an amount of money 
 	 * @return moneys the amount of money returned
 	 */
 	public static int moneyPrompt( String prompt ) {
@@ -170,7 +170,13 @@ public class CLIUtilities {
 		
 		return choice;
 	}
-
+	
+	/**
+	 * Prompts for a default integer.
+	 * @param prompt the prompt to the screen
+	 * @param defval the default integer value
+	 * @return the integer, which is guranteed to be valid  
+	 */
 	public static int promptIntDefault(String prompt, int defVal) {
 		int theInt = -1;
 		do {
@@ -216,6 +222,7 @@ public class CLIUtilities {
 	/**
 	 * Allows easily formatting quantities of money.
 	 * @param amount the amount of money, in cents
+	 * @return the moeney amount in the form of "$X.XX"
 	 */
 	public static String formatMoney(int amount)
 	{
