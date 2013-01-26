@@ -9,7 +9,7 @@ import java.util.Scanner;
  */
 public class CustomerCLI {
 	private static void usage() {
-		System.err.println("USAGE: java -jar CustomerCLI.jar <machine ID>");
+		System.err.println("In order to start a machine, you need to enter a valid ID.");
 	}
 
 	public static void main(String[] args) {
