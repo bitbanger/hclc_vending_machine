@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
+import java.util.Stack;
 
 /**
  * Frame that is used for all GUIs in this project. This helps keep a consistent
@@ -32,9 +33,9 @@ public class BaseGUI extends JFrame
 	private String title;
 
 	/**
-	 * Current content.
+	 * Stack of content panels.
 	 **/
-	private JPanel contentPanel;
+	private Stack<JPanel> contentStack;
 
 	/**
 	 * Creates this GUI with the given title.
@@ -43,6 +44,7 @@ public class BaseGUI extends JFrame
 	public BaseGUI(String title)
 	{
 		this.title = title;
+		contentStack = new Stack<JPanel>();
 		statusBar = new StatusBar();
 		addBaseComponents();
 	}
@@ -82,16 +84,44 @@ public class BaseGUI extends JFrame
 	}
 
 	/**
-	 * Swaps in the given panel as the center panel.
+	 * Pushes the panel content onto the stack of panels and displays it.
 	 * @param content The panel to display
 	 **/
-	public void setContentPanel(JPanel content)
+	public void pushContentPanel(JPanel content)
 	{
-		if (contentPanel != null)
-			getContentPane().remove(contentPanel);
-		contentPanel = content;
-		contentPanel.setBorder(new EmptyBorder(0,10,10,10));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		try
+		{
+			JPanel currentPanel = contentStack.peek();
+			if (currentPanel != null)
+				getContentPane().remove(currentPanel);
+		}
+		catch (java.util.EmptyStackException ex) {}
+		contentStack.push(content);
+		displayTop();
+	}
+
+	/**
+	 * Pops the top off the stack of content panels and displays the next one.
+	 **/
+	public void popContentPanel()
+	{
+		JPanel currentPanel = contentStack.peek();
+		if (currentPanel != null)
+			getContentPane().remove(currentPanel);
+		contentStack.pop();
+		displayTop();
+	}
+
+	/**
+	 * Displays the top of the stack.
+	 * Pre-conditions: The last content panel to be displayed must have been
+	 * removed (i.e. nothing should be currently displayed).
+	 **/
+	private void displayTop()
+	{
+		JPanel currentPanel = contentStack.peek();
+		currentPanel.setBorder(new EmptyBorder(0,10,10,10));
+		getContentPane().add(currentPanel, BorderLayout.CENTER);
 		validate();
 	}
 }

@@ -137,21 +137,4 @@ public class CustomerLoginScreenGUI extends JPanel
 		this.add(cashButton);
 	}
 
-	/**
-	 * Main method, displays the GUI for the vending machine specified on the
-	 * command line.
-	 * @param args Command line arguments:
-	 * <ol>
-	 * <li>ID of the vending machine</li>
-	 * </ol>
-	 **/
-	public static void main(String[] args) throws Exception
-	{
-		GUIUtilities.setNativeLookAndFeel();
-		CustomerLoginScreen controller = CustomerLoginScreen.buildInstance(Integer.parseInt(args[0]));
-		CustomerLoginScreenGUI gui = new CustomerLoginScreenGUI(controller);
-		BaseGUI base = new BaseGUI("Customer Login Screen");
-		base.setContentPanel(gui);
-		base.displayGUI();
-	}
 }
