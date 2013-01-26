@@ -174,7 +174,7 @@ public class CLIUtilities {
 	/**
 	 * Prompts for a default integer.
 	 * @param prompt the prompt to the screen
-	 * @param defval the default integer value
+	 * @param defVal the default integer value
 	 * @return the integer, which is guranteed to be valid  
 	 */
 	public static int promptIntDefault(String prompt, int defVal) {
@@ -330,7 +330,7 @@ public class CLIUtilities {
 
 	/**
 	 * Provides a nice way to print a layout. Hides inactive items.
-	 * @param hideInactive Whether to hide inactive items
+	 * @param layout The layout to print
 	 **/
 	public static void printLayout(VMLayout layout)
 	{
