@@ -113,4 +113,28 @@ public class RestockerTaskListScreen {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 	}
+
+	/**
+	 * Builder for use in the view.
+	 * @param id the ID of the <tt>VendingMachine</tt>
+	 * @return an instance representing the task list screen, or <tt>null</tt> in case of trouble
+	 */
+	public static RestockerTaskListScreen buildInstance(int id)
+	{
+		VendingMachine mach=null;
+		try
+		{
+			return new RestockerTaskListScreen(db.getVendingMachineById(id));
+		}
+		//catch(InstantiationException absentInactive) //not found in database (null) or inactive
+	//	{
+	//		ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, absentInactive);
+	//		return null;
+	//	}
+		catch(Exception databaseError) //more serious error came from database
+		{
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseError);
+			return null;
+		}
+	}
 }
