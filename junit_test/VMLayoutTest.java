@@ -96,7 +96,9 @@ public class VMLayoutTest
 	@Test(expected=BadStateException.class)
 	public void testDeepCopyConstruction() throws BadArgumentException, BadStateException
 	{
-		VMLayout orig=new VMLayout(1, 2, 3);
+		FoodItem munchy=new FoodItem("Item", 483, 4);
+		VMLayout orig=new VMLayout(new Row[][]{ {new Row(munchy, 3, new GregorianCalendar()), new Row(munchy, 2, new GregorianCalendar()), new Row(munchy, 1, new GregorianCalendar())},
+							{new Row(munchy, 4, new GregorianCalendar()), new Row(munchy, 5, new GregorianCalendar()), new Row(munchy, 6, new GregorianCalendar())} }, 6);
 		orig.setNextVisit(new GregorianCalendar());
 		orig.setId(9);
 		VMLayout bak=new VMLayout(orig, true);

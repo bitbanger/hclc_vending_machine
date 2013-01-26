@@ -141,10 +141,17 @@ public class RestockerTaskListScreen {
 				rows[x][y].setRemainingQuantity( Integer.parseInt( split[2] ) );
 			} catch (PatternSyntaxException ex) {
 				System.err.println("You see nothing.");
+			} catch (BadArgumentException impossible) {
+				ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, impossible);
+				return false;
 			}
 		}
 		instructions.remove( id );
-		status = new VMLayout( rows, status.getDepth() );
+		try {
+			status = new VMLayout( rows, status.getDepth() );
+		} catch (BadArgumentException impossible) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, impossible);
+		}
 		return true;
 	}
 

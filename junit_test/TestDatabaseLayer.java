@@ -375,7 +375,7 @@ public class TestDatabaseLayer
 		testUtil.noTestAddFoodItems();
 		testUtil.noTestAddVendingMachines();
 
-		machines.get(1).swapInNextLayout();
+		machines.get(1).swapInNextLayout( machines.get(1).getNextLayout() );
 		dbl.updateOrCreateVendingMachine(machines.get(1));
 		VendingMachine test = dbl.getVendingMachineById(machines.get(1).getId());
 		TestUtilities.vendingMachineEquals(test, machines.get(1));
