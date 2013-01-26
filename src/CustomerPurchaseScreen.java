@@ -165,7 +165,7 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
-	 * Gets an ordered list of most frequently bought items by the current user
+	 * Gets an ordered list of most frequently bought items by the current user.
 	 * @return A list of items sorted in descending order of frequency the
 	 * current user has bought the item.
 	 **/
