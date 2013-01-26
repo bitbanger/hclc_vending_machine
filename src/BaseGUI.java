@@ -46,6 +46,7 @@ public class BaseGUI extends JFrame
 		this.title = title;
 		contentStack = new Stack<JPanel>();
 		statusBar = new StatusBar();
+		NumberField.setBar(statusBar);
 		addBaseComponents();
 	}
 
