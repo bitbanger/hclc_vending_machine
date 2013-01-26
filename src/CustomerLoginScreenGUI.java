@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.Box;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 
 /**
  * Content panel for the customer login screen.
@@ -22,7 +24,7 @@ public class CustomerLoginScreenGUI extends JPanel
 	/**
 	 * Login by customer id button.
 	 **/
-	private JButton loginButton;
+	private ConditionButton loginButton;
 
 	/**
 	 * Login as cash customer button.
@@ -67,7 +69,7 @@ public class CustomerLoginScreenGUI extends JPanel
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		// Text field for customer id
-		JTextField idTextField = new JTextField(20);
+		final JTextField idTextField = new JTextField(20);
 		idTextField.setMaximumSize(idTextField.getPreferredSize());
 		idPanel.add(idTextField);
 
@@ -86,10 +88,42 @@ public class CustomerLoginScreenGUI extends JPanel
 		loginButtonPanel.add(Box.createGlue());
 
 		// Add the login button
-		loginButton = new JButton("Login");
-		loginButton.setEnabled(false);
+		loginButton = new ConditionButton("Login")
+		{
+			/**
+			 * The button should only be enabled if the idTextField has content.
+			 * {@inheritDoc}
+			 **/
+			@Override
+			public boolean checkCondition()
+			{
+				return idTextField.getText().length() > 0;
+			}
+		};
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
+		
+		// Make the id text field notify the login button when it is changed
+		final ConditionButton temp = loginButton;
+		idTextField.getDocument().addDocumentListener(new DocumentListener()
+		{
+			@Override
+			public void changedUpdate(DocumentEvent e)
+			{
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e)
+			{
+				temp.checkAndSetEnabled();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+				temp.checkAndSetEnabled();
+			}
+		});
 
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
