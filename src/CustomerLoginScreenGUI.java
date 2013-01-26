@@ -9,10 +9,10 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 
 /**
- * GUI for the customer login screen.
+ * Content panel for the customer login screen.
  * @author Matthew Koontz
  **/
-public class CustomerLoginScreenGUI extends BaseGUI
+public class CustomerLoginScreenGUI extends JPanel
 {
 	/**
 	 * Controller instance for this screen.
@@ -30,27 +30,25 @@ public class CustomerLoginScreenGUI extends BaseGUI
 	private JButton cashButton;
 
 	/**
-	 * Creates and displays the GUI.
+	 * Creates the panel with the given controller instance.
 	 * @param controller The controller instance to use.
 	 **/
 	public CustomerLoginScreenGUI(CustomerLoginScreen controller)
 	{
-		super("Customer Login Screen");
 		this.controller = controller;
+		addComponents();
 	}
 
 	/**
-	 * Builds and displays the GUI.
+	 * Lays out the components on the panel.
 	 **/
 	public void addComponents()
 	{
 		// Components will be laid out vertically in the main panel
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-		BaseGUI.setProperBorder(mainPanel);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		// Align the components to the left side
-		mainPanel.setAlignmentX(LEFT_ALIGNMENT);
+		this.setAlignmentX(LEFT_ALIGNMENT);
 
 		// Panel to hold id text box and login button
 		JPanel loginPanel = new JPanel();
@@ -95,17 +93,14 @@ public class CustomerLoginScreenGUI extends BaseGUI
 
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
-		mainPanel.add(loginPanel);
+		this.add(loginPanel);
 
 		// Gap between above and pay with cash button
-		mainPanel.add(Box.createRigidArea(new Dimension(0,20)));
+		this.add(Box.createRigidArea(new Dimension(0,20)));
 
 		// Pay with cash button
 		cashButton = new JButton("Pay with cash");
-		mainPanel.add(cashButton);
-
-		// Add the main panel to the screen
-		add(mainPanel, BorderLayout.CENTER);
+		this.add(cashButton);
 	}
 
 	/**
@@ -116,11 +111,13 @@ public class CustomerLoginScreenGUI extends BaseGUI
 	 * <li>ID of the vending machine</li>
 	 * </ol>
 	 **/
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
 		GUIUtilities.setNativeLookAndFeel();
 		CustomerLoginScreen controller = CustomerLoginScreen.buildInstance(Integer.parseInt(args[0]));
 		CustomerLoginScreenGUI gui = new CustomerLoginScreenGUI(controller);
-		gui.displayGUI();
+		BaseGUI base = new BaseGUI("Customer Login Screen");
+		base.setContentPanel(gui);
+		base.displayGUI();
 	}
 }

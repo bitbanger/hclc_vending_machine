@@ -5,18 +5,19 @@ import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 
 /**
- * Base GUI for all GUIs in this project.
+ * Frame that is used for all GUIs in this project. This helps keep a consistent
+ * experience for the user.
  * Includes the status bar and a default size.
  **/
-public abstract class BaseGUI extends JFrame
+public class BaseGUI extends JFrame
 {
 	/**
-	 * Default width for windows.
+	 * Default width for the window.
 	 **/
 	private static final int DEFAULT_WIDTH = 600;
 
 	/**
-	 * Default height for windows.
+	 * Default height for the window.
 	 **/
 	private static final int DEFAULT_HEIGHT = 700;
 
@@ -31,19 +32,25 @@ public abstract class BaseGUI extends JFrame
 	private String title;
 
 	/**
+	 * Current content.
+	 **/
+	private JPanel contentPanel;
+
+	/**
 	 * Creates this GUI with the given title.
-	 * @param title The title of the created GUI
+	 * @param title The title for the created window.
 	 **/
 	public BaseGUI(String title)
 	{
 		this.title = title;
 		statusBar = new StatusBar();
+		addBaseComponents();
 	}
 
 	/**
 	 * Adds the status bar and sets the layout to a BorderLayout.
 	 **/
-	public void addBaseComponents()
+	private void addBaseComponents()
 	{
 		setLayout(new BorderLayout());
 		JPanel northPanel = new JPanel();
@@ -55,14 +62,10 @@ public abstract class BaseGUI extends JFrame
 
 
 	/**
-	 * Adds the components to the window (by calling addBaseComponents and
-	 * addComponents()) before displaying the GUI.
+	 * Displays the GUI
 	 **/
 	public void displayGUI()
 	{
-		addBaseComponents();
-		addComponents();
-
 		setVisible(true);
 		setTitle(title);
 		setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
@@ -79,17 +82,16 @@ public abstract class BaseGUI extends JFrame
 	}
 
 	/**
-	 * Adds the components specific to this GUI
+	 * Swaps in the given panel as the center panel.
+	 * @param content The panel to display
 	 **/
-	public abstract void addComponents();
-
-	/**
-	 * Sets the border of the given panel to 10 pixels on all sides but the top.
-	 * This looks nice for the center panel.
-	 * @param panel The panel that is getting a border change.
-	 **/
-	public static void setProperBorder(JPanel panel)
+	public void setContentPanel(JPanel content)
 	{
-		panel.setBorder(new EmptyBorder(0,10,10,10));
+		if (contentPanel != null)
+			getContentPane().remove(contentPanel);
+		contentPanel = content;
+		contentPanel.setBorder(new EmptyBorder(0,10,10,10));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		validate();
 	}
 }
