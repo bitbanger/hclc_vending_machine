@@ -149,17 +149,50 @@ public class CLIUtilities {
 	 */
 	public static int promptInt(String prompt, NumberFormat condition)
 	{
-		return condition.promptLoop(prompt);
+		boolean invalid=false;
+		int choice=-1;
+		
+		do
+		{
+			invalid=false;
+			try
+			{
+				choice=Integer.parseInt(prompt(prompt));
+			}
+			catch(NumberFormatException nai)
+			{
+				System.out.println("Please enter only an integral number");
+				invalid=true;
+				continue; //we can't allow this to check the condition, since -1 might be valid
+			}
+		}
+		while(!condition.checkLoudly(choice, invalid));
+		
+		return choice;
 	}
 	
 	/**
-	 * Requests a <i>positive</i> integer but suggests a default value.
+	 * Prompts for a default integer.
 	 * @param prompt the prompt to the screen
 	 * @param defVal the default integer value
 	 * @return the integer, which is guranteed to be valid  
 	 */
 	public static int promptIntDefault(String prompt, int defVal) {
-		return new MinValueNumberFormat(1, defVal).promptLoop(prompt+" (blank for default of "+defVal+")");
+		int theInt = -1;
+		do {
+			try {
+				String thePrompt = prompt(prompt + " (default " + defVal + ")");
+				if(thePrompt.equals("")) {
+					return defVal;
+				}
+
+				theInt = Integer.parseInt(thePrompt);
+			} catch(NumberFormatException e) {
+				theInt = -1;
+				continue;
+			}
+		} while(theInt < 0);
+		return theInt;
 	}
 
 	/**
@@ -310,34 +343,6 @@ public class CLIUtilities {
 	 */
 	private static abstract class NumberFormat
 	{
-		/** Whether or not this format provides a default value. */
-		boolean usingDefault;
-
-		/** The default input value, if applicable. */
-		int defaultValue;
-
-		/**
-		 * No&ndash;default value (mandatory input) constructor.
-		 * Constructs a generic format functor with no default value.
-		 * Using this constructor makes user input mandatory.
-		 */
-		public NumberFormat()
-		{
-			usingDefault=false;
-			defaultValue=0;
-		}
-
-		/**
-		 * Default value (optional input) constructor.
-		 * Constructs a functor with a default input value.
-		 * If the user accepts on empty input, this default value will be logged.
-		 */
-		public NumberFormat(int defaultValue)
-		{
-			usingDefault=true;
-			this.defaultValue=defaultValue;
-		}
-
 		/**
 		 * Checks whether the specified number classifies as valid input.
 		 * @param input the guess to validate
@@ -352,23 +357,13 @@ public class CLIUtilities {
 		public abstract String toString();
 
 		/**
-		 * Checks the input and prints the error output, if any.
+		 * Checks the input and maybe prints the output.
+		 * Validates a number and prints the validation error only on failure.
 		 * @param input the number to be validated
+		 * @param cont whether to skip the check and return false
 		 * @return the result of the validation
 		 */
-		public final boolean checkLoudly(int input)
-		{
-			return checkLoudly(input, false);
-		}
-
-		/**
-		 * Checks the input unless instructed to continue without doing so.
-		 * This provides the option of enforcing a reprompt by flagging failure.
-		 * @param input the number to be validated
-		 * @param cont whether to skip the check and return <tt>false</tt>
-		 * @return the result of the validation
-		 */
-		private final boolean checkLoudly(int input, boolean cont)
+		public final boolean checkLoudly(int input, boolean cont)
 		{
 			if(cont)
 				return false;
@@ -379,47 +374,6 @@ public class CLIUtilities {
 				System.out.println(this);
 			
 			return valid;
-		}
-
-		/**
-		 * Enters an input loop that blocks and reprompts until a valid value is supplied.
-		 * @param message the prompt with which to present the user
-		 * @return the result of the query
-		 */
-		public final int promptLoop(String message)
-		{
-			boolean invalid=false;
-			int choice=-1;
-			
-			do
-			{
-				String response;
-				
-				invalid=false;
-				response=prompt(message);
-				
-				try
-				{
-					choice=Integer.parseInt(response);
-				}
-				catch(NumberFormatException nai)
-				{
-					if(usingDefault && response.equals(""))
-					{
-						choice=defaultValue;
-						break;
-					}
-					else
-					{
-						System.out.println("Please enter only an integral number");
-						invalid=true;
-						continue; //we can't allow this to check the condition, since -1 might be valid
-					}
-				}
-			}
-			while(!checkLoudly(choice, invalid)); //workaround for clean response to floats
-			
-			return choice;
 		}
 	}
 
@@ -438,7 +392,7 @@ public class CLIUtilities {
 		private final int MINIMUM;
 
 		/**
-		 * No&ndash;default value constructor.
+		 * Constructor.
 		 * Sets the minimum value to be used.
 		 * @param minimum the lowest number to be accepted
 		 */
@@ -447,26 +401,14 @@ public class CLIUtilities {
 			this.MINIMUM=minimum;
 		}
 
-		/**
-		 * Default value constructor.
-		 * Sets the minimum value and the default input.
-		 * @param minimum the lowest number to be accepted
-		 * @param assumed the default to be assumed on empty input
-		 */
-		public MinValueNumberFormat(int minimum, int assumed)
-		{
-			super(assumed);
-			this.MINIMUM=minimum;
-		}
-
-		/** @inheritDoc */
+		/** {@inheritDoc} */
 		@Override
 		public boolean validate(int input)
 		{
 			return input>=MINIMUM;
 		}
 
-		/** @inheritDoc */
+		/** {@inheritDoc} */
 		public String toString()
 		{
 			if(this.MINIMUM==ZERO.MINIMUM)
