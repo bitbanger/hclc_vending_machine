@@ -180,13 +180,11 @@ public class VendingMachine extends ModelBase
 	/**
 	 * Swaps the next layout into the current layout.
 	 * This process automatically sets the layout's next stocking visit.
-	 * All corresponding stocked quantities that have diminished in the current layout are automatically copied over.
-	 * However, if values there exceed their respective values in the next layout, the lower values stand.
-	 * At the end of this process, there is guaranteed to be an appropriate next layout.
+	 * @param next the new VMLayout
 	 */
-	public void swapInNextLayout()
+	public void swapInNextLayout( VMLayout next )
 	{
-		currentLayout=nextLayout;
+		currentLayout=next;
 		nextLayout=new VMLayout(currentLayout, true); //deep copy
 		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
 	}

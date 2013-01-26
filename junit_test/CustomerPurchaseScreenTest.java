@@ -84,8 +84,7 @@ public class CustomerPurchaseScreenTest {
 		VendingMachine help = helper.machines.get(1);
 		Row[][] next = help.getNextLayout().getRows();
 		next[0][0].setRemainingQuantity( 0 );
-		help.setNextLayout( new VMLayout( next, 7 ) );
-		help.swapInNextLayout();
+		help.swapInNextLayout( new VMLayout( next, 7 ) );
 		Customer user = helper.customers.get(0);
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );

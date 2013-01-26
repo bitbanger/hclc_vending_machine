@@ -203,7 +203,7 @@ public class VendingMachineTest
 		dispenser.getNextLayout().getRows()[0][1]=dispenser.getNextLayout().getRows()[1][0];
 		dispenser.getNextLayout().getRows()[1][0]=temp;
 		
-		dispenser.swapInNextLayout();
+		dispenser.swapInNextLayout( dispenser.getNextLayout() );
 		//assertEquals(dispenser.getCurrentLayout().getRows()[0][0].getRemainingQuantity(), 7);
 		//assertEquals(dispenser.getNextLayout().getRows()[0][0].getRemainingQuantity(), 7);
 		assertEquals(dispenser.getCurrentLayout().getRows()[0][1].getRemainingQuantity(), 1);
