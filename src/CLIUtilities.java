@@ -1,11 +1,18 @@
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Scanner;
-import java.util.*;
 
 /**
  * Utility class for creating a usable CLI.
  * Provides methods to do things like prompt the user, present an options list, etc.
  */
 public class CLIUtilities {
+
+	/**
+	 * Validation failure reporter
+	 */
+	private static final PrintStreamValidationComplainer STDOUT_WRAPPER=new PrintStreamValidationComplainer(System.out);
 
 	/**
 	 * Scanner instance
@@ -127,7 +134,7 @@ public class CLIUtilities {
 	 */
 	public static int promptInt(String prompt)
 	{
-		return promptInt(prompt, false);
+		return promptInt(prompt, MinValueNumberFormat.ONE);
 	}
 
 	/**
@@ -144,55 +151,64 @@ public class CLIUtilities {
 	/**
 	 * Provides a flexible way to get a valid integer.
 	 * @param prompt the prompt to the screen
-	 * @param condition the condition satisfied for valid inputs
 	 * @return the integer, which is guaranteed to be valid
 	 */
 	public static int promptInt(String prompt, NumberFormat condition)
 	{
+		return promptIntDefault(prompt, condition, null);
+	}
+
+	/**
+	 * Prompts for a <b>positive</b> integer, using a default if nothing is provided.
+	 * @param prompt the prompt to the screen
+	 * @param defVal the default integer value, or <tt>null</tt> for none (mandatory input)
+	 * @return the integer, which is guranteed to be valid  
+	 */
+	public static int promptIntDefault(String prompt, int defVal)
+	{
+		return promptIntDefault(prompt, MinValueNumberFormat.ONE, defVal);
+	}
+
+	/**
+	 * Prompts for an integer, using a default if nothing is provided.
+	 * @param prompt the prompt to the screen
+	 * @param condition the condition satisfied for valid inputs
+	 * @param defVal the default integer value, or <tt>null</tt> for none (mandatory input)
+	 * @return the integer, which is guranteed to be valid  
+	 */
+	private static int promptIntDefault(String prompt, NumberFormat condition, Integer defVal)
+	{
+		NumberFormat.setCommunicator(STDOUT_WRAPPER);
+		
 		boolean invalid=false;
 		int choice=-1;
 		
 		do
 		{
+			String input;
+			
 			invalid=false;
+			input=prompt(prompt+(defVal==null ? "" : " (enter for default "+defVal+")"));
+			
 			try
 			{
-				choice=Integer.parseInt(prompt(prompt));
+				choice=Integer.parseInt(input);
 			}
 			catch(NumberFormatException nai)
 			{
-				System.out.println("Please enter only an integral number");
-				invalid=true;
-				continue; //we can't allow this to check the condition, since -1 might be valid
+				if(defVal!=null && input.equals("")) //default available and "requested"
+					return defVal;
+				else
+				{
+					System.out.println("Please enter only an integral number");
+					invalid=true;
+					continue; //we can't allow this to check the condition, since -1 might be valid
+				}
 			}
 		}
 		while(!condition.checkLoudly(choice, invalid));
 		
 		return choice;
-	}
-	
-	/**
-	 * Prompts for a default integer.
-	 * @param prompt the prompt to the screen
-	 * @param defVal the default integer value
-	 * @return the integer, which is guranteed to be valid  
-	 */
-	public static int promptIntDefault(String prompt, int defVal) {
-		int theInt = -1;
-		do {
-			try {
-				String thePrompt = prompt(prompt + " (default " + defVal + ")");
-				if(thePrompt.equals("")) {
-					return defVal;
-				}
-
-				theInt = Integer.parseInt(thePrompt);
-			} catch(NumberFormatException e) {
-				theInt = -1;
-				continue;
-			}
-		} while(theInt < 0);
-		return theInt;
 	}
 
 	/**
@@ -338,85 +354,26 @@ public class CLIUtilities {
 	}
 
 	/**
-	 * Base class for number format functors.
-	 * These are used to customize integral input validation.
+	 * Provides a wrapper for reporting validation errors to a print stream.
 	 */
-	private static abstract class NumberFormat
+	private static class PrintStreamValidationComplainer implements ValidationComplainer
 	{
-		/**
-		 * Checks whether the specified number classifies as valid input.
-		 * @param input the guess to validate
-		 * @return whether it is considered valid
-		 */
-		public abstract boolean validate(int input);
-
-		/**
-		 * Prints the validation error associated with a bad value.
-		 * @return a message to be printed on bad input
-		 */
-		public abstract String toString();
-
-		/**
-		 * Checks the input and maybe prints the output.
-		 * Validates a number and prints the validation error only on failure.
-		 * @param input the number to be validated
-		 * @param cont whether to skip the check and return false
-		 * @return the result of the validation
-		 */
-		public final boolean checkLoudly(int input, boolean cont)
-		{
-			if(cont)
-				return false;
-			
-			boolean valid=validate(input);
-			
-			if(!valid)
-				System.out.println(this);
-			
-			return valid;
-		}
-	}
-
-	/**
-	 * Number format functor specifying a particular minimum acceptable number.
-	 */
-	public static class MinValueNumberFormat extends NumberFormat
-	{
-		/** An instance allowing any nonnegative number. */
-		public static final MinValueNumberFormat ZERO=new MinValueNumberFormat(0);
-
-		/** An instance allowing only positive numbers. */
-		public static final MinValueNumberFormat ONE=new MinValueNumberFormat(1);
-
-		/** The lowest number allowed to validate successfully. */
-		private final int MINIMUM;
+		/** The wrapped stream. */
+		private PrintStream stream;
 
 		/**
 		 * Constructor.
-		 * Sets the minimum value to be used.
-		 * @param minimum the lowest number to be accepted
+		 * @param stream to wrap
 		 */
-		public MinValueNumberFormat(int minimum)
+		public PrintStreamValidationComplainer(PrintStream stream)
 		{
-			this.MINIMUM=minimum;
+			this.stream=stream;
 		}
 
-		/** {@inheritDoc} */
-		@Override
-		public boolean validate(int input)
+		/** @inheritDoc */
+		public void alert(String message)
 		{
-			return input>=MINIMUM;
-		}
-
-		/** {@inheritDoc} */
-		public String toString()
-		{
-			if(this.MINIMUM==ZERO.MINIMUM)
-				return "Please enter only a nonnegative number";
-			else if(this.MINIMUM==ONE.MINIMUM)
-				return "Please enter only a positive number";
-			else
-				return "Please enter only a number greater than or equal to "+MINIMUM;
+			stream.println(message);
 		}
 	}
 }
