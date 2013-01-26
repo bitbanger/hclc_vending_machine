@@ -1,6 +1,6 @@
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import java.util.regex.PatternSyntaxException;
 /**
  *
  * 1/1/2013
@@ -20,6 +20,12 @@ public class RestockerTaskListScreen {
 	/** the vending machine the restocker is working on */
 	private VendingMachine vm;
 
+	/** the CURRENT VMLayout as of each instruction execution */
+	private VMLayout status;
+
+	/** The list of instructions to execute */
+	private ArrayList<String> instructions;
+
 	/**
 	 * Constructor
 	 * Creates an instance with the specified VendingMachine
@@ -27,16 +33,17 @@ public class RestockerTaskListScreen {
 	 */	
 	public RestockerTaskListScreen ( VendingMachine cur ) {
 		vm = cur;
+		instructions = new ArrayList<String>();
+		status = vm.getCurrentLayout();
+		assembleStockingList();
 	}
 
 	/**
 	 * creates a list of instructions for the restocker to follow
 	 * compares the next layout and the current layout to determine 
 	 *	the changes that need to be made
-	 * @return String[]: list of instructions, or <tt>null</tt> on a backend error
 	 */
-	public String[] assembleStockingList() {
-		ArrayList<String> instructions = new ArrayList<String>();
+	private void assembleStockingList() {
 		Row[][] cur = vm.getCurrentLayout().getRows();
 		Row[][] next = vm.getNextLayout().getRows();
 		for ( int i = 0; i < cur.length; i++ ) {
@@ -92,18 +99,68 @@ public class RestockerTaskListScreen {
 				}
 				} catch ( Exception databaseProblem ) {
 					ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
-					return null;
 				}
 			}	
 		} // end for
-		return instructions.toArray(new String[0]);
 	}
 
 	/**
-	 * updates the necessary machinery that the stocking is complete
+	 * gets the current list of instructions that remain
+	 * @return String[] the list of instructions
 	 */
-	public void completeStocking() {
-		vm.swapInNextLayout();
+	public String[] getInstructions() {
+		return instructions.toArray(new String[0]);
+	}
+
+	/** 
+	 * removes the specified instruction from the list of instuctions
+	 * @param id the id of the instruction being removed
+	 * @return boolean whether it succeeded
+	 */
+	public boolean removeInstruction( int id ) {
+		Row[][] rows = status.getRows();
+		String inst = instructions.get( id );
+		if ( inst.startsWith("Remove") ) {
+			//remove all from 'i', 'j'
+			inst = inst.substring( 15 );
+			inst.replace(',', ' ');
+			int i = 0;
+			for ( i = 0; i < inst.length(); ++i ) {
+				if ( inst.charAt( i ) == ' ' )
+					break;
+			}
+			int x = Integer.parseInt( inst.substring(0, i) );
+			int y = Integer.parseInt( inst.substring(i) );
+			rows[x][y] = null;
+		}
+		else {
+			//add 'depth' 'name' to location 'i', 'j'
+			inst.replace(',', ' ');
+			try {
+				String[] split = inst.split("\\s+");
+				int x = Integer.parseInt( split[5] );
+				int y = Integer.parseInt( split[6] );
+				rows[x][y].setProduct( vm.getNextLayout().getRows()[x][y].getProduct() );
+				rows[x][y].setRemainingQuantity( Integer.parseInt( split[2] ) );
+			} catch (PatternSyntaxException ex) {
+				System.err.println("You see nothing.");
+			}
+		}
+		instructions.remove( id );
+		status = new VMLayout( rows, status.getDepth() );
+		return true;
+	}
+
+	/**
+	 * updates the necessary machinery that the stocking is complete only
+	 *	if all instructions are complete
+	 * @return boolean if the stocking was successfully finished
+	 */
+	public boolean completeStocking() {
+		if ( instructions.size() == 0 ) 
+			vm.swapInNextLayout( status );
+		else
+			return false;
 		try
 		{
 			db.updateOrCreateVendingMachine( vm );
@@ -112,6 +169,7 @@ public class RestockerTaskListScreen {
 		{
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
+		return true;
 	}
 
 	/**
