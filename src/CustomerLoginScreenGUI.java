@@ -33,8 +33,14 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	 **/
 	private JButton cashButton;
 
+	/**
+	 * BaseGUI for this panel.
+	 **/
 	private BaseGUI master;
 
+	/**
+	 * Text field for the customer id.
+	 **/
 	private NumberField idTextField;
 
 	/**
@@ -156,17 +162,27 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
+		// If the login button was pressed
 		if (event.getSource() == loginButton)
 		{
+			
+			// Get the next controller
 			CustomerPurchaseScreen next = controller.tryLogin(Integer.parseInt(idTextField.getText()));
+
+			// If the custoker id was not found
 			if (next == null)
 			{
 				master.getStatusBar().setStatus("Customer id not found", StatusBar.STATUS_BAD_COLOR);
 			}
 			else
 			{
+				// Clear the id text
 				idTextField.setText("");
+
+				// Set up the next screen
 				CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master);
+
+				// Display the next screen
 				master.pushContentPanel(nextGUI);
 			}
 		}
