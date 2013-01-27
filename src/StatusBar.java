@@ -63,7 +63,7 @@ public class StatusBar extends JPanel
 	 **/
 	public void clearStatus()
 	{
-		statusLabel.setText("");
+		statusLabel.setText(" ");
 	}
 
 	/**
