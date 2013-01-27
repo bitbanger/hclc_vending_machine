@@ -154,6 +154,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 
 		// Pay with cash button
 		cashButton = new JButton("Pay with cash");
+		cashButton.addActionListener(this);
 		this.add(cashButton);
 	}
 
@@ -188,6 +189,13 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 				// Display the next screen
 				master.pushContentPanel(nextGUI);
 			}
+		}
+		else if (event.getSource() == cashButton)
+		{
+			CashCustomerPurchaseScreen next = controller.cashLogin();
+			idTextField.setText("");
+			CashCustomerPurchaseScreenGUI nextGUI = new CashCustomerPurchaseScreenGUI(next, master);
+			master.pushContentPanel(nextGUI);
 		}
 	}
 }
