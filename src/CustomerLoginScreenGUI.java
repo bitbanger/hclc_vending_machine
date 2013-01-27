@@ -9,12 +9,14 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * Content panel for the customer login screen.
  * @author Matthew Koontz
  **/
-public class CustomerLoginScreenGUI extends JPanel
+public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 {
 	/**
 	 * Controller instance for this screen.
@@ -31,13 +33,18 @@ public class CustomerLoginScreenGUI extends JPanel
 	 **/
 	private JButton cashButton;
 
+	private BaseGUI master;
+
+	private JTextField idTextField;
+
 	/**
 	 * Creates the panel with the given controller instance.
 	 * @param controller The controller instance to use.
 	 **/
-	public CustomerLoginScreenGUI(CustomerLoginScreen controller)
+	public CustomerLoginScreenGUI(CustomerLoginScreen controller, BaseGUI master)
 	{
 		this.controller = controller;
+		this.master = master;
 		addComponents();
 	}
 
@@ -69,7 +76,7 @@ public class CustomerLoginScreenGUI extends JPanel
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		// Text field for customer id
-		final JTextField idTextField = new JTextField(20);
+		idTextField = new JTextField(20);
 		idTextField.setMaximumSize(idTextField.getPreferredSize());
 		idPanel.add(idTextField);
 
@@ -88,6 +95,7 @@ public class CustomerLoginScreenGUI extends JPanel
 		loginButtonPanel.add(Box.createGlue());
 
 		// Add the login button
+		final JTextField tempField = idTextField;
 		loginButton = new ConditionButton("Login")
 		{
 			/**
@@ -97,9 +105,10 @@ public class CustomerLoginScreenGUI extends JPanel
 			@Override
 			public boolean checkCondition()
 			{
-				return idTextField.getText().length() > 0;
+				return tempField.getText().length() > 0;
 			}
 		};
+		loginButton.addActionListener(this);
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
 		
@@ -137,4 +146,20 @@ public class CustomerLoginScreenGUI extends JPanel
 		this.add(cashButton);
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent event)
+	{
+		if (event.getSource() == loginButton)
+		{
+			CustomerPurchaseScreen next = controller.tryLogin(Integer.parseInt(idTextField.getText()));
+			if (next == null)
+			{
+			}
+			else
+			{
+				CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master);
+				master.pushContentPanel(nextGUI);
+			}
+		}
+	}
 }

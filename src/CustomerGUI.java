@@ -13,7 +13,7 @@ public class CustomerGUI
 		GUIUtilities.setNativeLookAndFeel();
 		BaseGUI base = new BaseGUI("Customer Login Screen");
 		CustomerLoginScreen controller = CustomerLoginScreen.buildInstance(Integer.parseInt(args[0]));
-		CustomerLoginScreenGUI gui = new CustomerLoginScreenGUI(controller);
+		CustomerLoginScreenGUI gui = new CustomerLoginScreenGUI(controller, base);
 		base.pushContentPanel(gui);
 		base.displayGUI();
 	}
