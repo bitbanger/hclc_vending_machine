@@ -103,7 +103,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		loginButtonPanel.add(Box.createGlue());
 
 		// Add the login button
-		final JTextField tempField = idTextField;
+		final NumberField tempField = idTextField;
 		loginButton = new ConditionButton("Login")
 		{
 			/**
@@ -113,7 +113,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 			@Override
 			public boolean checkCondition()
 			{
-				return tempField.getText().length() > 0;
+				return tempField.areContentsValid();
 			}
 		};
 		loginButton.addActionListener(this);
