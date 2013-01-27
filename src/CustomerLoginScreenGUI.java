@@ -146,6 +146,11 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		this.add(cashButton);
 	}
 
+	/**
+	 * Handles the login and cash customer buttons getting pressed.
+	 * @param event Contains information regarding the event that caused this
+	 * action.
+	 **/
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
