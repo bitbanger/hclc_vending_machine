@@ -51,6 +51,10 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	{
 		this.controller = controller;
 		this.master = master;
+
+		loginButton = new ConditionButton("Login");
+		idTextField = new NumberField(NumberField.POSITIVE_Z);
+
 		master.getStatusBar().clearStatus();
 		addComponents();
 	}
@@ -83,42 +87,8 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		// Text field for customer id
-		idTextField = new NumberField(NumberField.POSITIVE_Z);
 		idTextField.setColumns(20);
 		idTextField.setMaximumSize(idTextField.getPreferredSize());
-		idPanel.add(idTextField);
-
-		// Add box id label and text box to login panel
-		idPanel.setMaximumSize(idPanel.getPreferredSize());
-		loginPanel.add(idPanel);
-
-		// Gap between customer id text box and login button
-		loginPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-		// Panel to align the login button to the right
-		JPanel loginButtonPanel = new JPanel();
-		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
-
-		// Aligns the button to the right
-		loginButtonPanel.add(Box.createGlue());
-
-		// Add the login button
-		final NumberField tempField = idTextField;
-		loginButton = new ConditionButton("Login");
-		loginButton.addCondition(new ConditionButtonCondition()
-		{
-			/**
-			 * The button should only be enabled if the idTextField has content.
-			 **/
-			@Override
-			public boolean checkCondition()
-			{
-				return tempField.areContentsValid();
-			}
-		});
-		loginButton.addActionListener(this);
-		loginButtonPanel.add(loginButton);
-		loginPanel.add(loginButtonPanel);
 		
 		// Make the id text field notify the login button when it is changed
 		final ConditionButton temp = loginButton;
@@ -141,6 +111,39 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 				temp.checkAndSetEnabled();
 			}
 		});
+		idPanel.add(idTextField);
+
+		// Add box id label and text box to login panel
+		idPanel.setMaximumSize(idPanel.getPreferredSize());
+		loginPanel.add(idPanel);
+
+		// Gap between customer id text box and login button
+		loginPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+		// Panel to align the login button to the right
+		JPanel loginButtonPanel = new JPanel();
+		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
+
+		// Aligns the button to the right
+		loginButtonPanel.add(Box.createGlue());
+
+		// Add the login button
+		final NumberField tempField = idTextField;
+		loginButton.addCondition(new ConditionButtonCondition()
+		{
+			/**
+			 * The button should only be enabled if the idTextField has content.
+			 **/
+			@Override
+			public boolean checkCondition()
+			{
+				return tempField.areContentsValid();
+			}
+		});
+		loginButton.addActionListener(this);
+		loginButtonPanel.add(loginButton);
+		loginPanel.add(loginButtonPanel);
+		
 
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
