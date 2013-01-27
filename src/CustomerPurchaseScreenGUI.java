@@ -4,12 +4,14 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * GUI that allows customers with an id to purchase goods.
  * @author Matthew Koontz
  **/
-public class CustomerPurchaseScreenGUI extends JPanel
+public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 {
 	/**
 	 * Controller for this GUI.
@@ -27,6 +29,16 @@ public class CustomerPurchaseScreenGUI extends JPanel
 	private BaseGUI master;
 
 	/**
+	 * Button that cancels the purchase
+	 **/
+	private JButton cancelButton;
+
+	/**
+	 * Button that makes the purchase
+	 **/
+	private JButton purchaseButton;
+
+	/**
 	 * Creates the panel using the given arguments.
 	 * @param controller The controller instance for this GUI.
 	 * @param master The master for this GUI.
@@ -36,6 +48,9 @@ public class CustomerPurchaseScreenGUI extends JPanel
 		this.master = master;
 		this.controller = controller;
 		vmButtons = new VMLayoutPanel(controller.listLayout(), false);
+
+		master.getStatusBar().setStatus(String.format("Welcome, %s", controller.getUser().getName()), StatusBar.STATUS_GOOD_COLOR);
+
 		addComponents();
 	}
 
@@ -69,15 +84,52 @@ public class CustomerPurchaseScreenGUI extends JPanel
 		bottomPanel.add(Box.createGlue());
 
 		// Cancel button
-		JButton cancelButton = new JButton("Cancel");
+		cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(this);
 		bottomPanel.add(cancelButton);
 
 		// Spacing between buttons
 		bottomPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		// Purchase button
-		JButton purchaseButton = new JButton("Purchase!");
+		purchaseButton = new JButton("Purchase!");
+		purchaseButton.addActionListener(this);
 		bottomPanel.add(purchaseButton);
 
+	}
+
+	/**
+	 * Handles the cancel and purchase buttons being clicked
+	 * @param event Contains information regarding the event
+	 **/
+	@Override
+	public void actionPerformed(ActionEvent event)
+	{
+		JButton source = (JButton)event.getSource();
+		if (source == cancelButton)
+		{
+			master.popContentPanel();
+			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
+		}
+		else
+		{
+			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
+			if (selected == null)
+			{
+				master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
+				return;
+			}
+			String result = controller.tryPurchase(selected);
+			if (result.equals("GOOD"))
+			{
+				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
+				master.popContentPanel();
+			}
+			else
+			{
+				master.getStatusBar().setStatus(result, StatusBar.STATUS_BAD_COLOR);
+				return;
+			}
+		}
 	}
 }
