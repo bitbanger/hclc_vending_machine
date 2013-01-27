@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
+import java.sql.PreparedStatement;
+
 /**
  * The DatabaseLayer class contains static methods for accessing the sqlite
  * database. It includes methods to get, update, and create objects in the
@@ -14,7 +16,6 @@ import java.util.ArrayList;
  * 
  * @author Matthew Koontz
  **/
-
 public class DatabaseLayer
 {
 	/** Default location of the database. */
@@ -362,14 +363,21 @@ public class DatabaseLayer
 		delStatement.close();
 			
 		Row[][] grid = layout.getRows();
+		PreparedStatement rowUpdateStatements = db.prepareStatement("UPDATE VMRow SET productId=?, expirationDate=?, remainingQuant=? WHERE vmRowId=?");
+		PreparedStatement rowLinkStatements = db.prepareStatement("INSERT INTO VMLayoutVMRowLink(layoutId, vmRowId, rowX, rowY) VALUES(?, ?, ?, ?)");
+		db.setAutoCommit(false);
 		for (int y=0;y<grid.length;++y)
 		{
 			for (int x=0;x<grid[y].length;++x)
 			{
 				Row row = grid[y][x];
-				updateOrCreateRow(row, x, y, layout.getId());
+				updateOrCreateRow(row, x, y, layout.getId(), rowUpdateStatements, rowLinkStatements);
 			}
 		}
+		rowUpdateStatements.executeBatch();
+		rowLinkStatements.executeBatch();
+		db.commit();
+		db.setAutoCommit(true);
 	}
 
 	/**
@@ -419,8 +427,10 @@ public class DatabaseLayer
 	 * @param x The x value of the row in the grid of the parent layout
 	 * @param y The y value of the row in the grid of the parent layout
 	 * @param parentLayoutId The id of the parent layout
+	 * @param rowUpdateStatements The prepared statement to put the batch update statements in
+	 * @param rowLinkStatements The prepare statement to put the batch row layout link statements in
 	 **/
-	private void updateOrCreateRow(Row row, int x, int y, int parentLayoutId) throws SQLException, BadStateException, BadArgumentException
+	private void updateOrCreateRow(Row row, int x, int y, int parentLayoutId, PreparedStatement rowUpdateStatements, PreparedStatement rowLinkStatements) throws SQLException, BadStateException, BadArgumentException
 	{
 		if (row != null)
 		{
@@ -433,6 +443,7 @@ public class DatabaseLayer
 				Statement rowStmt = db.createStatement();
 				String rowQuery = String.format("INSERT INTO VMRow(productId, expirationDate, remainingQuant) VALUES(%d, %d, %d)", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity());
 				rowStmt.executeUpdate(rowQuery);
+				db.commit();
 				ResultSet rowKeys = rowStmt.getGeneratedKeys();
 				rowKeys.next();
 				row.setId(rowKeys.getInt(1));
@@ -441,10 +452,11 @@ public class DatabaseLayer
 			else
 			{
 
-				Statement rowStmt = db.createStatement();
-				String rowQuery = String.format("UPDATE VMRow SET productId=%d, expirationDate=%d, remainingQuant=%d WHERE vmRowId=%d", row.getProduct().getId(), row.getExpirationDate().getTimeInMillis(), row.getRemainingQuantity(), row.getId());
-				rowStmt.executeUpdate(rowQuery);
-				rowStmt.close();
+				rowUpdateStatements.setInt(1, row.getProduct().getId());
+				rowUpdateStatements.setLong(2, row.getExpirationDate().getTimeInMillis());
+				rowUpdateStatements.setInt(3, row.getRemainingQuantity());
+				rowUpdateStatements.setInt(4, row.getId());
+				rowUpdateStatements.addBatch();
 			}
 		}
 		Statement qLink = db.createStatement();
@@ -452,10 +464,14 @@ public class DatabaseLayer
 		ResultSet linkSet = qLink.executeQuery("SELECT vmRowId FROM VMLayoutVMRowLink WHERE layoutId=" + parentLayoutId + " AND vmRowId=" + rowIdStr);
 		if (!linkSet.next())
 		{
-			Statement iLink = db.createStatement();
-			String query = String.format("INSERT INTO VMLayoutVMRowLink(layoutId, vmRowId, rowX, rowY) VALUES(%d, %s, %d, %d)", parentLayoutId, rowIdStr, x, y);
-			iLink.executeUpdate(query);
-			iLink.close();
+			rowLinkStatements.setInt(1, parentLayoutId);
+			if (row == null)
+				rowLinkStatements.setNull(2, java.sql.Types.INTEGER);
+			else
+				rowLinkStatements.setInt(2, row.getId());
+			rowLinkStatements.setInt(3, x);
+			rowLinkStatements.setInt(4, y);
+			rowLinkStatements.addBatch();
 		}
 		qLink.close();
 	}
