@@ -2,8 +2,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 /**
  * Utility class for creating a usable CLI.
@@ -102,54 +100,25 @@ public class CLIUtilities {
 	 * @return moneys the amount of money returned
 	 */
 	public static int moneyPrompt( String prompt ) {
-		final Pattern moneyPattern = Pattern.compile("(\\d*)(\\.(\\d(\\d?)))?");
 		final String failureString = "Please enter a valid positive monetary amount";
 		final String moneyTooLarge = "The amount that you entered is too large for this system to handle. Please enter a smaller amount.";
 
 		int moneys = -1;
 		do {
 			String attempt = prompt(prompt);
-			if (attempt.equals(""))
+			moneys = U.parseMoney(attempt);
+			if (moneys == U.BAD_MONEY)
 			{
 				System.out.println(failureString);
 				moneys = -1;
-				continue;
 			}
-			Matcher matcher = moneyPattern.matcher(attempt);
-			if (matcher.matches())
+			else if(moneys == U.TOO_MUCH_MONEY)
 			{
-				String moneyStr = matcher.group(1);
-				String centStr = matcher.group(3);
-				if (centStr != null)
-				{
-					moneyStr += centStr;
-					if (centStr.length() == 1)
-						moneyStr += "0";
-				}
-				else
-				{
-					moneyStr += "00";
-				}
-				try
-				{
-					moneys = Integer.parseInt(moneyStr);
-				}
-				catch (NumberFormatException formatException)
-				{
-					System.out.println(moneyTooLarge);
-					moneys = -1;
-					continue;
-				}
-			}
-			else
-			{
-				System.out.println(failureString);
+				System.out.println(moneyTooLarge);
 				moneys = -1;
-				continue;
 			}
-				
 		} while (moneys < 0);
-		return (int)moneys;
+		return moneys;
 	} 
 
 	/**
