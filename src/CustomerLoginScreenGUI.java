@@ -35,7 +35,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 
 	private BaseGUI master;
 
-	private JTextField idTextField;
+	private NumberField idTextField;
 
 	/**
 	 * Creates the panel with the given controller instance.
@@ -77,7 +77,8 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		// Text field for customer id
-		idTextField = new JTextField(20);
+		idTextField = new NumberField(NumberField.POSITIVE_Z);
+		idTextField.setColumns(20);
 		idTextField.setMaximumSize(idTextField.getPreferredSize());
 		idPanel.add(idTextField);
 
