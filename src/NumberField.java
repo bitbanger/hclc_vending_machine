@@ -2,6 +2,8 @@ import java.awt.Color;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * A validating field accepting integers.
@@ -51,6 +53,7 @@ public class NumberField extends JTextField
 	{
 		this.formatDescriptor=formatDescriptor;
 		setInputVerifier(new NumberFieldVerifier());
+		getDocument().addDocumentListener((NumberFieldVerifier)getInputVerifier());
 		contentsValid=false; //there *is* no int
 	}
 
@@ -60,6 +63,7 @@ public class NumberField extends JTextField
 	 */
 	public boolean areContentsValid()
 	{
+		getInputVerifier().verify(null);
 		return contentsValid;
 	}
 
@@ -79,7 +83,7 @@ public class NumberField extends JTextField
 	 * Verifies input and prints any errors to the status bar as focus is about to be lost.
 	 * In case of any such errors, the focus is retained until they are fixed.
 	 */
-	private class NumberFieldVerifier extends InputVerifier
+	private class NumberFieldVerifier extends InputVerifier implements DocumentListener
 	{
 		/** @inheritDoc */
 		public boolean verify(JComponent ignored)
@@ -113,5 +117,20 @@ public class NumberField extends JTextField
 				return contentsValid;
 			}
 		}
+
+		/** @inheritDoc */
+		public void insertUpdate(DocumentEvent ignored)
+		{
+			verify(null);
+		}
+
+		/** @inheritDoc */
+		public void removeUpdate(DocumentEvent ignored)
+		{
+			verify(null);
+		}
+
+		/** @inheritDoc */
+		public void changedUpdate(DocumentEvent ignored) {}
 	}
 }
