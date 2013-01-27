@@ -123,6 +123,7 @@ public class BaseGUI extends JFrame
 		JPanel currentPanel = contentStack.peek();
 		currentPanel.setBorder(new EmptyBorder(0,10,10,10));
 		getContentPane().add(currentPanel, BorderLayout.CENTER);
+		currentPanel.repaint();
 		validate();
 	}
 }
