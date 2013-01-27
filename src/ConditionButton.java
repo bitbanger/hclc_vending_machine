@@ -1,16 +1,20 @@
 import javax.swing.JButton;
 import java.awt.Component;
+import java.util.LinkedList;
 
 /**
- * A button that is enabled iff a condition is true.
+ * A button that is enabled iff a all of the conditions in a set are true.
+ * @author Matthew Koontz
  **/
-public abstract class ConditionButton extends JButton
+public class ConditionButton extends JButton
 {
+	private LinkedList<ConditionButtonCondition> conditions;
 	/**
 	 * Creates a ConditionButton with no label.
 	 **/
 	public ConditionButton()
 	{
+		conditions = new LinkedList<ConditionButtonCondition>();
 		setEnabled(false);
 		checkAndSetEnabled();
 	}
@@ -22,20 +26,28 @@ public abstract class ConditionButton extends JButton
 	public ConditionButton(String label)
 	{
 		super(label);
+		conditions = new LinkedList<ConditionButtonCondition>();
 		setEnabled(false);
 	}
 
 	/**
-	 * Sets enabled to the current result of checkCondition()
+	 * Sets enabled to the true iff all of the conditions are true.
 	 **/
 	public void checkAndSetEnabled()
 	{
-		setEnabled(checkCondition());
+		boolean enabled = true;
+		for (ConditionButtonCondition condition : conditions)
+			enabled = enabled && condition.checkCondition();
+		setEnabled(enabled);
 	}
 
 	/**
-	 * Checks if the button should be enabled based on a boolean expression.
-	 * @return True iff the button should be enabled
+	 * Adds the condition to the list of conditions that must be true for
+	 * the button the be enabled.
+	 * @param condition The condition to add.
 	 **/
-	public abstract boolean checkCondition();
+	public void addCondition(ConditionButtonCondition condition)
+	{
+		conditions.add(condition);
+	}
 }

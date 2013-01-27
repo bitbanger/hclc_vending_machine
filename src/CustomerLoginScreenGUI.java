@@ -104,18 +104,18 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 
 		// Add the login button
 		final NumberField tempField = idTextField;
-		loginButton = new ConditionButton("Login")
+		loginButton = new ConditionButton("Login");
+		loginButton.addCondition(new ConditionButtonCondition()
 		{
 			/**
 			 * The button should only be enabled if the idTextField has content.
-			 * {@inheritDoc}
 			 **/
 			@Override
 			public boolean checkCondition()
 			{
 				return tempField.areContentsValid();
 			}
-		};
+		});
 		loginButton.addActionListener(this);
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
