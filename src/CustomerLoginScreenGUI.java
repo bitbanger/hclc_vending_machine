@@ -162,6 +162,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 			}
 			else
 			{
+				idTextField.setText("");
 				CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master);
 				master.pushContentPanel(nextGUI);
 			}
