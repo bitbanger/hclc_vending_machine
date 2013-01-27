@@ -23,6 +23,9 @@ public class NumberField extends JTextField
 	/** The descriptor of the proper integer format. */
 	private NumberFormat formatDescriptor;
 
+	/** The current validity. */
+	private boolean contentsValid;
+
 	/**
 	 * This should be called once to point the validation framework at the <tt>StatusBar</tt>.
 	 * @param bar that status bar
@@ -48,6 +51,16 @@ public class NumberField extends JTextField
 	{
 		this.formatDescriptor=formatDescriptor;
 		setInputVerifier(new NumberFieldVerifier());
+		contentsValid=false; //there *is* no int
+	}
+
+	/**
+	 * Checks whether the current contents reflect valid input.
+	 * @return whether they are valid
+	 */
+	public boolean areContentsValid()
+	{
+		return contentsValid;
 	}
 
 	/**
@@ -76,23 +89,28 @@ public class NumberField extends JTextField
 			try
 			{
 				choice=Integer.parseInt(getText());
+				
+				if(formatDescriptor.validate(choice))
+				{
+					bar.clearStatus();
+					contentsValid=true;
+				}
+				else
+				{
+					bar.setColor(bar.STATUS_BAD_COLOR);
+					//the format descriptor will have set the status appropriately
+					contentsValid=false;
+				}
 			}
 			catch(NumberFormatException nai)
 			{
 				bar.setStatus("Please enter only an integral number");
-				bar.setColor(Color.RED);
-				return false;
+				bar.setColor(bar.STATUS_BAD_COLOR);
+				contentsValid=false;
 			}
-			
-			if(formatDescriptor.validate(choice))
+			finally
 			{
-				bar.setColor(Color.GREEN);
-				return true;
-			}
-			else
-			{
-				bar.setColor(Color.RED);
-				return false;
+				return contentsValid;
 			}
 		}
 	}
