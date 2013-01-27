@@ -45,6 +45,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	{
 		this.controller = controller;
 		this.master = master;
+		master.getStatusBar().clearStatus();
 		addComponents();
 	}
 
@@ -159,6 +160,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 			CustomerPurchaseScreen next = controller.tryLogin(Integer.parseInt(idTextField.getText()));
 			if (next == null)
 			{
+				master.getStatusBar().setStatus("Customer id not found", StatusBar.STATUS_BAD_COLOR);
 			}
 			else
 			{
