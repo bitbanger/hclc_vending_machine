@@ -2,6 +2,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * Utility class for creating a usable CLI.
@@ -100,29 +102,52 @@ public class CLIUtilities {
 	 * @return moneys the amount of money returned
 	 */
 	public static int moneyPrompt( String prompt ) {
-		float moneys = -1;
+		final Pattern moneyPattern = Pattern.compile("(\\d*)(\\.(\\d(\\d?)))?");
+		final String failureString = "Please enter a valid positive monetary amount";
+		final String moneyTooLarge = "The amount that you entered is too large for this system to handle. Please enter a smaller amount.";
+
+		int moneys = -1;
 		do {
-			try {
-				moneys = Float.parseFloat(prompt(prompt) );
-				moneys *= 100;
-				
-				if(moneys<0)
-				{
-					moneys = -1;
-					System.out.println("Please don't enter negative monetary amounts");
-					continue;
-				}
-				else if(Math.abs(moneys-(int)moneys)>Math.pow(10, -23))
-				{
-					moneys = -1;
-					System.out.println("Please use only two places after the decimal");
-					continue;
-				}
-			} catch (NumberFormatException e) {
+			String attempt = prompt(prompt);
+			if (attempt.equals(""))
+			{
+				System.out.println(failureString);
 				moneys = -1;
-				System.out.println("Please only enter valid real numbers");
 				continue;
 			}
+			Matcher matcher = moneyPattern.matcher(attempt);
+			if (matcher.matches())
+			{
+				String moneyStr = matcher.group(1);
+				String centStr = matcher.group(3);
+				if (centStr != null)
+				{
+					moneyStr += centStr;
+					if (centStr.length() == 1)
+						moneyStr += "0";
+				}
+				else
+				{
+					moneyStr += "00";
+				}
+				try
+				{
+					moneys = Integer.parseInt(moneyStr);
+				}
+				catch (NumberFormatException formatException)
+				{
+					System.out.println(moneyTooLarge);
+					moneys = -1;
+					continue;
+				}
+			}
+			else
+			{
+				System.out.println(failureString);
+				moneys = -1;
+				continue;
+			}
+				
 		} while (moneys < 0);
 		return (int)moneys;
 	} 
