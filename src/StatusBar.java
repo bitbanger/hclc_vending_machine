@@ -14,12 +14,12 @@ public class StatusBar extends JPanel
 	/**
 	 * Color the status bar will be when not reporting errors.
 	 **/
-	private static final Color STATUS_GOOD_COLOR = Color.green;
+	public static final Color STATUS_GOOD_COLOR = Color.green;
 
 	/**
 	 * Color the status bar will be when reporting errors.
 	 **/
-	private static final Color STATUS_BAD_COLOR = Color.red;
+	public static final Color STATUS_BAD_COLOR = Color.red;
 
 	/**
 	 * Label that holds the text for the status bar
@@ -37,6 +37,16 @@ public class StatusBar extends JPanel
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		statusLabel = new JLabel("status");
 		add(statusLabel);
+	}
+
+	/**
+	 * Sets the status text of the status bar.
+	 * @param status The string to display
+	 **/
+	public void setStatus(String status, Color color)
+	{
+		statusLabel.setText(status);
+		setBackground(color);
 	}
 
 	/**
