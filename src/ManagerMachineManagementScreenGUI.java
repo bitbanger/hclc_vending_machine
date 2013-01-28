@@ -8,6 +8,8 @@ import javax.swing.BoxLayout;
 import javax.swing.Box;
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  * Screen that allows the manager to manage machines
@@ -76,6 +78,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 
 		addComponents();
 		addLogic();
+		refreshList();
 	}
 	
 	/**
@@ -103,18 +106,83 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 
 		add(Box.createGlue());
 		
-		machineList.setListData(new Vector<VendingMachine>(controller.listMachinessAll()));
 		machineList.setMaximumSize(new Dimension((int)machineList.getPreferredSize().getHeight(), Integer.MAX_VALUE));
 		add(new JScrollPane(machineList));
 	}
 
+	/**
+	 * Refreshes the data in the list.
+	 **/
+	private void refreshList()
+	{
+		machineList.setListData(new Vector<VendingMachine>(controller.listMachinessAll()));
+	}
+
+	/**
+	 * Adds the logic to the buttons and lists.
+	 **/
 	private void addLogic()
 	{
+		// Make final copies for anonymous classes
+		final ConditionButton deactivateButtonTemp = deactivateButton;
+		final ConditionButton reactivateButtonTemp = reactivateButton;
+		final ConditionButton locationButtonTemp = locationButton;
+		final JList machineListTemp = machineList;
+
+		// Add action listeners for buttons
 		addMachineButton.addActionListener(this);
 		deactivateButton.addActionListener(this);
 		reactivateButton.addActionListener(this);
 		locationButton.addActionListener(this);
 		exitButton.addActionListener(this);
+
+		// Deactivate button should be enabled iff an active vending machine is selected
+		deactivateButton.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				VendingMachine selected = (VendingMachine)machineListTemp.getSelectedValue();
+				if (selected == null)
+					return false;
+				return selected.isActive();
+			}
+		});
+
+		// Reactivate button should be enabled iff an inactive vending machine is selected
+		reactivateButton.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				VendingMachine selected = (VendingMachine)machineListTemp.getSelectedValue();
+				if (selected == null)
+					return false;
+				return !selected.isActive();
+			}
+		});
+
+		// Location button should be active iff a vending machine is selected
+		locationButtonTemp.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				return machineListTemp.getSelectedValue() != null;
+			}
+		});
+
+		// Makes changes in the list recheck the conditions
+		machineList.addListSelectionListener(new ListSelectionListener()
+		{
+			@Override
+			public void valueChanged(ListSelectionEvent _)
+			{
+				deactivateButtonTemp.checkAndSetEnabled();
+				reactivateButtonTemp.checkAndSetEnabled();
+				locationButtonTemp.checkAndSetEnabled();
+			}
+		});
 	}
 
 	/**
@@ -125,10 +193,33 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 	public void actionPerformed(ActionEvent event)
 	{
 		Object source = event.getSource();
-		if (source == exitButton)
+
+		// Deactivate button
+		if (source == deactivateButton)
+		{
+			if (controller.deactivateMachine((VendingMachine)machineList.getSelectedValue()))
+				master.getStatusBar().setStatus("Machine deactivated successfully", StatusBar.STATUS_GOOD_COLOR);
+			else
+				master.getStatusBar().setStatus("An error occurred while trying to deactivate the machine", StatusBar.STATUS_BAD_COLOR);
+		}
+
+		// Reactivate button
+		else if (source == reactivateButton)
+		{
+			if (controller.reactivateMachine((VendingMachine)machineList.getSelectedValue()))
+				master.getStatusBar().setStatus("Machine reactivated successfully", StatusBar.STATUS_GOOD_COLOR);
+			else
+				master.getStatusBar().setStatus("An error occurred while trying to reactivate the machine", StatusBar.STATUS_BAD_COLOR);
+		}
+
+		// Return home button
+		else if (source == exitButton)
 		{
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
 		}
+
+		// Update data in list
+		refreshList();
 	}
 }
