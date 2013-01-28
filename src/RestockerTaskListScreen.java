@@ -98,7 +98,7 @@ public class RestockerTaskListScreen {
 				Row nextItems = next[i][j];
 				GregorianCalendar exp = items.getExpirationDate();
 				GregorianCalendar nextVisit = (GregorianCalendar)exp.clone();
-				exp.roll(GregorianCalendar.DAY_OF_MONTH, 
+				exp.roll(GregorianCalendar.DAY_OF_YEAR, 
 					vm.getStockingInterval());
 				try {
 				if ( exp.before( nextVisit ) ) {
