@@ -1,6 +1,7 @@
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
+import java.util.HashMap;
 /**
  *
  * 1/1/2013
@@ -24,7 +25,7 @@ public class RestockerTaskListScreen {
 	private VMLayout status;
 
 	/** The list of instructions to execute */
-	private ArrayList<String> instructions;
+	private HashMap<Integer, Pair<String, Boolean>> instructions;
 
 	/**
 	 * Constructor
@@ -33,9 +34,39 @@ public class RestockerTaskListScreen {
 	 */	
 	public RestockerTaskListScreen ( VendingMachine cur ) {
 		vm = cur;
-		instructions = new ArrayList<String>();
+		instructions = new HashMap<Integer, Pair<String, Boolean>>();
 		status = vm.getCurrentLayout();
-		assembleStockingList();
+		this.assembleStockingList();
+	}
+
+	private void checkRows() {
+		Row[][] curRows=vm.getCurrentLayout().getRows(), newRows=vm.getNextLayout().getRows();
+		for ( int i = 0; i < curRows.length; i++ ) {
+			for ( int j = 0; j < curRows[i].length; j++ ) {
+				if( curRows[i][j]!=null && newRows[i][j]!=null &&
+					curRows[i][j].getProduct().equals(newRows[i][j].getProduct())) {
+					try {
+						if(curRows[i][j].getRemainingQuantity()<newRows[i][j].getRemainingQuantity())
+							newRows[i][j].setRemainingQuantity(curRows[i][j].getRemainingQuantity());
+					} catch (BadArgumentException impossible) {
+						System.err.println("CRITICAL:Model detected a problem previously though impossible");
+						System.err.print("    DUMP : ");
+						impossible.printStackTrace();	
+						System.err.println();
+					}
+				}
+			}
+		}
+		try {
+			VMLayout next = new VMLayout( newRows, vm.getCurrentLayout().getDepth() );
+			vm.setNextLayout( next );
+		}
+		catch (BadArgumentException impossible) {
+			System.err.println("CRITICAL:Model detected a problem previously though impossible");
+			System.err.print("    DUMP : ");
+			impossible.printStackTrace();	
+			System.err.println();
+		} 
 	}
 
 	/**
@@ -44,6 +75,7 @@ public class RestockerTaskListScreen {
 	 *	the changes that need to be made
 	 */
 	private void assembleStockingList() {
+		int count = 0;
 		Row[][] cur = vm.getCurrentLayout().getRows();
 		Row[][] next = vm.getNextLayout().getRows();
 		for ( int i = 0; i < cur.length; i++ ) {
@@ -51,15 +83,15 @@ public class RestockerTaskListScreen {
 				if ( next[i][j] == null ) {
 					if ( cur[i][j] != null && 
 						cur[i][j].getRemainingQuantity() != 0 )
-						instructions.add("Remove all from " + i
-							 + ", " + j);
+						instructions.put(count++, new Pair(("Remove " +
+						"all from " + i+ ", " + j), false) );
 					continue;
 				}
 				if ( cur[i][j] == null ) {
-					instructions.add("Add " + 
+					instructions.put(count++, new Pair(("Add " + 
 						next[i][j].getRemainingQuantity()
 						+ " " + next[i][j].getProduct().getName() 
-						+ " to location " + i + ", " + j);
+						+ " to location " + i + ", " + j), false) );
 					continue;
 				}
 				Row items = cur[i][j];
@@ -71,28 +103,29 @@ public class RestockerTaskListScreen {
 				try {
 				if ( exp.before( nextVisit ) ) {
 					// expiration
-					instructions.add("Remove all from " +
-						i + ", " + j);	
-					instructions.add("Add " + 
+					instructions.put(count++, new Pair(("Remove all from " +
+						i + ", " + j), true) );	
+					instructions.put(count++, new Pair(("Add " + 
 						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
-						+ " to location " + i + ", " + j);
+						+ " to location " + i + ", " + j), false) );
 				}
 				else if ( items.getRemainingQuantity() == 0 ) {
 					// Manager didn't change this row's product and it's empty
-					instructions.add("Add " + vm.getCurrentLayout().getDepth()
-						+ " " + items.getProduct().getName() 
-						+ " to location " + i + ", " + j);
+					instructions.put(count++, new Pair(("Add " + 
+						vm.getCurrentLayout().getDepth()+ " " 
+						+ items.getProduct().getName() 
+						+ " to location " + i + ", " + j), false) );
 				}
 				else if ( !items.getProduct().equals( 
 					nextItems.getProduct() ) ) {
 					// next products not the same	
-					instructions.add("Remove all from " +
-						i + ", " + j);	
-					instructions.add("Add " + 
+					instructions.put(count++, new Pair(("Remove all from " +
+						i + ", " + j), true) );	
+					instructions.put(count++, new Pair(("Add " + 
 						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
-						+ " to location " + i + ", " + j);
+						+ " to location " + i + ", " + j), false) );
 				}
 				} catch ( Exception databaseProblem ) {
 					ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
@@ -103,49 +136,66 @@ public class RestockerTaskListScreen {
 
 	/**
 	 * gets the current list of instructions that remain
-	 * @return String[] the list of instructions
+	 * @return HashMap<Integer, Pair<String, Boolean>> the list of instructions and if required
 	 */
-	public String[] getInstructions() {
-		return instructions.toArray(new String[0]);
+	public HashMap<Integer, Pair<String, Boolean>> getInstructions() {
+		return instructions;
 	}
 
 	/** 
 	 * removes the specified instruction from the list of instuctions
-	 * @param id the id of the instruction being removed
+	 * @param id the id of the instruction being removed - gotten from a list
 	 * @return boolean whether it succeeded
 	 */
 	public boolean removeInstruction( int id ) {
 		Row[][] rows = status.getRows();
-		String inst = instructions.get( id );
+		Pair it = instructions.get( id );
+		String inst = (String)it.first;
 		if ( inst.startsWith("Remove") ) {
 			//remove all from 'i', 'j'
-			inst = inst.substring( 15 );
-			inst.replace(',', ' ');
-			int i = 0;
-			for ( i = 0; i < inst.length(); ++i ) {
-				if ( inst.charAt( i ) == ' ' )
-					break;
-			}
-			int x = Integer.parseInt( inst.substring(0, i) );
-			int y = Integer.parseInt( inst.substring(i) );
-			rows[x][y] = null;
-		}
-		else {
-			//add 'depth' 'name' to location 'i', 'j'
-			inst.replace(',', ' ');
+			String next = inst.replace(',', ' ');
 			try {
-				String[] split = inst.split("\\s+");
-				int x = Integer.parseInt( split[5] );
-				int y = Integer.parseInt( split[6] );
-				rows[x][y].setProduct( vm.getNextLayout().getRows()[x][y].getProduct() );
-				rows[x][y].setRemainingQuantity( Integer.parseInt( split[2] ) );
+				String[] split = next.split("\\s+");
+				int i;
+				for ( i = 0; i < split.length; i++ ) {
+					if ( split[i].equals("from") )
+						break;
+				}
+				int x = Integer.parseInt( split[i + 1] );
+				int y = Integer.parseInt( split[i + 2] );
+				rows[x][y] = null;
+			} catch (PatternSyntaxException ex) {
+				System.err.println("You see nothing.");
+			}
+		}
+		else if ( inst.startsWith("Add") ) {
+			//add 'depth' 'name' to location 'i', 'j'
+			String next = inst.replace(',', ' ');
+			try {
+				String[] split = next.split("\\s+");
+				int i;
+				for ( i = 0; i < split.length; i++ ) {
+					if ( split[i].equals("location") )
+						break;
+				}
+				int x = Integer.parseInt( split[i + 1] );
+				int y = Integer.parseInt( split[i + 2] );
+				if ( rows[x][y] != null )
+					return false; // Don't add to non null rows
+				FoodItem prod = vm.getNextLayout().getRows()[x][y].getProduct();
+				int quantity = Integer.parseInt( split[1] );
+				GregorianCalendar cal = new GregorianCalendar();
+				cal.add(cal.DAY_OF_YEAR, (int)prod.getFreshLength());
+				rows[x][y] = new Row( vm.getNextLayout().getRows()[x][y].getProduct(), quantity, cal );
 			} catch (PatternSyntaxException ex) {
 				System.err.println("You see nothing.");
 			} catch (BadArgumentException impossible) {
 				ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, impossible);
 				return false;
 			}
-		}
+		} else {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, new Exception("How did we accidentally do the wrong command?") );
+		}	
 		instructions.remove( id );
 		try {
 			status = new VMLayout( rows, status.getDepth() );
@@ -161,10 +211,12 @@ public class RestockerTaskListScreen {
 	 * @return boolean if the stocking was successfully finished
 	 */
 	public boolean completeStocking() {
-		if ( instructions.size() == 0 ) 
-			vm.swapInNextLayout( status );
-		else
-			return false;
+		checkRows();
+		for ( Pair<String, Boolean> next : instructions.values() ) {
+			if ( next.second )
+				return false;
+		}
+		vm.swapInNextLayout( status );
 		try
 		{
 			db.updateOrCreateVendingMachine( vm );
