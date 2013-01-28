@@ -45,7 +45,6 @@ public class ManagerHomeScreen {
 
 	/**
 	 * alter the layout of a given machine
-	 * @param vm The vending machine
 	 * @return the alter layout screen for the machine, or <tt>null</tt> on failure
 	 */
 	public ManagerAlterLayoutScreen alterLayout() {

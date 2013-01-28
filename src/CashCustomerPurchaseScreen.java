@@ -1,7 +1,7 @@
 /**
  * This is the class for the cash handling screen.
  * @author Kyle Savarese
- * @contributor Piper Chester  
+ * @author Piper Chester  
  */
 
 public class CashCustomerPurchaseScreen extends CustomerPurchaseScreen {
