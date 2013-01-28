@@ -135,7 +135,7 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		else if (source == stockedItemsButton)
 		{
 			ManagerStockedItemsScreen next = controller.manageItems();
-			// Do stuff
+			master.pushContentPanel(new ManagerStockedItemsScreenGUI(next, master));
 		}
 		else if (source == layoutButton)
 		{
