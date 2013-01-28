@@ -9,6 +9,12 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * Content panel for the restocker task machine picker screen.
@@ -20,20 +26,31 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 	 * Controller instance for this screen.
 	 **/
 	private RestockerMachinePickerScreen controller;
-	
 
 	/**
-	 * Array of tasks to perform.
+	 * Master for this panel.
 	 */
-	private String[] tasks;
+	private BaseGUI master;
+
+	/**
+	 * List of machines.
+	 */
+	private JList machines;
+
 
 	/**
 	 * Creates the panel with the given controller instance.
 	 * @param controller The controller instance to use.
 	 **/
-	public RestockerMachinePickerScreenGUI(RestockerMachinePickerScreen controller)
+	public RestockerMachinePickerScreenGUI(RestockerMachinePickerScreen controller, BaseGUI master)
 	{
+		this.master = master;
 		this.controller = controller;
+
+		machines = new JList(controller.listActiveMachines().toArray());
+		
+		master.getStatusBar().setStatus("Need to Restock", StatusBar.STATUS_GOOD_COLOR);
+
 		addComponents();
 	}
 
@@ -64,7 +81,11 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		// Gap between label and text box
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
+		// Add a scroll pane
+		JScrollPane scrollPanel = new JScrollPane(machines);
+		this.add(scrollPanel);		
 
+	
 		// Add box id label and text box to login panel
 		idPanel.setMaximumSize(idPanel.getPreferredSize());
 		loginPanel.add(idPanel);
@@ -80,28 +101,6 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		loginButtonPanel.add(Box.createGlue());
 
 		
-		// Make the id text field notify the login button when it is changed
-	//	final ConditionButton temp = loginButton;
-	//	idTextField.getDocument().addDocumentListener(new DocumentListener()
-	//	{
-	//		@Override
-	//		public void changedUpdate(DocumentEvent e)
-	//		{
-	//		}
-
-	//		@Override
-	//		public void insertUpdate(DocumentEvent e)
-	//		{
-	//			temp.checkAndSetEnabled();
-	//		}
-
-	//		@Override
-	//		public void removeUpdate(DocumentEvent e)
-	//		{
-	//			temp.checkAndSetEnabled();
-	//		}
-	//	});
-
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
 		this.add(loginPanel);
@@ -117,8 +116,37 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		this.add(Box.createRigidArea(new Dimension(50,0)));
 
 		// Done button
-		JButton doneButton = new JButton("Done");
+		ConditionButton doneButton = new ConditionButton("Done");
 		this.add(doneButton);
+
+		
+		doneButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e){
+				master.getStatusBar().setStatus("" + machines.getSelectedValue()); 
+			}
+		});
+
+		final JList machineFinal = machines;
+
+		doneButton.addCondition(new ConditionButtonCondition()
+		{
+			public boolean checkCondition(){
+				return machineFinal.getSelectedValue() != null;		
+			}
+		});
+
+		
+		final ConditionButton doneButtonFinal = doneButton;
+
+		machines.addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e){
+				doneButtonFinal.checkAndSetEnabled();
+			}
+		});
+
+		
 
 		JPanel toDoPanel = new JPanel();
 		toDoPanel.setLayout(new BoxLayout(toDoPanel, BoxLayout.Y_AXIS));

@@ -7,7 +7,7 @@
 public class ControllerExceptionHandler
 {
 	/** Controls the minimum verbosity level on which the system will act. */
-	public static final Verbosity VERBOSITY=Verbosity.ERROR;
+	public static final Verbosity VERBOSITY=Verbosity.INFO;
 
 	/** The possible verbosities levels. */
 	public static enum Verbosity

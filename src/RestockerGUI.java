@@ -11,9 +11,9 @@ public class RestockerGUI
 	public static void main(String[] args) throws Exception
 	{
 		GUIUtilities.setNativeLookAndFeel();
-		BaseGUI base = new BaseGUI("Restocker Task List Screen");
-		RestockerMachinePickerScreen controller = RestockerMachinePickerScreen.buildInstance();
-		RestockerMachinePickerScreenGUI gui = new RestockerMachinePickerScreenGUI(controller);
+		BaseGUI base = new BaseGUI("Restocker Machine Picker Screen");
+		RestockerMachinePickerScreen controller = new  RestockerMachinePickerScreen();
+		RestockerMachinePickerScreenGUI gui = new RestockerMachinePickerScreenGUI(controller, base);
 		base.pushContentPanel(gui);
 		base.displayGUI();
 	}
