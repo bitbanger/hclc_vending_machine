@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.Collections;
 
 /**
- * CustomerPurchaseScreen.
- * The screen that presents the purchasing options to the customer.
+ *
+ * 1/3/2012
  * @author Kyle Savarese
  * 
+ * CustomerPurchaseScreen
  */
+
 public class CustomerPurchaseScreen {
 	
 	/** The Database instance */
@@ -23,7 +25,7 @@ public class CustomerPurchaseScreen {
 	private VendingMachine machine;
 
 	/** 
-	 * The Standard CustomerPurchaseScreen constructor.
+	 * The Standard CustomerPurchaseScreen constructor
 	 * @param cust the current customer
 	 * @param vm the VendingMachine the user is at
 	 */
@@ -33,7 +35,7 @@ public class CustomerPurchaseScreen {
 	}
 
 	/** 
-	 * Lists the layout of all the items still available for sale.
+	 * lists the layout of all the items still available for sale.
 	 * Those items that have sold out are delivered as <tt>null</tt>s.
 	 * @return the layout of items
  	 */
@@ -52,7 +54,7 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
-	 * Attempts to purchase the item at the specified location.
+	 * attempts to purchase the item at the specified location
 	 * @param product the location (as a Pair of Integers) of the product
 	 * @return a reason why it either succeded or failed.  If success, returns "GOOD"
  	 */
@@ -74,6 +76,7 @@ public class CustomerPurchaseScreen {
 		int price = item.getPrice();
 		if ( cash < price )
 			return "INSUFFICIENT FUNDS"; //insufficient funds
+		// otherwise we're good
 		
 		try
 		{
@@ -139,7 +142,7 @@ public class CustomerPurchaseScreen {
 	}
 
 	/**
-	 * Gets the current balance of the user.
+	 * gets the current balance of the user
 	 * @return the amount of money available
 	 */
 	public int getBalance() {
