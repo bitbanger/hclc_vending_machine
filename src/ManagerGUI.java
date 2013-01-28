@@ -16,7 +16,7 @@ public class ManagerGUI
 	public static void main(String[] args) throws Exception
 	{
 		GUIUtilities.setNativeLookAndFeel();
-		BaseGUI base = new BaseGUI("Manager Login Screen");
+		BaseGUI base = new BaseGUI("Manager GUI");
 		ManagerLoginScreen controller = new ManagerLoginScreen();
 		ManagerLoginScreenGUI gui = new ManagerLoginScreenGUI(controller, base);
 		base.pushContentPanel(gui);

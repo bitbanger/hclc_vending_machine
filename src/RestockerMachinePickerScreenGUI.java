@@ -74,10 +74,6 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		JPanel idPanel = new JPanel();
 		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
 
-		// Label for customer id text box
-		JLabel idLabel = new JLabel("Requested Changes");
-		idPanel.add(idLabel);
-
 		// Gap between label and text box
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
@@ -119,7 +115,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		ConditionButton doneButton = new ConditionButton("Done");
 		this.add(doneButton);
 
-		
+		// Displays task into status bar	
 		doneButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e){
@@ -127,8 +123,8 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 			}
 		});
 
+		// Checks the condition of the done button
 		final JList machineFinal = machines;
-
 		doneButton.addCondition(new ConditionButtonCondition()
 		{
 			public boolean checkCondition(){
@@ -137,8 +133,8 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		});
 
 		
+		// Grays out button if need be
 		final ConditionButton doneButtonFinal = doneButton;
-
 		machines.addListSelectionListener(new ListSelectionListener()
 		{
 			public void valueChanged(ListSelectionEvent e){
@@ -146,11 +142,8 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 			}
 		});
 
-		
-
 		JPanel toDoPanel = new JPanel();
 		toDoPanel.setLayout(new BoxLayout(toDoPanel, BoxLayout.Y_AXIS));
 		toDoPanel.setAlignmentX(RIGHT_ALIGNMENT);
-
 	}
 }

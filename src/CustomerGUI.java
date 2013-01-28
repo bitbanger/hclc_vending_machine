@@ -11,7 +11,7 @@ public class CustomerGUI
 	public static void main(String[] args) throws Exception
 	{
 		GUIUtilities.setNativeLookAndFeel();
-		BaseGUI base = new BaseGUI("Customer Login Screen");
+		BaseGUI base = new BaseGUI("Customer GUI");
 		CustomerLoginScreen controller = CustomerLoginScreen.buildInstance(Integer.parseInt(args[0]));
 		CustomerLoginScreenGUI gui = new CustomerLoginScreenGUI(controller, base);
 		base.pushContentPanel(gui);

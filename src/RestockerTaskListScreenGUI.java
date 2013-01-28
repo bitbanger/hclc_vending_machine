@@ -57,9 +57,6 @@ public class RestockerTaskListScreenGUI extends JPanel
 		JPanel idPanel = new JPanel();
 		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
 
-		// Label for customer id text box
-		JLabel idLabel = new JLabel("Requested Changes");
-		idPanel.add(idLabel);
 
 		// Gap between label and text box
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -78,29 +75,6 @@ public class RestockerTaskListScreenGUI extends JPanel
 
 		// Aligns the button to the right
 		loginButtonPanel.add(Box.createGlue());
-
-		
-		// Make the id text field notify the login button when it is changed
-	//	final ConditionButton temp = loginButton;
-	//	idTextField.getDocument().addDocumentListener(new DocumentListener()
-	//	{
-	//		@Override
-	//		public void changedUpdate(DocumentEvent e)
-	//		{
-	//		}
-
-	//		@Override
-	//		public void insertUpdate(DocumentEvent e)
-	//		{
-	//			temp.checkAndSetEnabled();
-	//		}
-
-	//		@Override
-	//		public void removeUpdate(DocumentEvent e)
-	//		{
-	//			temp.checkAndSetEnabled();
-	//		}
-	//	});
 
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
@@ -125,7 +99,6 @@ public class RestockerTaskListScreenGUI extends JPanel
 		toDoPanel.setAlignmentX(RIGHT_ALIGNMENT);
 
 		tasks = controller.assembleStockingList();
-
 
 		JLabel toDoLabel = new JLabel(tasks[0]);
 		toDoPanel.add(toDoLabel);
