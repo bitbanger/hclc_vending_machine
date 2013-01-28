@@ -7,6 +7,7 @@ import java.util.Vector;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
 import java.awt.Dimension;
+import javax.swing.JScrollPane;
 
 /**
  * Screen that allows the manager to manage machines
@@ -104,7 +105,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		
 		machineList.setListData(new Vector<VendingMachine>(controller.listMachinessAll()));
 		machineList.setMaximumSize(new Dimension((int)machineList.getPreferredSize().getHeight(), Integer.MAX_VALUE));
-		add(machineList);
+		add(new JScrollPane(machineList));
 	}
 
 	private void addLogic()
