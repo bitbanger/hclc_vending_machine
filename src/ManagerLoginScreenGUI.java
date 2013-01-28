@@ -198,11 +198,8 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 			idTextField.setText("");
 			passTextField.setText("");
 
-			// Set up the next screen
-			//CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master);
-
-			// Display the next screen
-			//master.pushContentPanel(nextGUI);
+			ManagerHomeScreenGUI nextGUI = new ManagerHomeScreenGUI(next, master);
+			master.pushContentPanel(nextGUI);
 		}
 	}
 }
