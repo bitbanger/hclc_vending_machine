@@ -194,8 +194,9 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		}
 		else
 		{
-			// Clear the id text
+			// Clear the id and password text
 			idTextField.setText("");
+			passTextField.setText("");
 
 			// Set up the next screen
 			//CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master);
