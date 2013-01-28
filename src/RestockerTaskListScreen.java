@@ -83,12 +83,12 @@ public class RestockerTaskListScreen {
 				if ( next[i][j] == null ) {
 					if ( cur[i][j] != null && 
 						cur[i][j].getRemainingQuantity() != 0 )
-						instructions.put(count++, new Pair(("Remove " +
+						instructions.put(count++, new Pair<String, Boolean>(("Remove " +
 						"all from " + i+ ", " + j), false) );
 					continue;
 				}
 				if ( cur[i][j] == null ) {
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						next[i][j].getRemainingQuantity()
 						+ " " + next[i][j].getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
@@ -103,16 +103,16 @@ public class RestockerTaskListScreen {
 				try {
 				if ( exp.before( nextVisit ) ) {
 					// expiration
-					instructions.put(count++, new Pair(("Remove all from " +
+					instructions.put(count++, new Pair<String, Boolean>(("Remove all from " +
 						i + ", " + j), true) );	
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
 				}
 				else if ( items.getRemainingQuantity() == 0 ) {
 					// Manager didn't change this row's product and it's empty
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						vm.getCurrentLayout().getDepth()+ " " 
 						+ items.getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
@@ -120,9 +120,9 @@ public class RestockerTaskListScreen {
 				else if ( !items.getProduct().equals( 
 					nextItems.getProduct() ) ) {
 					// next products not the same	
-					instructions.put(count++, new Pair(("Remove all from " +
+					instructions.put(count++, new Pair<String, Boolean>(("Remove all from " +
 						i + ", " + j), true) );	
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
