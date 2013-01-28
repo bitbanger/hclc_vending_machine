@@ -1,6 +1,6 @@
 import java.util.Collection;
 import java.util.Scanner;
-
+import java.util.HashMap;
 /**
  * CLI for the Restocker's perspective.
  * Provides an entry point for the Restocker.
@@ -25,27 +25,34 @@ public class RestockerCLI {
 	 * @param restockerTaskListScreen The state of the RestockerTaskListScreen
 	 */
 	private static void listTasks(RestockerTaskListScreen restockerTaskListScreen) {
-		String[] tasks;
+		HashMap<Integer, Pair<String, Boolean>> tasks;
 
 		CLIUtilities.printTitle("List of Tasks to Perform");
 	
-		tasks = restockerTaskListScreen.assembleStockingList();
+		tasks = restockerTaskListScreen.getInstructions();
 
-		for (String task : tasks)
-			System.out.println(task);
+		for ( Integer task : tasks.keySet() ) {
+			System.out.print(task + ": " + tasks.get(task).first);
+			if ( !tasks.get(task).second )
+				System.out.print("\tREQUIRED");
+			System.out.println();
+		}
 
 		while(true) {
-			String response = CLIUtilities.prompt("Please enter DONE when the tasks are completed, or QUIT to quit");
-
-			if(response.toLowerCase().equals("done")) {
-				restockerTaskListScreen.completeStocking();
-				System.out.println("========\nRestocking completed.");
-				break;
-			}
-
-			if(response.toLowerCase().equals("quit")) {
+			int response = CLIUtilities.promptInt("Enter the number of the instruction completed, 0 to attempt to finish, or -1 to quit", new MinValueNumberFormat( -1 ) );
+			if ( response == 0 ) {
+				boolean done = restockerTaskListScreen.completeStocking();
+				if ( done ) {
+					System.out.println("========\nRestocking completed.");
+					break;
+				} else {
+					System.out.println("========\nRestocking not yet complete, please finish all required tasks.");
+				}
+			} else if ( response == -1 ) {
 				System.out.println("========\nRestocking NOT completed.");
 				break;
+			} else {
+				restockerTaskListScreen.removeInstruction( response );
 			}
 		}
 

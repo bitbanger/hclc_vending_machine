@@ -10,6 +10,8 @@ import java.awt.BorderLayout;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 
+import java.util.HashMap;
+
 /**
  * Content panel for the restocker task list.
  * @author Piper Chester
@@ -25,7 +27,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 	/**
 	 * Array of tasks to perform.
 	 */
-	private String[] tasks;
+	private HashMap<Integer, Pair<String, Boolean>> tasks;
 
 	/**
 	 * Creates the panel with the given controller instance.
@@ -98,9 +100,10 @@ public class RestockerTaskListScreenGUI extends JPanel
 		toDoPanel.setLayout(new BoxLayout(toDoPanel, BoxLayout.Y_AXIS));
 		toDoPanel.setAlignmentX(RIGHT_ALIGNMENT);
 
-		tasks = controller.assembleStockingList();
+		tasks = controller.getInstructions();
 
-		JLabel toDoLabel = new JLabel(tasks[0]);
-		toDoPanel.add(toDoLabel);
+		//JLabel toDoLabel = new JLabel(tasks);
+		// Yo you should uncomment this thing
+		//toDoPanel.add(toDoLabel);
 	}
 }
