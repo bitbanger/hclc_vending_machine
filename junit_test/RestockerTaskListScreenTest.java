@@ -50,6 +50,7 @@ public class RestockerTaskListScreenTest {
 		ArrayList<String> inst = new ArrayList<String>();
 		for ( Pair<String, Boolean> in : bla.values() ) {
 			inst.add( in.first );
+			//System.out.println(in.first);
 		}
 
 		ArrayList<String> counter = new ArrayList<String>();
