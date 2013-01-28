@@ -42,9 +42,21 @@ public class ManagerStockedItemsScreen {
 	 * @return the id of the added item, or <tt>FAILURE_KEY</tt> on failure
  	 */
 	public int addItem( String name, int price, long freshLength ) {
+		return addItem(name, price, freshLength, true);
+	}
+	
+	/**
+	 * adds an item to the collection, including setting its activation status.
+	 * @param name the name of the item
+	 * @param price the price in cents
+	 * @param freshLength the amount of time the item stays fresh
+	 * @param activated whether the item should be available for purchase
+	 * @return the id of the added item, or <tt>FAILURE_KEY</tt> on failure
+ 	 */
+	public int addItem( String name, int price, long freshLength, boolean activated ) {
 		try
 		{
-			FoodItem next = new FoodItem( name, price, freshLength );
+			FoodItem next = new FoodItem( name, price, freshLength, activated );
 			db.updateOrCreateFoodItem( next );
 			stockpile.add( next );
 			return next.getId();
