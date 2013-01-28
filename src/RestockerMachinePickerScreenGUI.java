@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.JList;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -41,6 +42,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 	/**
 	 * Creates the panel with the given controller instance.
 	 * @param controller The controller instance to use.
+	 * @param master The frame surrounding the panel
 	 **/
 	public RestockerMachinePickerScreenGUI(RestockerMachinePickerScreen controller, BaseGUI master)
 	{
@@ -48,6 +50,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		this.controller = controller;
 
 		machines = new JList(controller.listActiveMachines().toArray());
+		machines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		master.getStatusBar().setStatus("Need to Restock", StatusBar.STATUS_GOOD_COLOR);
 
