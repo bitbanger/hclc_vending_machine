@@ -14,7 +14,7 @@ import javax.swing.event.DocumentEvent;
  * Content panel for the restocker task list.
  * @author Piper Chester
  **/
-public class RestockerTaskListGUI extends JPanel
+public class RestockerTaskListScreenGUI extends JPanel
 {
 	/**
 	 * Controller instance for this screen.
@@ -31,7 +31,7 @@ public class RestockerTaskListGUI extends JPanel
 	 * Creates the panel with the given controller instance.
 	 * @param controller The controller instance to use.
 	 **/
-	public RestockerTaskListGUI(RestockerTaskListScreen controller)
+	public RestockerTaskListScreenGUI(RestockerTaskListScreen controller)
 	{
 		this.controller = controller;
 		addComponents();

@@ -12,8 +12,8 @@ public class RestockerGUI
 	{
 		GUIUtilities.setNativeLookAndFeel();
 		BaseGUI base = new BaseGUI("Restocker Task List Screen");
-		RestockerTaskListScreen controller = RestockerTaskListScreen.buildInstance(Integer.parseInt(args[0]));
-		RestockerTaskListGUI gui = new RestockerTaskListGUI(controller);
+		RestockerMachinePickerScreen controller = RestockerMachinePickerScreen.buildInstance();
+		RestockerMachinePickerScreenGUI gui = new RestockerMachinePickerScreenGUI(controller);
 		base.pushContentPanel(gui);
 		base.displayGUI();
 	}
