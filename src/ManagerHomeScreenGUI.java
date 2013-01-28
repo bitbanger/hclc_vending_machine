@@ -150,7 +150,8 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		else if (source == machinesButton)
 		{
 			ManagerMachineManagementScreen next = controller.manageMachines();
-			// Do stuff
+			ManagerMachineManagementScreenGUI nextGUI = new ManagerMachineManagementScreenGUI(next, master);
+			master.pushContentPanel(nextGUI);
 		}
 		else if (source == logoutButton)
 		{
