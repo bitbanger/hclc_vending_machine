@@ -74,6 +74,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		exitButton = new JButton("Back To Home");
 
 		addComponents();
+		addLogic();
 	}
 	
 	/**
@@ -106,12 +107,27 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		add(machineList);
 	}
 
+	private void addLogic()
+	{
+		addMachineButton.addActionListener(this);
+		deactivateButton.addActionListener(this);
+		reactivateButton.addActionListener(this);
+		locationButton.addActionListener(this);
+		exitButton.addActionListener(this);
+	}
+
 	/**
 	 * Handles the buttons getting pressed.
+	 * @param event Contains information regarding the event.
 	 **/
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-
+		Object source = event.getSource();
+		if (source == exitButton)
+		{
+			master.getStatusBar().clearStatus();
+			master.popContentPanel();
+		}
 	}
 }
