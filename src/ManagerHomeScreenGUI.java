@@ -142,7 +142,8 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		else if (source == layoutButton)
 		{
 			ManagerAlterLayoutScreen next = controller.alterLayout();
-			// Do stuff
+			ManagerAlterLayoutScreenGUI nextGUI = new ManagerAlterLayoutScreenGUI(next, master);
+			master.pushContentPanel(nextGUI);
 		}
 		else if (source == accountsButton)
 		{
