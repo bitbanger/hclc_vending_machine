@@ -183,7 +183,5 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 			
 			selectedModelObj = controller.listFoodItems().get(index);
 		}
-		
-		System.out.println(selectedModelObj.toString());
 	}
 }
