@@ -1,30 +1,27 @@
 import java.util.*;
 
 /**
- * The main home screen for the Manager application. 
+ * 
  * @author Kyle Savarese
  * 
  */
+
 public class ManagerHomeScreen {
 	
-	/** The manager who is working. */
+	/** the manager who is working */
 	private Manager manny;
 
-	/** The database. */
+	/** the database */
 	private static DatabaseLayer db = DatabaseLayer.getInstance();	
 
 	/**
-	 * The base constructor.
+	 * base constructor
 	 * @param man the manager
 	 */
 	public ManagerHomeScreen( Manager man ) {
 		manny = man;
 	}
 
-	/**
-	 * Displays all of the vending machines.
-	 * @return the array list of vending machines to be displayed
-	 */
 	public ArrayList<VendingMachine> displayVendingMachines()
 	{
 		try
@@ -40,15 +37,15 @@ public class ManagerHomeScreen {
 
 
 	/**
-	 * Creates a screen to view statistics.
-	 * @return the screen for the Manager to view the stats.
+	 * create a screen to view stats
 	 */
 	public ManagerReportStatsScreen viewStats() {
 		return new ManagerReportStatsScreen();
 	}
 
 	/**
-	 * Alter the layout of a given machine.
+	 * alter the layout of a given machine
+	 * @param vm The vending machine
 	 * @return the alter layout screen for the machine, or <tt>null</tt> on failure
 	 */
 	public ManagerAlterLayoutScreen alterLayout() {
@@ -61,7 +58,7 @@ public class ManagerHomeScreen {
 	}
 
 	/**
-	 * Manage the items that are in the database.
+	 * manage the items that are in the database
 	 * @return the stocked item screen, or <tt>null</tt> on failure
 	 */
 	public ManagerStockedItemsScreen manageItems() {
@@ -75,7 +72,7 @@ public class ManagerHomeScreen {
 	}
 
 	/**
-	 * Manage machines.
+	 * manage machines
 	 * @return the machine management screen, or <tt>null</tt> on failure
 	 */
 	public ManagerMachineManagementScreen manageMachines() {
@@ -89,7 +86,7 @@ public class ManagerHomeScreen {
 	}
 	
 	/**
-	 * Manage users.
+	 * manage users
 	 * @return the user management screen
 	 */
 	public ManagerUserAccountsScreen manageUsers() {
