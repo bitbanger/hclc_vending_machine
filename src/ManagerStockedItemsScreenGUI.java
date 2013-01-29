@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -38,6 +39,9 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 	/** Field for shelf length. */
 	private NumberField freshnessField;
 
+	/** Control for en/disabling items. */
+	private JCheckBox enableBox;
+
 	/** Button for updating the selected item. */
 	private ConditionButton updateSelected;
 
@@ -57,6 +61,8 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		nameField=new JTextField();
 		priceField=new MoneyField(master.getStatusBar());
 		freshnessField=new NumberField(NumberField.POSITIVE_Z);
+		enableBox=new JCheckBox("Enabled for sale");
+		enableBox.setSelected(true);
 		updateSelected=new ConditionButton("Update selected item");
 		addNew=new ConditionButton("Add new item");
 		products=new JList(controller.listItems().toArray());
@@ -83,6 +89,7 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		controls.add(priceField);
 		controls.add(new JLabel("Item fresh length"));
 		controls.add(freshnessField);
+		controls.add(enableBox);
 		controls.add(updateSelected);
 		controls.add(addNew);
 		add(controls, BorderLayout.WEST);
@@ -119,6 +126,7 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 					nameField.setText(chosen.getName());
 					priceField.setText(String.valueOf((double)chosen.getPrice()/100));
 					freshnessField.setText(String.valueOf(chosen.getFreshLength()));
+					enableBox.setSelected(chosen.isActive());
 				}
 			}
 		});
@@ -173,6 +181,7 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 			String name=nameField.getText();
 			int price=priceField.getMonetaryAmount();
 			int freshness=Integer.parseInt(freshnessField.getText());
+			boolean enablement=enableBox.isSelected();
 			
 			if(e.getSource().equals(updateSelected))
 			{
@@ -180,15 +189,17 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 				controller.changeItemName(chosen, name);
 				controller.changeItemPrice(chosen, price);
 				controller.changeItemFreshLength(chosen, freshness);
+				controller.changeItemStatus(chosen, enablement);
 			}
 			else //addNew button hit
-				controller.addItem(name, price, freshness);
+				controller.addItem(name, price, freshness, enablement);
 			
 			products.setListData(controller.listItems().toArray());
 			products.clearSelection();
 			nameField.setText("");
 			priceField.clearMoneyEntered();
 			freshnessField.setText("");
+			enableBox.setSelected(true);
 		}
 	}
 }
