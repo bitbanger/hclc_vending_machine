@@ -10,7 +10,7 @@ import java.awt.Dimension;
  * Changes the location of a vending machine.
  * @author Matthew Koontz
  **/
-public class ChangeLocationPanel extends JPanel implements ActionListener
+public class ChangeLocationGUI extends JPanel implements ActionListener
 {
 	/**
 	 * Saves the data.
@@ -48,13 +48,13 @@ public class ChangeLocationPanel extends JPanel implements ActionListener
 	private ManagerMachineManagementScreenGUI parent;
 
 	/**
-	 * Creates a new ChangeLocationPanel to change the location of the given vending machine.
+	 * Creates a new ChangeLocationGUI to change the location of the given vending machine.
 	 * @param controller The controller instance for this view.
 	 * @param master The master frame.
 	 * @param machine The machine to change the location for.
 	 * @param parent The parent screen. Used to refresh the list.
 	 **/
-	public ChangeLocationPanel(ManagerMachineManagementScreen controller, BaseGUI master, VendingMachine machine, ManagerMachineManagementScreenGUI parent)
+	public ChangeLocationGUI(ManagerMachineManagementScreen controller, BaseGUI master, VendingMachine machine, ManagerMachineManagementScreenGUI parent)
 	{
 		this.controller=controller;
 		this.master = master;

@@ -215,7 +215,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		// Set location button
 		else if (source == locationButton)
 		{
-			ChangeLocationPanel setLocationPanel = new ChangeLocationPanel(controller, master, (VendingMachine)machineList.getSelectedValue(), this);
+			ChangeLocationGUI setLocationPanel = new ChangeLocationGUI(controller, master, (VendingMachine)machineList.getSelectedValue(), this);
 			master.pushContentPanel(setLocationPanel);
 		}
 
