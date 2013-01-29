@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -34,6 +35,9 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 	
 	/** Button used to show transactions related to the selected element */
 	private JButton showTransactionsButton;
+	
+	/** The model object whose transactions we're going to look up */
+	private ModelBase selectedModelObj;
 	
 	/**
 	 * Constructor for this screen.
@@ -91,11 +95,18 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		
 		// Create the show transactions button and add ourselves as an action listener
 		showTransactionsButton = new JButton("Show Transactions");
+		showTransactionsButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		showTransactionsButton.setAlignmentX(LEFT_ALIGNMENT);
 		
-		//machineList.addActionListener(this);
-		//customerList.addActionListener(this);
-		//itemList.addActionListener(this);
+		// Only one thing should be selected at a time
+		machineList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		customerList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		// Add all listeners
+		machineList.addListSelectionListener(this);
+		customerList.addListSelectionListener(this);
+		itemList.addListSelectionListener(this);
 		showTransactionsButton.addActionListener(this);
 		
 		this.add(Box.createGlue());
@@ -109,6 +120,7 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		this.add(itemList);
 		this.add(Box.createGlue());
 		this.add(showTransactionsButton);
+		this.add(Box.createGlue());
 		
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		
@@ -118,14 +130,35 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource() == showTransactionsButton) {
-			// Show the transaction here
+			ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI transactionsScreen = new ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI(controller, master, selectedModelObj);
+			master.getStatusBar().clearStatus();
+			master.pushContentPanel(transactionsScreen);
 		}
 	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent event) {
-		if(event.getSource() == itemList) {
-			// Currently unimplemented
+		int index = ((JList)event.getSource()).getLeadSelectionIndex();
+		
+		if(event.getSource() == machineList) {
+			customerList.clearSelection();
+			itemList.clearSelection();
+			
+			selectedModelObj = controller.listMachines().get(index);
+			
+		} else if(event.getSource() == customerList) {
+			machineList.clearSelection();
+			itemList.clearSelection();
+			
+			selectedModelObj = controller.listCustomers().get(index);
+			
+		} else if(event.getSource() == itemList) {
+			machineList.clearSelection();
+			customerList.clearSelection();
+			
+			selectedModelObj = controller.listFoodItems().get(index);
 		}
+		
+		System.out.println(selectedModelObj.toString());
 	}
 }
