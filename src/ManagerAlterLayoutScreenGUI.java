@@ -117,17 +117,21 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		commitChangesButton.addActionListener(this);
 		bottomPanel.add(commitChangesButton);
 
-		
-	//	changeRowButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-	//	add(changeRowButton);
+		// Spacing between buttons
+		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
 
-	//	add(Box.createRigidArea(new Dimension(0, 20)));
+		// Empty Row button
+		emptyRowButton = new JButton("Empty Row");
+		emptyRowButton.addActionListener(this);
+		bottomPanel.add(emptyRowButton);
 
-	//	emptyRowButton.addActionListener(this);
-	//	emptyRowButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-	//	add(emptyRowButton);
+		// Spacing between buttons
+		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
 
-	//	add(Box.createRigidArea(new Dimension(0, 20)));
+		// Change Row button
+		changeRowButton = new ConditionButton("Change Row");
+		changeRowButton.addActionListener(this);
+		bottomPanel.add(changeRowButton);
 		
 		//behavior:
 		changeRowButton.addCondition(new ConditionButtonCondition()
