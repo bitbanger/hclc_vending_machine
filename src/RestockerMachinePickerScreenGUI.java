@@ -110,25 +110,47 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		// Cancel button
 		JButton	cancelButton = new JButton("Cancel");
 		this.add(cancelButton);
+		
+		// Exits the screen on cancel
+		cancelButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e){
+				master.setVisible(false);
+				System.exit(1);
+			}
+		});
 
 		// Gap between above and cancel button
 		this.add(Box.createRigidArea(new Dimension(50,0)));
 
 		// Done button
-		ConditionButton doneButton = new ConditionButton("Done");
-		this.add(doneButton);
+		ConditionButton selectButton = new ConditionButton("Select");
+		this.add(selectButton);
 
 		// Displays task into status bar	
-		doneButton.addActionListener(new ActionListener()
+		selectButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e){
 				master.getStatusBar().setStatus("" + machines.getSelectedValue()); 
+				try {
+					RestockerTaskListScreen next = controller.tryMachine( 
+						((VendingMachine)machines.getSelectedValue()).getId());
+					if ( next == null )
+						master.getStatusBar().setStatus("Vending machine not found", StatusBar.STATUS_BAD_COLOR);
+					else {
+						RestockerTaskListScreenGUI nextGUI = new RestockerTaskListScreenGUI( next, master );
+						master.pushContentPanel( nextGUI );
+					}
+				} catch (BadStateException impossible) {
+					System.err.println("oops?");
+					//I can't think of a way around this...
+				}
 			}
 		});
 
 		// Checks the condition of the done button
 		final JList machineFinal = machines;
-		doneButton.addCondition(new ConditionButtonCondition()
+		selectButton.addCondition(new ConditionButtonCondition()
 		{
 			public boolean checkCondition(){
 				return machineFinal.getSelectedValue() != null;		
@@ -137,11 +159,11 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 
 		
 		// Grays out button if need be
-		final ConditionButton doneButtonFinal = doneButton;
+		final ConditionButton selectButtonFinal = selectButton;
 		machines.addListSelectionListener(new ListSelectionListener()
 		{
 			public void valueChanged(ListSelectionEvent e){
-				doneButtonFinal.checkAndSetEnabled();
+				selectButtonFinal.checkAndSetEnabled();
 			}
 		});
 

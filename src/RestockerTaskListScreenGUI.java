@@ -11,7 +11,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 
 import java.util.HashMap;
-
+import java.util.ArrayList;
 /**
  * Content panel for the restocker task list.
  * @author Piper Chester
@@ -23,6 +23,11 @@ public class RestockerTaskListScreenGUI extends JPanel
 	 **/
 	private RestockerTaskListScreen controller;
 	
+	/**
+	 * Master for this panel
+	 */
+	private BaseGUI master;
+	
 
 	/**
 	 * Array of tasks to perform.
@@ -32,10 +37,13 @@ public class RestockerTaskListScreenGUI extends JPanel
 	/**
 	 * Creates the panel with the given controller instance.
 	 * @param controller The controller instance to use.
+	 * @param master the master BaseGUI to use
 	 **/
-	public RestockerTaskListScreenGUI(RestockerTaskListScreen controller)
+	public RestockerTaskListScreenGUI(RestockerTaskListScreen controller, BaseGUI master)
 	{
 		this.controller = controller;
+		this.master = master;
+		tasks = controller.getInstructions();
 		addComponents();
 	}
 
@@ -87,6 +95,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 
 		// Cancel button
 		JButton	cancelButton = new JButton("Cancel");
+		//cancelButton.addActionListener(this);
 		this.add(cancelButton);
 
 		// Gap between above and cancel button
@@ -94,16 +103,24 @@ public class RestockerTaskListScreenGUI extends JPanel
 
 		// Done button
 		JButton doneButton = new JButton("Done");
+		//doneButton.addActionListener(this);
 		this.add(doneButton);
 
 		JPanel toDoPanel = new JPanel();
 		toDoPanel.setLayout(new BoxLayout(toDoPanel, BoxLayout.Y_AXIS));
 		toDoPanel.setAlignmentX(RIGHT_ALIGNMENT);
 
-		tasks = controller.getInstructions();
-
-		//JLabel toDoLabel = new JLabel(tasks);
-		// Yo you should uncomment this thing
+		//tasks=controller.getInstructions();
+		ArrayList<String> insts = new ArrayList<String>();
+		for ( Integer next : tasks.keySet() ) {
+			Pair<String, Boolean> inst = tasks.get(next);
+			if ( inst.second )
+				insts.add(next+": "+inst.first+"\tREQUIRED");
+			else
+				insts.add(next+": "+inst.first);
+		}
+		
+		//JLabel toDoLabel = new JLabel(insts.toArray());
 		//toDoPanel.add(toDoLabel);
 	}
 }
