@@ -113,7 +113,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 	/**
 	 * Refreshes the data in the list.
 	 **/
-	private void refreshList()
+	public void refreshList()
 	{
 		machineList.setListData(new Vector<VendingMachine>(controller.listMachinessAll()));
 	}
@@ -210,6 +210,13 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 				master.getStatusBar().setStatus("Machine reactivated successfully", StatusBar.STATUS_GOOD_COLOR);
 			else
 				master.getStatusBar().setStatus("An error occurred while trying to reactivate the machine", StatusBar.STATUS_BAD_COLOR);
+		}
+
+		// Set location button
+		else if (source == locationButton)
+		{
+			ChangeLocationPanel setLocationPanel = new ChangeLocationPanel(controller, master, (VendingMachine)machineList.getSelectedValue(), this);
+			master.pushContentPanel(setLocationPanel);
 		}
 
 		// Return home button
