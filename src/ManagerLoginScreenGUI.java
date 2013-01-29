@@ -186,7 +186,9 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 	{
 		// Get the next controller
 		ManagerHomeScreen next = controller.tryLogin(Integer.parseInt(idTextField.getText()), new String(passTextField.getPassword()));
-
+		
+		passTextField.setText(""); //clear password
+		
 		// If the credentials didn't use an auth token
 		if (next == null)
 		{
@@ -194,11 +196,9 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		}
 		else
 		{
-			// Clear the id and password text
-			idTextField.setText("");
-			passTextField.setText("");
-
 			ManagerHomeScreenGUI nextGUI = new ManagerHomeScreenGUI(next, master);
+			idTextField.clearNumberEntered(); //clear ID
+			
 			master.pushContentPanel(nextGUI);
 		}
 	}

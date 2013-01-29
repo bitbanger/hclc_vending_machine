@@ -181,7 +181,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 			else
 			{
 				// Clear the id text
-				idTextField.setText("");
+				idTextField.clearNumberEntered();
 
 				// Set up the next screen
 				CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master);
@@ -193,7 +193,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		else if (event.getSource() == cashButton)
 		{
 			CashCustomerPurchaseScreen next = controller.cashLogin();
-			idTextField.setText("");
+			idTextField.clearNumberEntered();
 			CashCustomerPurchaseScreenGUI nextGUI = new CashCustomerPurchaseScreenGUI(next, master);
 			master.pushContentPanel(nextGUI);
 		}

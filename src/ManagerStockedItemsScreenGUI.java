@@ -198,7 +198,7 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 			products.clearSelection();
 			nameField.setText("");
 			priceField.clearMoneyEntered();
-			freshnessField.setText("");
+			freshnessField.clearNumberEntered();
 			enableBox.setSelected(true);
 		}
 	}
