@@ -10,6 +10,12 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+/**
+ * Screen used by ManagerReportStatsScreenGUI to actually view the selected list of transactions.
+ * Please forgive the long class name.
+ * 
+ * @author Lane Lawley <lxl5734@rit.edu>
+ */
 public class ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI extends JPanel implements ActionListener {
 	/** Controller instance */
 	private ManagerReportStatsScreen controller;

@@ -14,8 +14,11 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-
-
+/**
+ * Manager GUI screen to view sale statistics by machine, customer, and specific item.
+ * 
+ * @author Lane Lawley <lxl5734@rit.edu>
+ */
 public class ManagerReportStatsScreenGUI extends JPanel implements ActionListener, ListSelectionListener {
 	
 	/** Controller instance to allow this screen's manipulation of the model */
