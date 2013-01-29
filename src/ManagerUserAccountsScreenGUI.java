@@ -61,6 +61,18 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 		master.getStatusBar().clearStatus();
 		addComponents();
 	}
+
+	/**
+	 * Causes us to refresh ourselves with a sigh.
+	 */
+	public void refreshYourselfYouSmellAweful()
+	{
+		managerList.setListData(controller.listManagers().toArray());
+		customerList.setListData(controller.listCustomers().toArray());
+		managerList.clearSelection();
+		customerList.clearSelection();
+		editSelectionButton.checkAndSetEnabled();
+	}
 	
 	/** Lays out components on the JPanel */
 	private void addComponents() {
