@@ -36,6 +36,9 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 	/** Button used to show transactions related to the selected element */
 	private JButton showTransactionsButton;
 	
+	/** Button used to return to the manager home screen */
+	private JButton returnHomeButton;
+	
 	/** The model object whose transactions we're going to look up */
 	private ModelBase selectedModelObj;
 	
@@ -109,6 +112,22 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		itemList.addListSelectionListener(this);
 		showTransactionsButton.addActionListener(this);
 		
+		// Initially disable the show transactions button
+		showTransactionsButton.setEnabled(false);
+		
+		returnHomeButton = new JButton("Return to Home Screen");
+		returnHomeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		returnHomeButton.setAlignmentX(LEFT_ALIGNMENT);
+		returnHomeButton.addActionListener(this);
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.add(returnHomeButton);
+		buttonPanel.add(showTransactionsButton);
+		buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
+		// Add everything to the visible panel
 		this.add(Box.createGlue());
 		this.add(machineLabel);
 		this.add(machineList);
@@ -119,12 +138,10 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		this.add(itemLabel);
 		this.add(itemList);
 		this.add(Box.createGlue());
-		this.add(showTransactionsButton);
+		this.add(buttonPanel);
 		this.add(Box.createGlue());
 		
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		
-		
 	}
 	
 	@Override
@@ -133,11 +150,19 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 			ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI transactionsScreen = new ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI(controller, master, selectedModelObj);
 			master.getStatusBar().clearStatus();
 			master.pushContentPanel(transactionsScreen);
+		} else if(event.getSource() == returnHomeButton) {
+			master.getStatusBar().clearStatus();
+			master.popContentPanel();
 		}
 	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent event) {
+		// I'm doing this unnecessary check under the assumption that there's more overhead in the setEnabled method
+		if(!showTransactionsButton.isEnabled()) {
+			showTransactionsButton.setEnabled(true);
+		}
+		
 		int index = ((JList)event.getSource()).getLeadSelectionIndex();
 		
 		if(event.getSource() == machineList) {

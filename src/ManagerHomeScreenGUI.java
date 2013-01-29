@@ -130,12 +130,14 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		if (source == statsButton)
 		{
 			ManagerReportStatsScreen next = controller.viewStats();
-			// Do stuff
+			ManagerReportStatsScreenGUI nextGUI = new ManagerReportStatsScreenGUI(next, master);
+			master.pushContentPanel(nextGUI);
 		}
 		else if (source == stockedItemsButton)
 		{
 			ManagerStockedItemsScreen next = controller.manageItems();
-			master.pushContentPanel(new ManagerStockedItemsScreenGUI(next, master));
+			ManagerStockedItemsScreenGUI nextGUI = new ManagerStockedItemsScreenGUI(next, master);
+			master.pushContentPanel(nextGUI);
 		}
 		else if (source == layoutButton)
 		{
