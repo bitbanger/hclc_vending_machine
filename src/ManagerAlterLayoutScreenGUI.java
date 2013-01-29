@@ -1,10 +1,11 @@
 import javax.swing.JPanel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JButton;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * Content panel for the manger's alter layout screen.
@@ -16,6 +17,11 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	 * The controller for this screen.
 	 **/
 	private ManagerAlterLayoutScreen controller;
+
+	/**
+	 * Panel that allows a user to select an item.
+	 */
+	private VMLayoutPanel vmButtons;
 
 	/**
 	 * The frame this panel is in.
@@ -53,12 +59,13 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		this.controller = controller;
 		this.master = master;
 
-		master.getStatusBar().setStatus("Let's alter some layouts", StatusBar.STATUS_GOOD_COLOR);
-
-		changeRowButton = new JButton("Change Row");
-		emptyRowButton = new JButton("Empty Row");
-		commitChangesButton = new JButton("Commit Changes");
-		logoutButton = new JButton("Return to home screen");
+		vmButtons = new VMLayoutPanel(controller.listRows(), false); 
+		
+		
+	//	changeRowButton = new JButton("Change Row");
+	//	emptyRowButton = new JButton("Empty Row");
+	//	commitChangesButton = new JButton("Commit Changes");
+	//	logoutButton = new JButton("Return to home screen");
 
 		addComponents();
 	}
@@ -68,31 +75,51 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	 **/
 	private void addComponents()
 	{
+		// Sets the layout to a vertical layout
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		
-		changeRowButton.addActionListener(this);
-		changeRowButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		add(changeRowButton);
+		// Adds the vending machine layout panel
+		add(vmButtons);
+		
+		// Spacing between panel and bottom controls
+		add(Box.createGlue());
+		add(Box.createRigidArea(new Dimension(0,20)));
 
-		add(Box.createRigidArea(new Dimension(0, 20)));
+		// Panel for bottom controls
+		JPanel bottomPanel = new JPanel();
+		add(bottomPanel);
 
-		emptyRowButton.addActionListener(this);
-		emptyRowButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		add(emptyRowButton);
+		// Horizontal layout for bottom controls
+		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
 
-		add(Box.createRigidArea(new Dimension(0, 20)));
+		// Spacing between label and buttons
+		bottomPanel.add(Box.createGlue());
 
-		commitChangesButton.addActionListener(this);
-		commitChangesButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		add(commitChangesButton);
-
-		add(Box.createRigidArea(new Dimension(0, 20)));
-
+		// Return Home button
+		logoutButton = new JButton("Return Home");
 		logoutButton.addActionListener(this);
-		logoutButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		add(logoutButton);
+		bottomPanel.add(logoutButton);
+
+		// Spacing between buttons
+		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
+
+		// Confim Changes button
+		commitChangesButton = new JButton("Confirm Changes");
+		commitChangesButton.addActionListener(this);
+		bottomPanel.add(commitChangesButton);
+
+		
+	//	changeRowButton.addActionListener(this);
+	//	changeRowButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+	//	add(changeRowButton);
+
+	//	add(Box.createRigidArea(new Dimension(0, 20)));
+
+	//	emptyRowButton.addActionListener(this);
+	//	emptyRowButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+	//	add(emptyRowButton);
+
+	//	add(Box.createRigidArea(new Dimension(0, 20)));
 	}
 
 	/**
@@ -102,21 +129,27 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		Object source = event.getSource();
-		if (source == changeRowButton)
+		JButton source = (JButton)event.getSource();
+		if (source == logoutButton)
 		{
-			// Do stuff
-		}
-		else if (source == emptyRowButton)
-		{
-		}
-		else if (source == commitChangesButton)
-		{
-			// Do stuff
-		}
-		else if (source == logoutButton)
-		{
+			master.getStatusBar().clearStatus();
 			master.popContentPanel();
+			
+		}
+		else
+		{
+			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
+			if (selected == null)
+			{
+				master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
+			}
+
+			//String result = controller.tryPurchase(selected);
+		//	if (result.equals("GOOD"))
+		//	{
+		//		master.
+		//	}
+		
 		}
 	}
 }
