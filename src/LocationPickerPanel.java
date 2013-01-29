@@ -75,7 +75,10 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		businessField = new JTextField();
 		addBusinessButton = new JButton("Add Business");
 		editBusinessButton = new ConditionButton("Edit Business");
-		businesses = new Vector<String>(Arrays.asList(location.getNearbyBusinesses()));
+		if (location != null)
+			businesses = new Vector<String>(Arrays.asList(location.getNearbyBusinesses()));
+		else
+			businesses = new Vector<String>();
 
 		addComponents();
 		addLogic();
@@ -87,8 +90,11 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	 **/
 	private void fillData()
 	{
-		zipCodeField.setText(location.getZipCode()+"");
-		stateField.setText(location.getState());
+		if (location != null)
+		{
+			zipCodeField.setText(location.getZipCode()+"");
+			stateField.setText(location.getState());
+		}
 		refreshData();
 	}
 

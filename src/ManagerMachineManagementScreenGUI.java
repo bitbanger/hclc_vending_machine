@@ -219,6 +219,13 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 			master.pushContentPanel(setLocationPanel);
 		}
 
+		// Add machine button
+		else if (source == addMachineButton)
+		{
+			ManagerMachineManagementScreenAddMachineGUI nextGUI = new ManagerMachineManagementScreenAddMachineGUI(controller, master, this);
+			master.pushContentPanel(nextGUI);
+		}
+
 		// Return home button
 		else if (source == exitButton)
 		{
