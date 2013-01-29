@@ -75,7 +75,7 @@ public class RestockerTaskListScreen {
 	 *	the changes that need to be made
 	 */
 	private void assembleStockingList() {
-		int count = 0;
+		int count = 1;
 		Row[][] cur = vm.getCurrentLayout().getRows();
 		Row[][] next = vm.getNextLayout().getRows();
 		for ( int i = 0; i < cur.length; i++ ) {
@@ -220,6 +220,14 @@ public class RestockerTaskListScreen {
 				return false;
 		}
 		vm.swapInNextLayout( status );
+		for ( Integer inst : instructions.keySet() ) {
+			this.removeInstruction( inst );
+		}
+		try {
+			vm.setNextLayout( status );
+		} catch ( BadArgumentException impossible ) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, impossible);
+		}
 		try
 		{
 			db.updateOrCreateVendingMachine( vm );
