@@ -89,13 +89,12 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		
 		//a way to get back to Kansas:
 		JButton takeMeHome=new JButton("Back to home screen");
-		final BaseGUI deBase=master;
 		add(takeMeHome, BorderLayout.SOUTH);
 		takeMeHome.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent ignored)
 			{
-				deBase.popContentPanel();
+				master.popContentPanel();
 			}
 		});
 		
@@ -109,21 +108,17 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		addNew.addActionListener(complete);
 		
 		//handle selections made via the list:
-		final JList finallyProducts=products;
-		final JTextField finallyName=nameField;
-		final MoneyField finallyPrice=priceField;
-		final NumberField finallyFresh=freshnessField;
 		products.addListSelectionListener(new ListSelectionListener()
 		{
 			public void valueChanged(ListSelectionEvent ignored)
 			{
-				if(!finallyProducts.isSelectionEmpty())
+				if(!products.isSelectionEmpty())
 				{
-					FoodItem chosen=(FoodItem)finallyProducts.getSelectedValue();
+					FoodItem chosen=(FoodItem)products.getSelectedValue();
 					
-					finallyName.setText(chosen.getName());
-					finallyPrice.setText(String.valueOf((double)chosen.getPrice()/100));
-					finallyFresh.setText(String.valueOf(chosen.getFreshLength()));
+					nameField.setText(chosen.getName());
+					priceField.setText(String.valueOf((double)chosen.getPrice()/100));
+					freshnessField.setText(String.valueOf(chosen.getFreshLength()));
 				}
 			}
 		});
@@ -133,14 +128,14 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		{
 			public boolean checkCondition()
 			{
-				return !finallyProducts.isSelectionEmpty() && finallyPrice.areContentsValid() && finallyFresh.areContentsValid();
+				return !products.isSelectionEmpty() && priceField.areContentsValid() && freshnessField.areContentsValid();
 			}
 		});
 		addNew.addCondition(new ConditionButtonCondition()
 		{
 			public boolean checkCondition()
 			{
-				return finallyPrice.areContentsValid() && finallyFresh.areContentsValid();
+				return priceField.areContentsValid() && freshnessField.areContentsValid();
 			}
 		});
 	}
