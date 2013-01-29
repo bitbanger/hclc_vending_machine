@@ -153,13 +153,15 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource()==newManagerButton) {
-			//master.getStatusBar().setStatus("I wish I could make a manager");
 			ManagerUserAccountsScreenChangeManagerPasswordGUI nextGUI = new ManagerUserAccountsScreenChangeManagerPasswordGUI(controller, master, null, this);
 			master.getStatusBar().clearStatus();
 			master.pushContentPanel(nextGUI);
 		}
-		else if(event.getSource()==newCustomerButton)
-			master.getStatusBar().setStatus("I wish I could make a customer");
+		else if(event.getSource()==newCustomerButton) {
+			ManagerUserAccountsScreenCreateCustomerGUI nextGUI = new ManagerUserAccountsScreenCreateCustomerGUI(controller, master, this);
+			master.getStatusBar().clearStatus();
+			master.pushContentPanel(nextGUI);
+		}
 		else //changer button thingy
 		{
 			if(!managerList.isSelectionEmpty()) {
@@ -169,7 +171,7 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 				master.pushContentPanel(nextGUI);
 			}
 			else //customerList isn't empty
-				master.getStatusBar().setStatus("I would call the customer thingy if I could but I can't");
+				master.getStatusBar().setStatus("Customer editing not implemented :(", StatusBar.STATUS_WARN_COLOR);
 		}
 		
 		managerList.clearSelection();

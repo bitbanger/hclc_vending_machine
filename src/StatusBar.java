@@ -20,6 +20,11 @@ public class StatusBar extends JPanel
 	 * Color the status bar will be when reporting errors.
 	 **/
 	public static final Color STATUS_BAD_COLOR = Color.red;
+	
+	/**
+	 * Color the status bar will be when warning the user.
+	 **/
+	public static final Color STATUS_WARN_COLOR = Color.yellow;
 
 	/**
 	 * Label that holds the text for the status bar
