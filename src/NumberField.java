@@ -28,6 +28,9 @@ public class NumberField extends JTextField
 	/** The current validity. */
 	private boolean contentsValid;
 
+	/** Whether we're deliberately overriding validation. */
+	private boolean pleaseDontWorryAboutValidatingThis;
+
 	/**
 	 * This should be called once to point the validation framework at the <tt>StatusBar</tt>.
 	 * @param bar that status bar
@@ -55,6 +58,7 @@ public class NumberField extends JTextField
 		setInputVerifier(new NumberFieldVerifier());
 		getDocument().addDocumentListener((NumberFieldVerifier)getInputVerifier());
 		contentsValid=false; //there *is* no int
+		pleaseDontWorryAboutValidatingThis=false;
 	}
 
 	/**
@@ -65,6 +69,26 @@ public class NumberField extends JTextField
 	{
 		getInputVerifier().verify(null);
 		return contentsValid;
+	}
+
+	/**
+	 * Clears the field gracefully.
+	 * Please use this instead of <tt>setText("")</tt>, which will print a warning to the status bar!
+	 */
+	public void clearNumberEntered()
+	{
+		pleaseDontWorryAboutValidatingThis=true;
+		setText("");
+		pleaseDontWorryAboutValidatingThis=false;
+	}
+
+	/**
+	 * Retrieves the number entered by the user.
+	 * @return dat numbah
+	 */
+	public int getNumber()
+	{
+		return Integer.parseInt(getText());
 	}
 
 	/**
@@ -89,6 +113,12 @@ public class NumberField extends JTextField
 		public boolean verify(JComponent ignored)
 		{
 			int choice;
+			
+			if(pleaseDontWorryAboutValidatingThis)
+			{
+				bar.clearStatus();
+				return true;
+			}
 			
 			try
 			{
