@@ -148,7 +148,7 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		else if (source == accountsButton)
 		{
 			ManagerUserAccountsScreen next = controller.manageUsers();
-			// Do stuff
+			master.pushContentPanel(new ManagerUserAccountsScreenGUI(next, master));
 		}
 		else if (source == machinesButton)
 		{
