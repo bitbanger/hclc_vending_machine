@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Initial screen for a customer's transaction.
  * @author Kyle Savarese
- * @contributor Piper Chester <pwc1203@rit.edu>
+ * @author Piper Chester <pwc1203@rit.edu>
  */
 public class CustomerLoginScreen {
 

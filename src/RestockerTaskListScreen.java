@@ -83,12 +83,12 @@ public class RestockerTaskListScreen {
 				if ( next[i][j] == null ) {
 					if ( cur[i][j] != null && 
 						cur[i][j].getRemainingQuantity() != 0 )
-						instructions.put(count++, new Pair(("Remove " +
+						instructions.put(count++, new Pair<String, Boolean>(("Remove " +
 						"all from " + i+ ", " + j), false) );
 					continue;
 				}
 				if ( cur[i][j] == null ) {
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						next[i][j].getRemainingQuantity()
 						+ " " + next[i][j].getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
@@ -103,26 +103,29 @@ public class RestockerTaskListScreen {
 				try {
 				if ( exp.before( nextVisit ) ) {
 					// expiration
-					instructions.put(count++, new Pair(("Remove all from " +
+					instructions.put(count++, new Pair<String, Boolean>(("Remove all from " +
 						i + ", " + j), true) );	
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
 				}
 				else if ( items.getRemainingQuantity() == 0 ) {
 					// Manager didn't change this row's product and it's empty
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						vm.getCurrentLayout().getDepth()+ " " 
 						+ items.getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
 				}
+				else if ( items.getId() == nextItems.getId() ) {
+					continue; // Manager didn't update the row and other conditions are fine
+				}
 				else if ( !items.getProduct().equals( 
 					nextItems.getProduct() ) ) {
 					// next products not the same	
-					instructions.put(count++, new Pair(("Remove all from " +
+					instructions.put(count++, new Pair<String, Boolean>(("Remove all from " +
 						i + ", " + j), true) );	
-					instructions.put(count++, new Pair(("Add " + 
+					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
 						vm.getCurrentLayout().getDepth()
 						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
@@ -226,29 +229,5 @@ public class RestockerTaskListScreen {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
 		return true;
-	}
-
-	/**
-	 * Builder for use in the view.
-	 * @param id the ID of the <tt>VendingMachine</tt>
-	 * @return an instance representing the task list screen, or <tt>null</tt> in case of trouble
-	 */
-	public static RestockerTaskListScreen buildInstance(int id)
-	{
-		VendingMachine mach=null;
-		try
-		{
-			return new RestockerTaskListScreen(db.getVendingMachineById(id));
-		}
-		//catch(InstantiationException absentInactive) //not found in database (null) or inactive
-	//	{
-	//		ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, absentInactive);
-	//		return null;
-	//	}
-		catch(Exception databaseError) //more serious error came from database
-		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseError);
-			return null;
-		}
 	}
 }
