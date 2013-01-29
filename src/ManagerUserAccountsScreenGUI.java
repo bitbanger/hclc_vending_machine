@@ -52,8 +52,8 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	public ManagerUserAccountsScreenGUI(ManagerUserAccountsScreen controller, BaseGUI master) {
 		this.controller = controller;
 		this.master = master;
-		managerList = new JList(controller.listCustomers().toArray());
-		customerList = new JList(controller.listManagers().toArray());
+		managerList = new JList(controller.listManagers().toArray());
+		customerList = new JList(controller.listCustomers().toArray());
 		editSelectionButton = new ConditionButton("Edit selected user");
 		newManagerButton = new JButton("Create new manager");
 		newCustomerButton = new JButton("Create new customer");
