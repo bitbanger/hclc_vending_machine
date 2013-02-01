@@ -150,12 +150,20 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		else
 		{
 			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
+			String result;
 			if (selected == null)
 			{
-				master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
-				return;
+				FoodItem fav = favoritesPanel.getSelectedItem();
+				if (fav == null)
+				{
+					master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
+					return;
+				}
+				else
+					result = controller.tryPurchase(fav);
 			}
-			String result = controller.tryPurchase(selected);
+			else
+				result = controller.tryPurchase(selected);
 			if (result.equals("GOOD"))
 			{
 				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
