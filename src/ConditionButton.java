@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.JTextField;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  * A button that is enabled iff a all of the conditions in a set are true.
@@ -54,6 +57,10 @@ public class ConditionButton extends JButton
 		conditions.add(condition);
 	}
 
+	/**
+	 * 'Watches' a JTextField by checking our condition when the text changes.
+	 * @param field The JTextField to watch.
+	 **/
 	public void watch(JTextField field)
 	{
 		final ConditionButton me = this;
@@ -72,6 +79,42 @@ public class ConditionButton extends JButton
 
 			@Override
 			public void removeUpdate(DocumentEvent e)
+			{
+				me.checkAndSetEnabled();
+			}
+		});
+	}
+
+	/**
+	 * 'Watches' a JList by checking our conditions when the selected item
+	 * in the list changes.
+	 * @param list The JList to watch.
+	 **/
+	public void watch(JList list)
+	{
+		final ConditionButton me = this;
+		list.addListSelectionListener(new ListSelectionListener()
+		{
+			@Override
+			public void valueChanged(ListSelectionEvent ignored)
+			{
+				me.checkAndSetEnabled();
+			}
+		});
+	}
+
+	/**
+	 * 'Watches' a VMLayoutPanel by checking out conditions whenever the
+	 * selected item may have been changed.
+	 * @param panel The VMLayout panel to watch.
+	 **/
+	public void watch(VMLayoutPanel panel)
+	{
+		final ConditionButton me = this;
+		panel.addVendingMachineItemChangedListener(new VendingMachineItemChangedListener()
+		{
+			@Override
+			public void itemChanged()
 			{
 				me.checkAndSetEnabled();
 			}
