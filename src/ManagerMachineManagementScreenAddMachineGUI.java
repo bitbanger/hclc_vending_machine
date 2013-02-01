@@ -43,40 +43,67 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	private void addComponents()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		locationPicker.setAlignmentY(TOP_ALIGNMENT);
 		add(locationPicker);
 
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+		rightPanel.setAlignmentY(TOP_ALIGNMENT);
+		//rightPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		add(rightPanel);
 
 		JPanel attributePanel = new JPanel();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints con = new GridBagConstraints();
 		attributePanel.setLayout(gridbag);
+		//attributePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		rightPanel.add(attributePanel);
 
 		con.gridwidth = 1;
 		con.gridheight = 1;
-		
-		con.gridx = GridBagConstraints.RELATIVE;
-		attributePanel.add(new JLabel("Stocking interval (days):"), con);
-		con.gridx = GridBagConstraints.REMAINDER;
-		attributePanel.add(stockingIntervalField);
-		
-		con.gridx = GridBagConstraints.RELATIVE;
-		attributePanel.add(new JLabel("Number of rows:"), con);
-		con.gridx = GridBagConstraints.REMAINDER;
-		attributePanel.add(rowField);
-		
-		con.gridx = GridBagConstraints.RELATIVE;
-		attributePanel.add(new JLabel("Number of columns:"), con);
-		con.gridx = GridBagConstraints.REMAINDER;
-		attributePanel.add(colField);
+		con.weightx=1;
+		con.weighty=1;
+		con.fill = GridBagConstraints.HORIZONTAL;
 
-		con.gridx = GridBagConstraints.RELATIVE;
+		con.gridx=0;
+		con.gridy=0;
+		con.weightx=0;
+		attributePanel.add(new JLabel("Stocking interval (days):"), con);
+		con.weightx=1;
+		con.gridx=1;
+		stockingIntervalField.setColumns(20);
+		stockingIntervalField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)stockingIntervalField.getPreferredSize().getHeight()));
+		attributePanel.add(stockingIntervalField, con);
+		
+		con.gridx=0;
+		con.gridy=1;
+		con.weightx=0;
+		attributePanel.add(new JLabel("Number of rows:"), con);
+		con.weightx=1;
+		con.gridx=1;
+		rowField.setColumns(20);
+		rowField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)rowField.getPreferredSize().getHeight()));
+		attributePanel.add(rowField, con);
+		
+		con.gridx=0;
+		con.gridy=2;
+		con.weightx=0;
+		attributePanel.add(new JLabel("Number of columns:"), con);
+		con.weightx=1;
+		con.gridx=1;
+		colField.setColumns(20);
+		colField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)colField.getPreferredSize().getHeight()));
+		attributePanel.add(colField, con);
+
+		con.gridx=0;
+		con.gridy=3;
+		con.weightx=0;
 		attributePanel.add(new JLabel("Depth of machine:"), con);
-		con.gridx = GridBagConstraints.REMAINDER;
-		attributePanel.add(depthField);
+		con.weightx=1;
+		con.gridx=1;
+		depthField.setColumns(20);
+		depthField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)depthField.getPreferredSize().getHeight()));
+		attributePanel.add(depthField, con);
 
 		rightPanel.add(Box.createGlue());
 
@@ -91,6 +118,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		bottomPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		bottomPanel.add(confirmButton);
+
 	}
 
 	@Override
