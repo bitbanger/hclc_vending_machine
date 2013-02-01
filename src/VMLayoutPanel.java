@@ -185,6 +185,25 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	}
 
 	/**
+	 * Clears the selected item
+	 **/
+	public void clearSelection()
+	{
+		selectedRow = null;
+		int height = grid[0].length;
+		int width = grid.length;
+		for (int i=0;i<height;++i)
+		{
+			for (int j=0;j<width;++j)
+			{
+				grid[j][i].setSelected(false);
+			}
+		}
+
+		notifyItemChangedListeners();
+	}
+
+	/**
 	 * Notifies our VendingMachineItemChangedListeners that this VMLayoutPanel
 	 * may have changed.
 	 **/

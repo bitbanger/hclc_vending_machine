@@ -91,6 +91,15 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 		notifyItemChangedListeners();
 	}
 
+	public void clearSelection()
+	{
+		selected = null;
+		for (int i=0;i<buttons.size();++i)
+			buttons.get(i).setSelected(false);
+		notifyItemChangedListeners();
+	}
+
+
 	/**
 	 * Adds a listener to this panel.
 	 * @param listener The listener to add.
