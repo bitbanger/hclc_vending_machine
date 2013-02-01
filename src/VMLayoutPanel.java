@@ -29,6 +29,11 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	private LinkedList<VendingMachineItemChangedListener> itemChangedListeners;
 
 	/**
+	 * Whether this VMLayoutPanel should display in manager mode.
+	 **/
+	private boolean managerMode;
+
+	/**
 	 * Creates a VMLayoutPanel using the given array of items.
 	 * @param items The items to display in this panel.
 	 * @param managerMode If true it will allow the user to select empty rows
@@ -36,10 +41,11 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	 **/
 	public VMLayoutPanel(FoodItem[][] items, boolean managerMode)
 	{
+		this.managerMode = managerMode;
 		itemChangedListeners = new LinkedList<VendingMachineItemChangedListener>();
 		grid = new JToggleButton[items.length][items[0].length];
 		selectedRow = null;
-		addComponents(items, managerMode);
+		addComponents(items);
 	}
 
 	/**
@@ -48,7 +54,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	 * @param managerMode If true it will allow the user to select empty rows
 	 * and rows with deactivated items.
 	 **/
-	private void addComponents(FoodItem[][] items, boolean managerMode)
+	private void addComponents(FoodItem[][] items)
 	{
 		// Allows the panel to expand
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
@@ -59,6 +65,20 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 
 		// Sets the layout to a grid layout
 		setLayout(new GridLayout(height, width, 5, 5));
+		
+		refreshContent(items);
+	}
+
+	/**
+	 * Refreshes the content by displaying the given 2D array of items.
+	 * @param items The food items to display for the user to select.
+	 **/
+	public void refreshContent(FoodItem[][] items)
+	{
+		// height and width
+		int height = items[0].length;
+		int width = items.length;
+		removeAll();
 
 		// Add buttons
 		for (int i=0;i<height;++i)
@@ -98,6 +118,11 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 				add(grid[j][i]);
 			}
 		}
+
+		// Needed to ensure the panel is repainted (don't get me started on
+		// the difficulty of determining which method I needed to call to have
+		// this work).
+		revalidate();
 	}
 	
 
