@@ -193,7 +193,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		}
 
 		// Change row button clicked
-		else if (source == changeRowButton);
+		else if (source == changeRowButton)
 		{
 			// Try the row change
 			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
