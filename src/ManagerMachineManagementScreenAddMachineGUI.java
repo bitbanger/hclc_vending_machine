@@ -107,7 +107,6 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 			@Override
 			public boolean checkCondition()
 			{
-				System.out.println("HERE");
 				return stockingIntervalField.areContentsValid() && rowField.areContentsValid() && colField.areContentsValid() && depthField.areContentsValid();
 			}
 		});
