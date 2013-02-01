@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JScrollPane;
 
 /**
  * Content panel for the manger's alter layout screen.
@@ -67,7 +68,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		this.controller = controller;
 		this.master = master;
 
-		vmButtons = new VMLayoutPanel(controller.listRows(), false); 
+		vmButtons = new VMLayoutPanel(controller.listRows(), true); 
 		stockableItems = new JList(controller.listItems().toArray());
 		
 		
@@ -77,6 +78,33 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	//	logoutButton = new JButton("Return to home screen");
 
 		addComponents();
+		addLogic();
+	}
+
+	/**
+	 * Adds logic to the components.
+	 **/
+	private void addLogic()
+	{
+		// Only show the change row button when an item and a row is selected
+		changeRowButton.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				return !stockableItems.isSelectionEmpty() && vmButtons.getSelectedRow() != null;
+			}
+		});
+
+		// Make the change row button 'watch' the list and layout
+		changeRowButton.watch(stockableItems);
+		changeRowButton.watch(vmButtons);
+
+		// Add action listeners to all of the buttons
+		logoutButton.addActionListener(this);
+		commitChangesButton.addActionListener(this);
+		emptyRowButton.addActionListener(this);
+		changeRowButton.addActionListener(this);
 	}
 
 	/**
@@ -85,18 +113,27 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	private void addComponents()
 	{
 		// Sets the layout to a vertical layout
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
+		add(new JScrollPane(stockableItems));
+
+		add(Box.createGlue());
+		add(Box.createRigidArea(new Dimension(20, 0)));
+
+		JPanel rightSide = new JPanel();
+		rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
+		add(rightSide);
 		
 		// Adds the vending machine layout panel
-		add(vmButtons);
+		rightSide.add(vmButtons);
 		
 		// Spacing between panel and bottom controls
-		add(Box.createGlue());
-		add(Box.createRigidArea(new Dimension(0,20)));
+		rightSide.add(Box.createGlue());
+		rightSide.add(Box.createRigidArea(new Dimension(0,20)));
 
 		// Panel for bottom controls
 		JPanel bottomPanel = new JPanel();
-		add(bottomPanel);
+		rightSide.add(bottomPanel);
 
 		// Horizontal layout for bottom controls
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
@@ -106,7 +143,6 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 
 		// Return Home button
 		logoutButton = new JButton("Return Home");
-		logoutButton.addActionListener(this);
 		bottomPanel.add(logoutButton);
 
 		// Spacing between buttons
@@ -114,7 +150,6 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 
 		// Confim Changes button
 		commitChangesButton = new ConditionButton("Confirm Changes");
-		commitChangesButton.addActionListener(this);
 		bottomPanel.add(commitChangesButton);
 
 		// Spacing between buttons
@@ -122,7 +157,6 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 
 		// Empty Row button
 		emptyRowButton = new JButton("Empty Row");
-		emptyRowButton.addActionListener(this);
 		bottomPanel.add(emptyRowButton);
 
 		// Spacing between buttons
@@ -130,26 +164,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 
 		// Change Row button
 		changeRowButton = new ConditionButton("Change Row");
-		changeRowButton.addActionListener(this);
 		bottomPanel.add(changeRowButton);
-		
-		//behavior:
-		changeRowButton.addCondition(new ConditionButtonCondition()
-		{
-			@Override
-			public boolean checkCondition()
-			{
-				return !stockableItems.isSelectionEmpty();
-			}
-		});
-		stockableItems.addListSelectionListener(new ListSelectionListener()
-		{
-			@Override
-			public void valueChanged(ListSelectionEvent ignored)
-			{
-				changeRowButton.checkAndSetEnabled();
-			}
-		});
 	}
 
 	/**
