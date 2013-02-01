@@ -34,11 +34,6 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	private boolean managerMode;
 
 	/**
-	 * The number of rows in this panel.
-	 **/
-	private int height;
-
-	/**
 	 * Creates a VMLayoutPanel using the given array of items.
 	 * @param items The items to display in this panel.
 	 * @param managerMode If true it will allow the user to select empty rows
@@ -65,7 +60,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
 		// height and width
-		height = items[0].length;
+		int height = items[0].length;
 		int width = items.length;
 
 		// Sets the layout to a grid layout
@@ -81,7 +76,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	public void refreshContent(FoodItem[][] items)
 	{
 		// height and width
-		height = items[0].length;
+		int height = items[0].length;
 		int width = items.length;
 		removeAll();
 
@@ -127,9 +122,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 		// Clear selected row
 		selectedRow = null;
 
-		// Notify all of out listeners that the item has changed
-		for (VendingMachineItemChangedListener listener : itemChangedListeners)
-			listener.itemChanged();
+		notifyItemChangedListeners();
 
 		// Needed to ensure the panel is repainted (don't get me started on
 		// the difficulty of determining which method I needed to call to have
@@ -171,9 +164,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 			}
 		}
 
-		// Notify all of out listeners that the item has changed
-		for (VendingMachineItemChangedListener listener : itemChangedListeners)
-			listener.itemChanged();
+		notifyItemChangedListeners();
 	}
 
 	/**
@@ -190,6 +181,16 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	 **/
 	public int getNumberOfRows()
 	{
-		return height;
+		return grid[0].length;
+	}
+
+	/**
+	 * Notifies our VendingMachineItemChangedListeners that this VMLayoutPanel
+	 * may have changed.
+	 **/
+	private void notifyItemChangedListeners()
+	{
+		for (VendingMachineItemChangedListener listener : itemChangedListeners)
+			listener.itemChanged();
 	}
 }

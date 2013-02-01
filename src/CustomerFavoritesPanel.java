@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
+import java.util.LinkedList;
 
 /**
  * Displays buttons that allow the user to select from frequently bought items.
@@ -27,6 +28,11 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 	private FoodItem selected;
 
 	/**
+	 * List of all of the VendingMachineItemChangedListeners for this panel.
+	 **/
+	private LinkedList<VendingMachineItemChangedListener> itemChangedListeners;
+
+	/**
 	 * Creates a new favorites panel of the given size and displays the given
 	 * favorites.
 	 * @param favorites The favorites to display.
@@ -35,6 +41,7 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 	 **/
 	public CustomerFavoritesPanel(ArrayList<FoodItem> favorites, int maxSize)
 	{
+		itemChangedListeners = new LinkedList<VendingMachineItemChangedListener>();
 		this.favorites = new ArrayList<FoodItem>(favorites);
 		this.selected = null;
 		if (maxSize < this.favorites.size())
@@ -80,6 +87,17 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 				button.setSelected(false);
 			}
 		}
+
+		notifyItemChangedListeners();
+	}
+
+	/**
+	 * Adds a listener to this panel.
+	 * @param listener The listener to add.
+	 **/
+	public void addVendingMachineItemChangedListener(VendingMachineItemChangedListener listener)
+	{
+		itemChangedListeners.add(listener);
 	}
 
 	/**
@@ -88,5 +106,14 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 	public FoodItem getSelectedItem()
 	{
 		return selected;
+	}
+
+	/**
+	 * Notifies our VendingMachineItemChangedListeners that this panel may have changed.
+	 **/
+	private void notifyItemChangedListeners()
+	{
+		for (VendingMachineItemChangedListener listener : itemChangedListeners)
+			listener.itemChanged();
 	}
 }
