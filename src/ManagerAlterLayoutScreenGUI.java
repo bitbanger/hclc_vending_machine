@@ -188,22 +188,18 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		{
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
-			
 		}
-		else
+		else if (source == changeRowButton);
 		{
 			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
-			if (selected == null)
-			{
-				master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
-			}
-
-			//String result = controller.tryPurchase(selected);
-		//	if (result.equals("GOOD"))
-		//	{
-		//		master.
-		//	}
-		
+			int result = controller.queueRowChange(selected, (FoodItem)stockableItems.getSelectedValue());
+			if (result == 0)
+				master.getStatusBar().setStatus("Row changed successfully", StatusBar.STATUS_GOOD_COLOR);
+			else if (result == 1)
+				master.getStatusBar().setStatus("Item expires too soon. Cannot add item.", StatusBar.STATUS_BAD_COLOR);
+			else
+				master.getStatusBar().setStatus("An error occurred while trying to change row.", StatusBar.STATUS_BAD_COLOR);
+			vmButtons.refreshContent(controller.listRows());
 		}
 	}
 }
