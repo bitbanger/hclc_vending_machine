@@ -57,6 +57,9 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		confirmButton.watch(rowField);
 		confirmButton.watch(colField);
 		confirmButton.watch(depthField);
+
+		cancelButton.addActionListener(this);
+		confirmButton.addActionListener(this);
 	}
 
 	private void addComponents()
@@ -141,5 +144,10 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
+		Object source = event.getSource();
+		if (source == cancelButton)
+		{
+			master.popContentPanel();
+		}
 	}
 }
