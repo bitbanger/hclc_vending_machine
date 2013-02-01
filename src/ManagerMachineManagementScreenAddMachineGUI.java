@@ -8,6 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.Box;
 import java.awt.Dimension;
 import javax.swing.JLabel;
+import java.util.ArrayList;
 
 /**
  * Panel that allows a manager to add machines. Used in the machine management
@@ -30,6 +31,12 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	 * The parent GUI for this panel. Used to update parent list upon exit.
 	 **/
 	private ManagerMachineManagementScreenGUI parent;
+
+	/**
+	 * The layout of the machines already in the database. Null if none
+	 * exist.
+	 **/
+	private VMLayout oldLayout;
 
 	/**
 	 * The panel that allows the manager to choose a location.
@@ -117,6 +124,35 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		confirmButton.watch(rowField);
 		confirmButton.watch(colField);
 		confirmButton.watch(depthField);
+
+		// Set the fields if there is already a table in the database
+		ArrayList<VendingMachine> machines = controller.listMachinessAll();
+		if (machines.size() == 0)
+		{
+			oldLayout = null;
+		}
+		else
+		{
+			// Set old layout to the first machine's next layout because all
+			// machines must have the same next layout.
+			VendingMachine machine = machines.get(0);
+			oldLayout = machine.getNextLayout();
+
+			// Get the attributes of the layout
+			int rows = oldLayout.getRows()[0].length;
+			int cols = oldLayout.getRows().length;
+			int depth = oldLayout.getDepth();
+
+			// Display the information to the manager.
+			rowField.setText(rows+"");
+			colField.setText(cols+"");
+			depthField.setText(depth+"");
+
+			// Don't allow him to change the information
+			rowField.setEnabled(false);
+			colField.setEnabled(false);
+			depthField.setEnabled(false);
+		}
 
 		// Set the action listeners of the buttons
 		cancelButton.addActionListener(this);
