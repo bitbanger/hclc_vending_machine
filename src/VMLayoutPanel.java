@@ -34,6 +34,11 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	private boolean managerMode;
 
 	/**
+	 * The number of rows in this panel.
+	 **/
+	private int height;
+
+	/**
 	 * Creates a VMLayoutPanel using the given array of items.
 	 * @param items The items to display in this panel.
 	 * @param managerMode If true it will allow the user to select empty rows
@@ -60,7 +65,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
 		// height and width
-		int height = items[0].length;
+		height = items[0].length;
 		int width = items.length;
 
 		// Sets the layout to a grid layout
@@ -76,7 +81,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	public void refreshContent(FoodItem[][] items)
 	{
 		// height and width
-		int height = items[0].length;
+		height = items[0].length;
 		int width = items.length;
 		removeAll();
 
@@ -178,5 +183,13 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	public void addVendingMachineItemChangedListener(VendingMachineItemChangedListener listener)
 	{
 		itemChangedListeners.add(listener);
+	}
+
+	/**
+	 * @return The number of rows in this panel.
+	 **/
+	public int getNumberOfRows()
+	{
+		return height;
 	}
 }
