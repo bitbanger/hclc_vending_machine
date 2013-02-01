@@ -38,6 +38,8 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 	 **/
 	private JButton purchaseButton;
 
+	private CustomerFavoritesPanel favoritesPanel;
+
 	/**
 	 * Creates the panel using the given arguments.
 	 * @param controller The controller instance for this GUI.
@@ -62,8 +64,17 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		// Sets the layout to a vertical layout
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		add(topPanel);
+
 		// adds the vending machine layout panel
-		add(vmButtons);
+		topPanel.add(vmButtons);
+
+		topPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		
+		favoritesPanel = new CustomerFavoritesPanel(controller.getFrequentlyBought(), vmButtons.getNumberOfRows());
+		topPanel.add(favoritesPanel);
 
 		// Spacing between panel and bottom controls
 		add(Box.createGlue());
