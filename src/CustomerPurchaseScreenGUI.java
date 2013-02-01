@@ -54,6 +54,33 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		master.getStatusBar().setStatus(String.format("Welcome, %s", controller.getUser().getName()), StatusBar.STATUS_GOOD_COLOR);
 
 		addComponents();
+		addLogic();
+	}
+
+	private void addLogic()
+	{
+		vmButtons.addVendingMachineItemChangedListener(new VendingMachineItemChangedListener()
+		{
+			@Override
+			public void itemChanged()
+			{
+			 	if (vmButtons.getSelectedRow() != null)
+					favoritesPanel.clearSelection();
+			}
+		});
+
+		favoritesPanel.addVendingMachineItemChangedListener(new VendingMachineItemChangedListener()
+		{
+			@Override
+			public void itemChanged()
+			{
+				if (favoritesPanel.getSelectedItem() != null)
+					vmButtons.clearSelection();
+			}
+		});
+
+		purchaseButton.addActionListener(this);
+		cancelButton.addActionListener(this);
 	}
 
 	/**
@@ -96,7 +123,6 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 
 		// Cancel button
 		cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(this);
 		bottomPanel.add(cancelButton);
 
 		// Spacing between buttons
@@ -104,7 +130,6 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 
 		// Purchase button
 		purchaseButton = new JButton("Purchase!");
-		purchaseButton.addActionListener(this);
 		bottomPanel.add(purchaseButton);
 
 	}
