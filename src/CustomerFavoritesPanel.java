@@ -91,6 +91,9 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 		notifyItemChangedListeners();
 	}
 
+	/**
+	 * Clears the selected item.
+	 **/
 	public void clearSelection()
 	{
 		selected = null;
