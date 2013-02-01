@@ -119,6 +119,13 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 			}
 		}
 
+		// Clear selected row
+		selectedRow = null;
+
+		// Notify all of out listeners that the item has changed
+		for (VendingMachineItemChangedListener listener : itemChangedListeners)
+			listener.itemChanged();
+
 		// Needed to ensure the panel is repainted (don't get me started on
 		// the difficulty of determining which method I needed to call to have
 		// this work).
