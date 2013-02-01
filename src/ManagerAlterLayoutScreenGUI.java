@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
+import java.awt.GridLayout;
 
 /**
  * Content panel for the manger's alter layout screen.
@@ -148,32 +149,20 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		JPanel bottomPanel = new JPanel();
 		rightSide.add(bottomPanel);
 
-		// Horizontal layout for bottom controls
-		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
-
-		// Spacing between label and buttons
-		bottomPanel.add(Box.createGlue());
-
-		// Return Home button
-		bottomPanel.add(logoutButton);
-
-		// Spacing between buttons
-		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
-
-		// Confirm Changes button
-		bottomPanel.add(commitChangesButton);
-
-		// Spacing between buttons
-		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
+		// Grid layout for bottom controls
+		bottomPanel.setLayout(new GridLayout(2,2,3,3));
 
 		// Empty Row button
 		bottomPanel.add(emptyRowButton);
-
-		// Spacing between buttons
-		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
+		
+		// Confirm Changes button
+		bottomPanel.add(commitChangesButton);
 
 		// Change Row button
 		bottomPanel.add(changeRowButton);
+
+		// Return Home button
+		bottomPanel.add(logoutButton);
 	}
 
 	/**
