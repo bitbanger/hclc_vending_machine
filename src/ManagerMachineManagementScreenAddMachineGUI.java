@@ -279,5 +279,36 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		{
 			master.popContentPanel();
 		}
+
+		// If the confirm button was pressed then add the new machine to the
+		// database, set an appropriate status, and go back to the previous
+		// screen.
+		if (source == confirmButton)
+		{
+			// If the old layout was null then we need to make one from the
+			// manager's input.
+			if (oldLayout == null)
+			{
+				try
+				{
+					oldLayout=new VMLayout(colField.getNumber(), rowField.getNumber(), depthField.getNumber());
+				}
+				catch(BadArgumentException no)
+				{
+					ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, no);
+				}
+			}
+
+			// Try adding the machine. If it works then display a success
+			// message. If it fails then display an error message.
+			if (controller.addMachine(locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses(), stockingIntervalField.getNumber(), oldLayout) != -1)
+				master.getStatusBar().setStatus("Machine added successfully!", StatusBar.STATUS_GOOD_COLOR);
+			else
+				master.getStatusBar().setStatus("An error occurred while attempting to add the machine", StatusBar.STATUS_BAD_COLOR);
+			// Refresh the list on the ManagerMachineManagementScreenGUI and go
+			// back to it.
+			parent.refreshList();
+			master.popContentPanel();
+		}
 	}
 }
