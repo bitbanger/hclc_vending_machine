@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.Dimension;
+import java.util.LinkedList;
 
 /**
  * Panel for displaying a vending machine's layout. Has modes for customer
@@ -23,6 +24,11 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	private Pair<Integer, Integer> selectedRow;
 
 	/**
+	 * List of all of the VendingMachineItemChangedListeners for this VMLayoutPanel.
+	 **/
+	private LinkedList<VendingMachineItemChangedListener> itemChangedListeners;
+
+	/**
 	 * Creates a VMLayoutPanel using the given array of items.
 	 * @param items The items to display in this panel.
 	 * @param managerMode If true it will allow the user to select empty rows
@@ -30,6 +36,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	 **/
 	public VMLayoutPanel(FoodItem[][] items, boolean managerMode)
 	{
+		itemChangedListeners = new LinkedList<VendingMachineItemChangedListener>();
 		grid = new JToggleButton[items.length][items[0].length];
 		selectedRow = null;
 		addComponents(items, managerMode);
@@ -126,5 +133,18 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 					button.setSelected(false);
 			}
 		}
+
+		// Notify all of out listeners that the item has changed
+		for (VendingMachineItemChangedListener listener : itemChangedListeners)
+			listener.itemChanged();
+	}
+
+	/**
+	 * Adds a listener to this VMLayoutPanel.
+	 * @param listener The listener to add.
+	 **/
+	public void addVendingMachineItemChangedListener(VendingMachineItemChangedListener listener)
+	{
+		itemChangedListeners.add(listener);
 	}
 }
