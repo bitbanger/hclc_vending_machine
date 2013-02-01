@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.ArrayList;
 
 /**
  * CLI for the Customer's perspective.
@@ -99,19 +99,50 @@ public class CustomerCLI {
 			System.out.println("Welcome, " + account.getUserName() + "!");
 			System.out.println("Available funds: " + CLIUtilities.formatMoney(account.getBalance()));
 
-			CLIUtilities.printLayout(display);
+			int choice = CLIUtilities.option(
+				"Choose from vending machine layout",
+				"Choose from frequently bought items",
+				"Cancel purchase");
+			switch (choice)
+			{
+				case 0:
+					CLIUtilities.printLayout(display);
 
-			if(CLIUtilities.yesOrNo("Would you like to proceed with your purchase?")) {
-				
-				String message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter X", true), CLIUtilities.promptInt("Enter Y", true)));
-				if(message.equals("GOOD")) {
-					System.out.println("Purchase complete: remaining balance is " + CLIUtilities.formatMoney(account.getBalance()));
+					if(CLIUtilities.yesOrNo("Would you like to proceed with your purchase?")) {
+						
+						String message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter X", true), CLIUtilities.promptInt("Enter Y", true)));
+						if(message.equals("GOOD")) {
+							System.out.println("Purchase complete: remaining balance is " + CLIUtilities.formatMoney(account.getBalance()));
+							break screen;
+						}
+						else
+							CLIUtilities.prompt(message + " please press enter to continue");
+					} else {
+						break screen; // BREAK THE SCREEN
+					}
+					break;
+				case 1:
+					ArrayList<FoodItem> items = account.getFrequentlyBought();
+					if (items.size() == 0)
+					{
+						CLIUtilities.prompt("You have no frequently bought items!\nplease press enter to continue");
+						break;
+					}
+					int chosenIndex = CLIUtilities.option(items);
+					String freqMessage = account.tryPurchase(items.get(chosenIndex));
+					if (freqMessage.equals("GOOD"))
+					{
+						System.out.println("Purchase complete: remaining balance is " + CLIUtilities.formatMoney(account.getBalance()));
+						break screen;
+					}
+					else
+					{
+
+						CLIUtilities.prompt(freqMessage + " please press enter to continue");
+					}
+					break;
+				case 2:
 					break screen;
-				}
-				else
-					CLIUtilities.prompt(message + " please press enter to continue");
-			} else {
-				break screen; // BREAK THE SCREEN
 			}
 		}
 	}
