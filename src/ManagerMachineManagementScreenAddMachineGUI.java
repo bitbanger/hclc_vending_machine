@@ -146,16 +146,13 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		// Make the panel to hold the other fields (stocking interval, rows, etc.)
 		// It will have a grid bag layout.
 		JPanel attributePanel = new JPanel();
-		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints con = new GridBagConstraints();
-		attributePanel.setLayout(gridbag);
 		attributePanel.setLayout(new GridBagLayout());
 		rightPanel.add(attributePanel);
 
 		// Set up the common grid bag constraints for all components.
 		con.gridwidth = 1;
 		con.gridheight = 1;
-		con.weightx=1;
 		con.weighty=1;
 		con.fill = GridBagConstraints.HORIZONTAL;
 
