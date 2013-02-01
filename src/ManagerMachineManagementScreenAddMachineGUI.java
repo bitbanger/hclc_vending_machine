@@ -20,7 +20,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	private NumberField rowField;
 	private NumberField colField;
 	private NumberField depthField;
-	private JButton confirmButton;
+	private ConditionButton confirmButton;
 	private JButton cancelButton;
 
 	public ManagerMachineManagementScreenAddMachineGUI(ManagerMachineManagementScreen controller, BaseGUI master, ManagerMachineManagementScreenGUI parent)
@@ -34,10 +34,29 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		rowField = new NumberField(NumberField.POSITIVE_Z);
 		colField = new NumberField(NumberField.POSITIVE_Z);
 		depthField = new NumberField(NumberField.POSITIVE_Z);
-		confirmButton = new JButton("Add Machine");
+		confirmButton = new ConditionButton("Add Machine");
 		cancelButton = new JButton("Cancel");
 
 		addComponents();
+		addLogic();
+	}
+
+	private void addLogic()
+	{
+		confirmButton.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				System.out.println("HERE");
+				return stockingIntervalField.areContentsValid() && rowField.areContentsValid() && colField.areContentsValid() && depthField.areContentsValid();
+			}
+		});
+
+		confirmButton.watch(stockingIntervalField);
+		confirmButton.watch(rowField);
+		confirmButton.watch(colField);
+		confirmButton.watch(depthField);
 	}
 
 	private void addComponents()
@@ -49,14 +68,12 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		rightPanel.setAlignmentY(TOP_ALIGNMENT);
-		//rightPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		add(rightPanel);
 
 		JPanel attributePanel = new JPanel();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints con = new GridBagConstraints();
 		attributePanel.setLayout(gridbag);
-		//attributePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		rightPanel.add(attributePanel);
 
 		con.gridwidth = 1;
@@ -124,6 +141,5 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-
 	}
 }
