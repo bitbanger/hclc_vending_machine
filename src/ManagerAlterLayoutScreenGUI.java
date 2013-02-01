@@ -45,12 +45,12 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	/**
 	 * The button that allows the manager to empty row.
 	 **/
-	private JButton emptyRowButton;
+	private ConditionButton emptyRowButton;
 
 	/**
 	 * The button that allows the manager to commit changes.
 	 **/
-	private ConditionButton commitChangesButton;
+	private JButton commitChangesButton;
 
 	/**
 	 * The button that allows the manager to log out.
@@ -73,9 +73,9 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		
 		
 		changeRowButton = new ConditionButton("Change Row");
-	//	emptyRowButton = new JButton("Empty Row");
-	//	commitChangesButton = new JButton("Commit Changes");
-	//	logoutButton = new JButton("Return to home screen");
+		emptyRowButton = new ConditionButton("Empty Row");
+		commitChangesButton = new JButton("Commit Changes");
+		logoutButton = new JButton("Return to home screen");
 
 		addComponents();
 		addLogic();
@@ -99,6 +99,19 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		// Make the change row button 'watch' the list and layout
 		changeRowButton.watch(stockableItems);
 		changeRowButton.watch(vmButtons);
+
+		// Only show the empty row button when a row is selected
+		emptyRowButton.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				return vmButtons.getSelectedRow() != null;
+			}
+		});
+
+		// Make the empty row button 'watch' the layout
+		emptyRowButton.watch(vmButtons);
 
 		// Add action listeners to all of the buttons
 		logoutButton.addActionListener(this);
@@ -142,28 +155,24 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		bottomPanel.add(Box.createGlue());
 
 		// Return Home button
-		logoutButton = new JButton("Return Home");
 		bottomPanel.add(logoutButton);
 
 		// Spacing between buttons
 		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
 
 		// Confim Changes button
-		commitChangesButton = new ConditionButton("Confirm Changes");
 		bottomPanel.add(commitChangesButton);
 
 		// Spacing between buttons
 		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
 
 		// Empty Row button
-		emptyRowButton = new JButton("Empty Row");
 		bottomPanel.add(emptyRowButton);
 
 		// Spacing between buttons
 		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
 
 		// Change Row button
-		changeRowButton = new ConditionButton("Change Row");
 		bottomPanel.add(changeRowButton);
 	}
 
