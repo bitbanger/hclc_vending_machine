@@ -160,7 +160,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		// Spacing between buttons
 		bottomPanel.add(Box.createRigidArea(new Dimension(10,0)));
 
-		// Confim Changes button
+		// Confirm Changes button
 		bottomPanel.add(commitChangesButton);
 
 		// Spacing between buttons
@@ -184,21 +184,31 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	public void actionPerformed(ActionEvent event)
 	{
 		JButton source = (JButton)event.getSource();
+
+		// Logout button clicked
 		if (source == logoutButton)
 		{
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
 		}
+
+		// Change row button clicked
 		else if (source == changeRowButton);
 		{
+			// Try the row change
 			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
 			int result = controller.queueRowChange(selected, (FoodItem)stockableItems.getSelectedValue());
+
+			// Set the status bar to an appropriate message depending on the
+			// result.
 			if (result == 0)
 				master.getStatusBar().setStatus("Row changed successfully", StatusBar.STATUS_GOOD_COLOR);
 			else if (result == 1)
 				master.getStatusBar().setStatus("Item expires too soon. Cannot add item.", StatusBar.STATUS_BAD_COLOR);
 			else
 				master.getStatusBar().setStatus("An error occurred while trying to change row.", StatusBar.STATUS_BAD_COLOR);
+
+			// Refresh the content of the VM layout panel
 			vmButtons.refreshContent(controller.listRows());
 		}
 	}
