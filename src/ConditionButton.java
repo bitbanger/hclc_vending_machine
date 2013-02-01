@@ -1,6 +1,9 @@
 import javax.swing.JButton;
 import java.awt.Component;
 import java.util.LinkedList;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.JTextField;
 
 /**
  * A button that is enabled iff a all of the conditions in a set are true.
@@ -49,5 +52,29 @@ public class ConditionButton extends JButton
 	public void addCondition(ConditionButtonCondition condition)
 	{
 		conditions.add(condition);
+	}
+
+	public void watch(JTextField field)
+	{
+		final ConditionButton me = this;
+		field.getDocument().addDocumentListener(new DocumentListener()
+		{
+			@Override
+			public void changedUpdate(DocumentEvent e)
+			{
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e)
+			{
+				me.checkAndSetEnabled();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+				me.checkAndSetEnabled();
+			}
+		});
 	}
 }
