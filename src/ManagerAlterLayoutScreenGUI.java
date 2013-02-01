@@ -211,5 +211,23 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 			// Refresh the content of the VM layout panel
 			vmButtons.refreshContent(controller.listRows());
 		}
+
+		// Empty row button clicked
+		else if (source == emptyRowButton)
+		{
+			// Try to empty the row
+			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
+			int result = controller.queueRowChange(selected, null);
+
+			// Set the status bar to an appropriate message depending on the
+			// result.
+			if (result == 0)
+				master.getStatusBar().setStatus("Row emptied successfully", StatusBar.STATUS_GOOD_COLOR);
+			else
+				master.getStatusBar().setStatus("An error occurred while trying to empty the row.", StatusBar.STATUS_BAD_COLOR);
+
+			// Refresh the content of the VM layout panel
+			vmButtons.refreshContent(controller.listRows());
+		}
 	}
 }
