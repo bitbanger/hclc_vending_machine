@@ -73,6 +73,7 @@ public class BaseGUI extends JFrame
 		setTitle(title);
 		setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		pack();
 	}
 
 	/**
@@ -125,5 +126,6 @@ public class BaseGUI extends JFrame
 		getContentPane().add(currentPanel, BorderLayout.CENTER);
 		currentPanel.repaint();
 		validate();
+		pack();
 	}
 }

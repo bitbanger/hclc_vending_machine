@@ -122,6 +122,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 
 		// Add box id label and text box to login panel
 		idPanel.setMaximumSize(idPanel.getPreferredSize());
+		idPanel.setAlignmentX(CENTER_ALIGNMENT);
 		loginPanel.add(idPanel);
 
 		// Gap between customer id text box and login button
@@ -151,6 +152,8 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
 		
+		loginPanel.setAlignmentX(CENTER_ALIGNMENT);
+		
 
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
@@ -158,20 +161,28 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 
 		// Gap between above and pay with cash button
 		this.add(Box.createRigidArea(new Dimension(0,20)));
-
+		
+		JPanel buttonPanel = new JPanel();
 
 		// Pay with cash button
 		cashButton = new JButton("Cash Payment");
 		cashButton.addActionListener(this);
-		this.add(cashButton);
 
 		// Gap between cash and exit button
 		this.add(Box.createVerticalStrut(10));
 
 		// Exit button
-		exitButton = new JButton("Exit");
+		exitButton = new JButton("Return to Machine Picker");
 		exitButton.addActionListener(this);
-		this.add(exitButton);
+		
+		buttonPanel.add(exitButton);
+		buttonPanel.add(Box.createGlue());
+		buttonPanel.add(cashButton);
+		
+		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		
+		this.add(buttonPanel);
+		
 	}
 
 	/**
@@ -215,7 +226,8 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		}
 		else if (event.getSource() == exitButton)
 		{
-			System.exit(0);
+			master.getStatusBar().clearStatus();
+			master.popContentPanel();
 		}
 	}
 }

@@ -18,110 +18,109 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * Content panel for the restocker task machine picker screen.
- * @author Piper Chester
+ * Content panel for the customer machine picker screen.
+ * 
+ * @author Lane Lawley
  **/
-public class RestockerMachinePickerScreenGUI extends JPanel
-{
+public class CustomerMachinePickerScreenGUI extends JPanel {
 	/**
 	 * Controller instance for this screen.
 	 **/
-	private RestockerMachinePickerScreen controller;
-
+	private CustomerMachinePickerScreen controller;
+	
 	/**
 	 * Master for this panel.
 	 */
 	private BaseGUI master;
-
+	
 	/**
 	 * List of machines.
 	 */
 	private JList machines;
-
-
+	
 	/**
 	 * Creates the panel with the given controller instance.
-	 * @param controller The controller instance to use.
-	 * @param master The frame surrounding the panel
+	 * 
+	 * @param controller
+	 *            The controller instance to use.
+	 * @param master
+	 *            The frame surrounding the panel
 	 **/
-	public RestockerMachinePickerScreenGUI(RestockerMachinePickerScreen controller, BaseGUI master)
-	{
+	public CustomerMachinePickerScreenGUI(
+			CustomerMachinePickerScreen controller, BaseGUI master) {
 		this.master = master;
 		this.controller = controller;
-
+		
 		machines = new JList(controller.listActiveMachines().toArray());
 		machines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		master.getStatusBar().setStatus("Need to Restock", StatusBar.STATUS_GOOD_COLOR);
-
+		master.getStatusBar().clearStatus();
+		
 		addComponents();
 	}
-
+	
 	/**
 	 * Lays out the components on the panel.
 	 **/
-	public void addComponents()
-	{
+	public void addComponents() {
 		// Components will be laid out vertically in the main panel
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		
 		// Align the components to the left side
 		this.setAlignmentX(LEFT_ALIGNMENT);
-
+		
 		// Panel to hold id text box and login button
 		JPanel loginPanel = new JPanel();
 		loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
 		loginPanel.setAlignmentX(LEFT_ALIGNMENT);
-
+		
 		// Panel to hold id label and text box
 		JPanel idPanel = new JPanel();
 		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
-
+		
 		// Gap between label and text box
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-
+		
 		// Add a scroll pane
 		JScrollPane scrollPanel = new JScrollPane(machines);
-		this.add(scrollPanel);		
-
-	
+		this.add(scrollPanel);
+		
 		// Add box id label and text box to login panel
 		idPanel.setMaximumSize(idPanel.getPreferredSize());
 		loginPanel.add(idPanel);
-
+		
 		// Gap between customer id text box and login button
 		loginPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
+		
 		// Panel to align the login button to the right
 		JPanel loginButtonPanel = new JPanel();
-		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
-
+		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel,
+				BoxLayout.X_AXIS));
+		
 		// Aligns the button to the right
 		loginButtonPanel.add(Box.createGlue());
-
 		
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
 		this.add(loginPanel);
-
+		
 		// Gap between above and pay with cash button
-		this.add(Box.createRigidArea(new Dimension(0,20)));
-
+		this.add(Box.createRigidArea(new Dimension(0, 20)));
+		
 		// Cancel button
-		JButton	cancelButton = new JButton("Exit");
+		JButton cancelButton = new JButton("Exit");
 		
 		// Exits the screen on cancel
-		cancelButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e){
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				master.setVisible(false);
 				System.exit(1);
 			}
 		});
-
+		
 		// Gap between above and cancel button
-		this.add(Box.createRigidArea(new Dimension(50,0)));
-
+		this.add(Box.createRigidArea(new Dimension(50, 0)));
+		
 		// Done button
 		ConditionButton selectButton = new ConditionButton("Select");
 		
@@ -131,47 +130,46 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		buttonPanel.add(selectButton);
 		
 		this.add(buttonPanel);
-
-		// Displays task into status bar	
-		selectButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e){
-				master.getStatusBar().setStatus("" + machines.getSelectedValue()); 
+		
+		// Displays task into status bar
+		selectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
-					RestockerTaskListScreen next = controller.tryMachine( 
-						((VendingMachine)machines.getSelectedValue()).getId());
-					if ( next == null )
-						master.getStatusBar().setStatus("Vending machine not found", StatusBar.STATUS_BAD_COLOR);
+					CustomerLoginScreen next = controller
+							.tryMachine(((VendingMachine) machines
+									.getSelectedValue()).getId());
+					if (next == null)
+						master.getStatusBar().setStatus(
+								"Vending machine not found",
+								StatusBar.STATUS_BAD_COLOR);
 					else {
-						RestockerTaskListScreenGUI nextGUI = new RestockerTaskListScreenGUI( next, master );
-						master.pushContentPanel( nextGUI );
+						CustomerLoginScreenGUI nextGUI = new CustomerLoginScreenGUI(
+								next, master);
+						master.pushContentPanel(nextGUI);
 					}
 				} catch (BadStateException impossible) {
 					System.err.println("oops?");
-					//I can't think of a way around this...
+					// I can't think of a way around this...
 				}
 			}
 		});
-
+		
 		// Checks the condition of the done button
 		final JList machineFinal = machines;
-		selectButton.addCondition(new ConditionButtonCondition()
-		{
-			public boolean checkCondition(){
-				return machineFinal.getSelectedValue() != null;		
+		selectButton.addCondition(new ConditionButtonCondition() {
+			public boolean checkCondition() {
+				return machineFinal.getSelectedValue() != null;
 			}
 		});
-
 		
 		// Grays out button if need be
 		final ConditionButton selectButtonFinal = selectButton;
-		machines.addListSelectionListener(new ListSelectionListener()
-		{
-			public void valueChanged(ListSelectionEvent e){
+		machines.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
 				selectButtonFinal.checkAndSetEnabled();
 			}
 		});
-
+		
 		JPanel toDoPanel = new JPanel();
 		toDoPanel.setLayout(new BoxLayout(toDoPanel, BoxLayout.Y_AXIS));
 		toDoPanel.setAlignmentX(RIGHT_ALIGNMENT);

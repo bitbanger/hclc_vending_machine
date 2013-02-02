@@ -12,8 +12,8 @@ public class CustomerGUI
 	{
 		GUIUtilities.setNativeLookAndFeel();
 		BaseGUI base = new BaseGUI("Login Screen");
-		CustomerLoginScreen controller = CustomerLoginScreen.buildInstance(Integer.parseInt(args[0]));
-		CustomerLoginScreenGUI gui = new CustomerLoginScreenGUI(controller, base);
+		CustomerMachinePickerScreen controller = new CustomerMachinePickerScreen();
+		CustomerMachinePickerScreenGUI gui = new CustomerMachinePickerScreenGUI(controller, base);
 		base.pushContentPanel(gui);
 		base.displayGUI();
 	}

@@ -155,30 +155,6 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		// Panel to align the login button to the right
 		JPanel loginButtonPanel = new JPanel();
 		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
-
-		// Aligns the button to the right
-		loginButtonPanel.add(Box.createGlue());
-
-		// Add the login button
-		final NumberField tempField = idTextField;
-		loginButton.addCondition(new ConditionButtonCondition()
-		{
-			/**
-			 * The button should only be enabled if the idTextField has content.
-			 **/
-			@Override
-			public boolean checkCondition()
-			{
-				return tempField.areContentsValid();
-			}
-		});
-		loginButton.addActionListener(this);
-		loginButtonPanel.add(loginButton);
-		loginPanel.add(loginButtonPanel);
-
-		// Add the login panel to main panel
-		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
-		this.add(loginPanel);
 		
 		// Add the exit button
 		exitButton = new JButton("Exit");
@@ -196,7 +172,29 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 				}
 			}
 		});
-		this.add(exitButton);
+		loginButtonPanel.add(exitButton);
+
+		// Add the login button
+		final NumberField tempField = idTextField;
+		loginButton.addCondition(new ConditionButtonCondition()
+		{
+			/**
+			 * The button should only be enabled if the idTextField has content.
+			 **/
+			@Override
+			public boolean checkCondition()
+			{
+				return tempField.areContentsValid();
+			}
+		});
+		loginButton.addActionListener(this);
+		loginButtonPanel.add(loginButton);
+		loginButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		loginPanel.add(loginButtonPanel);
+
+		// Add the login panel to main panel
+		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
+		this.add(loginPanel);
 	}
 
 	/**
