@@ -86,7 +86,7 @@ public class RestockerTaskListScreen {
 					if ( cur[i][j] != null && 
 						cur[i][j].getRemainingQuantity() != 0 )
 						instructions.put(count++, new Pair<String, Boolean>(("Remove " +
-						"all from " + i+ ", " + j), false) );
+						"all from " + i+ ", " + j), true) );
 					continue;
 				}
 				if ( cur[i][j] == null ) {
