@@ -59,7 +59,7 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 		setLayout(new GridLayout(size, 1, 5, 5));
 		for (FoodItem item : favorites)
 		{
-			JToggleButton button = new JToggleButton(String.format("<html>%s<br />%s</html>", item.getName(), CLIUtilities.formatMoney(item.getPrice())));
+			JToggleButton button = new JToggleButton(String.format("<html>%s<br />%s</html>", item.getName(), U.formatMoney(item.getPrice())));
 			button.addActionListener(this);
 			buttons.add(button);
 			add(button);

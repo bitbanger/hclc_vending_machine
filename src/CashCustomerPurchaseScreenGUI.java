@@ -183,7 +183,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 
 	private void displayMoneyEntered()
 	{
-		enteredLabel.setText(String.format("Money Entered: %s", CLIUtilities.formatMoney(moneyEntered)));
+		enteredLabel.setText(String.format("Money Entered: %s", U.formatMoney(moneyEntered)));
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 			moneyEntered += moneyEnteredNow;
 			displayMoneyEntered();
 			enterMoneyField.clearMoneyEntered();
-			master.getStatusBar().setStatus(String.format("%s entered.", CLIUtilities.formatMoney(moneyEnteredNow), StatusBar.STATUS_GOOD_COLOR));
+			master.getStatusBar().setStatus(String.format("%s entered.", U.formatMoney(moneyEnteredNow), StatusBar.STATUS_GOOD_COLOR));
 		}
 	}
 }

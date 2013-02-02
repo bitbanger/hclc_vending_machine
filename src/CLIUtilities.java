@@ -252,19 +252,6 @@ public class CLIUtilities {
 	}
 
 	/**
-	 * Allows easily formatting quantities of money.
-	 * @param amount the amount of money, in cents
-	 * @return the moeney amount in the form of "$X.XX"
-	 */
-	public static String formatMoney(int amount)
-	{
-		String amt=String.format("%03d", amount);
-		int split=amt.length()-2;
-		
-		return "$"+amt.substring(0, split)+'.'+amt.substring(split);
-	}
-
-	/**
 	 * Provides a nice way to print a layout
 	 * @param rows The layout to print
 	 * @param hideInactive Whether to hide inactive items
@@ -295,7 +282,7 @@ public class CLIUtilities {
 				FoodItem item = rows[j][i];
 				String price = "";
 				if (item != null && item.isActive())
-					price = formatMoney(item.getPrice());
+					price = U.formatMoney(item.getPrice());
 				else if (item != null && !hideInactive)
 					price = "(INACTIVE)";
 				System.out.printf("       %10s ", price);

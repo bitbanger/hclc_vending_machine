@@ -71,7 +71,7 @@ public class CustomerCLI {
 	private static void anonymousConnection(CashCustomerPurchaseScreen wallet) {
 		screen:while(true) {
 			CLIUtilities.printTitle("Cash Payment");
-			System.out.println("You've added " + CLIUtilities.formatMoney(wallet.getBalance()) + " to this machine.");
+			System.out.println("You've added " + U.formatMoney(wallet.getBalance()) + " to this machine.");
 			int addOrSubtract = CLIUtilities.option("I want to insert cash", "I'm ready to purchase an item", "Return to main menu");
 			
 			switch(addOrSubtract) {
@@ -82,7 +82,7 @@ public class CustomerCLI {
 					productSelection(wallet);
 					break;
 				case 2:
-					System.out.println("Your change is " + CLIUtilities.formatMoney(wallet.getBalance()));
+					System.out.println("Your change is " + U.formatMoney(wallet.getBalance()));
 					break screen;
 			}
 		}
@@ -97,7 +97,7 @@ public class CustomerCLI {
 		screen:while(true) {
 			CLIUtilities.printTitle("Product Selection");
 			System.out.println("Welcome, " + account.getUserName() + "!");
-			System.out.println("Available funds: " + CLIUtilities.formatMoney(account.getBalance()));
+			System.out.println("Available funds: " + U.formatMoney(account.getBalance()));
 
 			int choice = CLIUtilities.option(
 				"Choose from vending machine layout",
@@ -112,7 +112,7 @@ public class CustomerCLI {
 						
 						String message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter X", true), CLIUtilities.promptInt("Enter Y", true)));
 						if(message.equals("GOOD")) {
-							System.out.println("Purchase complete: remaining balance is " + CLIUtilities.formatMoney(account.getBalance()));
+							System.out.println("Purchase complete: remaining balance is " + U.formatMoney(account.getBalance()));
 							break screen;
 						}
 						else
@@ -132,7 +132,7 @@ public class CustomerCLI {
 					String freqMessage = account.tryPurchase(items.get(chosenIndex));
 					if (freqMessage.equals("GOOD"))
 					{
-						System.out.println("Purchase complete: remaining balance is " + CLIUtilities.formatMoney(account.getBalance()));
+						System.out.println("Purchase complete: remaining balance is " + U.formatMoney(account.getBalance()));
 						break screen;
 					}
 					else

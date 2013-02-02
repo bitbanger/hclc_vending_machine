@@ -69,4 +69,16 @@ public class U
 		else
 			return BAD_MONEY;
 	}
+
+	/**
+	 * Allows easily formatting quantities of money.
+	 * @param amount the amount of money, in cents
+	 * @return the moeney amount in the form of "$X.XX"
+	 */
+	public static String formatMoney(int amount) {
+		String amt = String.format("%03d", amount);
+		int split = amt.length() - 2;
+
+		return "$" + amt.substring(0, split)+'.'+amt.substring(split);
+	}
 }

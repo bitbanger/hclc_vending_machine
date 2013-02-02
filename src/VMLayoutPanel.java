@@ -98,7 +98,7 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 				// is null
 				String price = "";
 				if (item != null)
-					price = CLIUtilities.formatMoney(item.getPrice());
+					price = U.formatMoney(item.getPrice());
 
 
 				// Create toggle button with name and price

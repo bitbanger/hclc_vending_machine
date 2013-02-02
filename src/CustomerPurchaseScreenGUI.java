@@ -115,7 +115,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
 
 		// Label that gives current balance
-		JLabel fundLabel = new JLabel(String.format("Your funds: %s", CLIUtilities.formatMoney(controller.getBalance())));
+		JLabel fundLabel = new JLabel(String.format("Your funds: %s", U.formatMoney(controller.getBalance())));
 		bottomPanel.add(fundLabel);
 
 		// Spacing between label and buttons
