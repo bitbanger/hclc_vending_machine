@@ -40,7 +40,7 @@ public class ManagerReportStatsScreen {
 
 	/**
 	 * get a collection of all machines
-	 * @return a collection of the machines present when screen was launched
+	 * @return an arraylist of the machines present when screen was launched
 	 */
 	public ArrayList<VendingMachine> listMachines() {
 		return machines;
