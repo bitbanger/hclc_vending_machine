@@ -186,28 +186,6 @@ public class VendingMachine extends ModelBase
 	 */
 	public void swapInNextLayout()
 	{
-		Row[][] curRows=currentLayout.getRows(), newRows=nextLayout.getRows();
-		for(int row=0; row<Math.min(curRows.length, newRows.length); ++row)
-			for(int col=0; col<Math.min(curRows[0].length, newRows[0].length); ++col)
-				if(curRows[row][col]!=null && newRows[row][col]!=null &&
-					curRows[row][col].getProduct().equals(newRows[row][col].getProduct()))
-				{
-					try
-					{
-						if(curRows[row][col].getRemainingQuantity()==0) //need to restock
-							newRows[row][col].setRemainingQuantity(currentLayout.getDepth());
-						else if(curRows[row][col].getRemainingQuantity()<newRows[row][col].getRemainingQuantity()) //be *hesitant* about overwriting the "newer" inventory
-								newRows[row][col].setRemainingQuantity(curRows[row][col].getRemainingQuantity());
-					}
-					catch(BadArgumentException impossible) //shouldn't happen, as that quantity must already be valid
-					{
-						System.err.println("CRITICAL : Model detected a problem not previously thought possible!");
-						System.err.print("    DUMP : ");
-						impossible.printStackTrace();
-						System.err.println();
-					}
-				}
-		
 		currentLayout=nextLayout;
 		nextLayout=new VMLayout(currentLayout, true); //deep copy
 		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
