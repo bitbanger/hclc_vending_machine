@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
@@ -35,6 +36,27 @@ public class CLIUtilities {
 	public static String prompt(String message) {
 		System.out.print(message + ": ");
 		return scan.nextLine();
+	}
+	
+	/**
+	 * Prompts the user with a given message and returns their obscured response.
+	 * This method is identical to prompt(), except echoing is disabled.
+	 * In the event of a weird console failure, this method falls back to prompt().
+	 * 
+	 * @param  message	The message to show the user, verbatim, with no newline at the end
+	 * @return			The user's response to the message. One line of recorded, and obscured, input
+	 */
+	public static String promptObscured(String message) {
+		try {
+			Console c = System.console();
+			if(c != null) {
+				return new String(c.readPassword(message + ": "));
+			} else {
+				throw new Exception();
+			}
+		} catch(Exception e) {
+			return prompt(message);
+		}
 	}
 
 	/**

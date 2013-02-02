@@ -35,7 +35,7 @@ public class ManagerCLI
 				}
 				if (id == 0)
 					return;
-				String password = CLIUtilities.prompt("Enter Your Password");
+				String password = CLIUtilities.promptObscured("Enter Your Password");
 				homeScreen = loginScreen.tryLogin(id, password);
 				if (homeScreen == null)
 					System.out.println("Invalid ID/password combo");
