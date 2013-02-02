@@ -67,6 +67,8 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		this.controller = controller;
 		this.master = master;
 
+		master.setTitle("Machine Management");
+
 		master.getStatusBar().clearStatus();
 
 		addMachineButton = new JButton("Add Machine");
@@ -74,7 +76,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		reactivateButton = new ConditionButton("Reactivate Machine");
 		locationButton = new ConditionButton("Change Machine Location");
 		machineList = new JList();
-		exitButton = new JButton("Back To Home");
+		exitButton = new JButton("Return to Home Screen");
 
 		addComponents();
 		addLogic();
@@ -231,6 +233,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		{
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
+			master.setTitle("Home Screen");
 		}
 
 		// Update data in list

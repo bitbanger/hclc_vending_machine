@@ -58,6 +58,8 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		this.controller=controller;
 		this.master=master;
 		
+		master.setTitle("Stocked Items");
+		
 		nameField=new JTextField();
 		priceField=new MoneyField(master.getStatusBar());
 		freshnessField=new NumberField(NumberField.POSITIVE_Z);
@@ -95,13 +97,14 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		add(controls, BorderLayout.WEST);
 		
 		//a way to get back to Kansas:
-		JButton takeMeHome=new JButton("Back to home screen");
+		JButton takeMeHome=new JButton("Return to Home Screen");
 		add(takeMeHome, BorderLayout.SOUTH);
 		takeMeHome.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent ignored)
 			{
 				master.popContentPanel();
+				master.setTitle("Home Screen");
 			}
 		});
 		

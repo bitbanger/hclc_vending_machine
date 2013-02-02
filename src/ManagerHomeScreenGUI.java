@@ -63,6 +63,8 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		this.controller = controller;
 		this.master = master;
 
+		master.setTitle("Home Screen"); // Changing the title of the GUI to "Home Screen"
+
 		master.getStatusBar().setStatus(String.format("Welcome, %s", controller.getUserName()), StatusBar.STATUS_GOOD_COLOR);
 
 		statsButton = new JButton("View Machine Statistics");
@@ -160,6 +162,7 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		{
 			master.getStatusBar().setStatus("Logged out successfully", StatusBar.STATUS_GOOD_COLOR);
 			master.popContentPanel();
+			master.setTitle("Manager GUI");
 		}
 	}
 }

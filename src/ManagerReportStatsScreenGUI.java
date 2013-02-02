@@ -55,6 +55,8 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		this.controller = controller;
 		this.master = master;
 		
+		master.setTitle("Machine Statistics");
+
 		master.getStatusBar().clearStatus();
 		addComponents();
 	}
@@ -156,6 +158,7 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		} else if(event.getSource() == returnHomeButton) {
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
+			master.setTitle("Home Screen");
 		}
 	}
 	

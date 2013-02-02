@@ -69,14 +69,15 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		this.controller = controller;
 		this.master = master;
 
+		master.setTitle("Layout Management");
+
 		vmButtons = new VMLayoutPanel(controller.listRows(), true); 
 		stockableItems = new JList(controller.listItems().toArray());
-		
-		
+	
 		changeRowButton = new ConditionButton("Change Row");
 		emptyRowButton = new ConditionButton("Empty Row");
 		commitChangesButton = new JButton("Commit Changes");
-		logoutButton = new JButton("Return to home screen");
+		logoutButton = new JButton("Return to Home Screen");
 
 		addComponents();
 		addLogic();
@@ -179,6 +180,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		{
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
+			master.setTitle("Home Screen");
 		}
 
 		// Change row button clicked
