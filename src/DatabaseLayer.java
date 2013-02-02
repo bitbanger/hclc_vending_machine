@@ -33,8 +33,15 @@ public class DatabaseLayer
 	/** Singleton instance itself. */
 	private static DatabaseLayer instance=null;
 
+	/**
+	 * Instance of the database connection. If nothing is using this it should
+	 * be null.
+	 **/
 	private Connection dbInstance;
 
+	/**
+	 * Number of methods using dbInstance.
+	 **/
 	private int dbUseCounter;
 
 	/**
@@ -100,7 +107,8 @@ public class DatabaseLayer
 	}
 
 	/**
-	 * Connects to the databse.
+	 * Connects to the database or returns the current connection.
+	 * @return A connection to the database.
 	 **/
 	private Connection connect() throws SQLException
 	{
@@ -110,6 +118,11 @@ public class DatabaseLayer
 		return dbInstance;
 	}
 
+	/**
+	 * Decrements the counter for the number of methods using the database.
+	 * If the counter reaches 0 then the connection is closed and
+	 * dbInstance is set to null.
+	 **/
 	private void closeConnection() throws SQLException
 	{
 		if (--dbUseCounter == 0)
