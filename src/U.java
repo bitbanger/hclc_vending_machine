@@ -23,7 +23,7 @@ public class U
 	/**
 	 * Pattern to use for matching money.
 	 **/
-	private static final Pattern moneyPattern = Pattern.compile("(\\d*)(\\.(\\d(\\d?)))?");
+	private static final Pattern moneyPattern = Pattern.compile("(\\d*)(\\.(\\d(\\d?))?)?");
 
 	/**
 	 * Private constructor to prevent creation.
