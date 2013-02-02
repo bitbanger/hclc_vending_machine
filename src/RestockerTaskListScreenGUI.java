@@ -1,18 +1,21 @@
 import javax.swing.JTextField;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.Box;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 /**
@@ -30,12 +33,21 @@ public class RestockerTaskListScreenGUI extends JPanel
 	 * Master for this panel
 	 */
 	private BaseGUI master;
-	
+
+	/**
+	 * Contains the check boxes for tasks to be completed.
+	 */
+	private JPanel taskList;
 
 	/**
 	 * Array of tasks to perform.
 	 */
-	private HashMap<Integer, Pair<String, Boolean>> tasks;
+	private JCheckBox[] tasks;
+
+	/**
+	 * Done button.
+	 */
+	private ConditionButton doneButton;
 
 	/**
 	 * Creates the panel with the given controller instance.
@@ -46,82 +58,135 @@ public class RestockerTaskListScreenGUI extends JPanel
 	{
 		this.controller = controller;
 		this.master = master;
+		tasks = null;
+		taskList = new JPanel();
+		doneButton = null;
 		master.setTitle("Task List");
-		tasks = controller.getInstructions();
 		addComponents();
+		updateTaskList();
 	}
 
 	/**
-	 * Lays out the components on the panel.
-	 **/
-	public void addComponents()
+	 * Updates the list of tasks.
+	 */
+	private void updateTaskList()
 	{
-		// Components will be laid out vertically in the main panel
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		Map<Integer, Pair<String, Boolean>> generatedTasks=controller.getInstructions();
+		
+		doneButton.clearConditions();
+		tasks=new JCheckBox[generatedTasks.size()];
+		for(int index : generatedTasks.keySet())
+		{
+			Pair<String, Boolean> taskElements=generatedTasks.get(index);
+			tasks[index-1]=new JCheckBox(taskElements.first);
+			
+			if(taskElements.second) //a required one
+			{
+				JCheckBox inQuestion=tasks[index-1];
+				
+				doneButton.addCondition(new CheckBoxChecked(inQuestion));
+				doneButton.watch(inQuestion);
+			}
+		}
+		doneButton.checkAndSetEnabled();
+		
+		taskList.removeAll();
+		for(JCheckBox boxy : tasks)
+			taskList.add(boxy);
+	}
+
+	/**
+	 * Sets up the general panel layout.
+	 **/
+	private void addComponents()
+	{
+		setLayout(new BorderLayout());
+		
+		// Check boxes will be vertical
+		add(taskList, BorderLayout.CENTER);
+		taskList.setLayout(new BoxLayout(taskList, BoxLayout.Y_AXIS));
 
 		// Align the components to the left side
-		this.setAlignmentX(LEFT_ALIGNMENT);
+		taskList.setAlignmentX(LEFT_ALIGNMENT);
 
-		// Panel to hold id text box and login button
-		JPanel loginPanel = new JPanel();
-		loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
-		loginPanel.setAlignmentX(LEFT_ALIGNMENT);
+		// Panel to hold buttons
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+		buttonsPanel.setAlignmentX(CENTER_ALIGNMENT);
 
-		// Panel to hold id label and text box
-		JPanel idPanel = new JPanel();
-		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
+		// Do some crazy stuff with buttons
+		JButton	cancelButton = new JButton("Leave machine");
+		doneButton = new ConditionButton("Done");
+		cancelButton.setAlignmentX(CENTER_ALIGNMENT);
+		doneButton.setAlignmentX(CENTER_ALIGNMENT);
+		
+		// Buttons' logic
+		doneButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent ignored)
+			{
+				for(int index=0; index<tasks.length; ++index)
+					if(tasks[index].isSelected())
+						controller.removeInstruction(index+1);
+				
+				controller.completeStocking();
+				updateTaskList();
+				master.getStatusBar().setStatus("Restocking complete!", StatusBar.STATUS_GOOD_COLOR);
+			}
+		});
+		cancelButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent ignored)
+			{
+				master.popContentPanel();
+			}
+		});
+		
+		// Adds stuff and aligns the button to the right
+		buttonsPanel.add(cancelButton);
+		buttonsPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		buttonsPanel.add(doneButton);
 
+		// Put those buttons on board
+		buttonsPanel.setMaximumSize(buttonsPanel.getPreferredSize());
+		add(buttonsPanel, BorderLayout.SOUTH);
+	}
 
-		// Gap between label and text box
-		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+	/**
+	 * Checks whether the checkbox is selected.
+	 */
+	private class CheckBoxChecked implements ConditionButtonCondition
+	{
+		/** My box. Mine. My precious. */
+		private JCheckBox box;
 
+		/**
+		 * Provides the check box to check off.
+		 * @param box the box to check
+		 */
+		public CheckBoxChecked(JCheckBox box)
+		{
+			this.box=box;
+		}
 
-		// Add box id label and text box to login panel
-		idPanel.setMaximumSize(idPanel.getPreferredSize());
-		loginPanel.add(idPanel);
-
-		// Gap between customer id text box and login button
-		loginPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-		// Panel to align the login button to the right
-		JPanel loginButtonPanel = new JPanel();
-		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
-
-		// Aligns the button to the right
-		loginButtonPanel.add(Box.createGlue());
-
-		// Add the login panel to main panel
-		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
-		this.add(loginPanel);
-
-		// Gap between above and pay with cash button
-		this.add(Box.createRigidArea(new Dimension(0,20)));
-
-		// Cancel button
-		JButton	cancelButton = new JButton("Cancel");
-		//cancelButton.addActionListener(this);
-		this.add(cancelButton);
-
-		// Gap between above and cancel button
-		this.add(Box.createRigidArea(new Dimension(50,0)));
-
-		// Done button
-		JButton doneButton = new JButton("Done");
-		//doneButton.addActionListener(this);
-		this.add(doneButton);
-
-		JPanel toDoPanel = new JPanel();
-		toDoPanel.setLayout(new BoxLayout(toDoPanel, BoxLayout.Y_AXIS));
-		toDoPanel.setAlignmentX(RIGHT_ALIGNMENT);
-
-		//tasks=controller.getInstructions();
-		ArrayList<String> insts = new ArrayList<String>();
-		for ( Integer next : tasks.keySet() ) {
-			Pair<String, Boolean> inst = tasks.get(next);
-			if ( inst.second )
-				insts.add(next+": "+inst.first+"\tREQUIRED");
+		/**
+		 * Does the check.
+		 * @return whether it is, in fact, currently checked
+		 */
+		public boolean checkCondition()
+		{
+			if(box.isSelected())
+			{
+				master.getStatusBar().clearStatus();
+				return true;
+			}
 			else
-				insts.add(next+": "+inst.first);
+			{
+				master.getStatusBar().setStatus("You must perform all removal tasks", StatusBar.STATUS_BAD_COLOR);
+				return false;
+			}
 		}
 	}
 }
