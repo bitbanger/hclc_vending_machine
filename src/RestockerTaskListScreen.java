@@ -2,6 +2,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 import java.util.HashMap;
+import java.util.Set;
+
 /**
  *
  * 1/1/2013
@@ -217,7 +219,8 @@ public class RestockerTaskListScreen {
 				return false;
 		}
 		VMLayout pres = new VMLayout( status, true );
-		for ( Integer inst : instructions.keySet() ) {
+		Set<Integer> insts = instructions.keySet();
+		for ( Integer inst : insts ) {
 			this.removeInstruction( inst );
 		}
 		vm.swapInNextLayout( pres );
