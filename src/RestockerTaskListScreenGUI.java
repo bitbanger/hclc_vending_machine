@@ -93,6 +93,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 		taskList.removeAll();
 		for(JCheckBox boxy : tasks)
 			taskList.add(boxy);
+		taskList.repaint(); //do some crazy Swing stuff
 	}
 
 	/**
@@ -131,8 +132,8 @@ public class RestockerTaskListScreenGUI extends JPanel
 						controller.removeInstruction(index+1);
 				
 				controller.completeStocking();
-				updateTaskList();
 				master.getStatusBar().setStatus("Restocking complete!", StatusBar.STATUS_GOOD_COLOR);
+				master.popContentPanel();
 			}
 		});
 		cancelButton.addActionListener(new ActionListener()
