@@ -33,7 +33,7 @@ public class RestockerCLI {
 
 		for ( Integer task : tasks.keySet() ) {
 			System.out.print(task + ": " + tasks.get(task).first);
-			if ( !tasks.get(task).second )
+			if ( tasks.get(task).second )
 				System.out.print("\tREQUIRED");
 			System.out.println();
 		}
