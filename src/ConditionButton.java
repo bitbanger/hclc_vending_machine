@@ -1,8 +1,11 @@
 import javax.swing.JButton;
 import java.awt.Component;
 import java.util.LinkedList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
+import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
@@ -55,6 +58,14 @@ public class ConditionButton extends JButton
 	public void addCondition(ConditionButtonCondition condition)
 	{
 		conditions.add(condition);
+	}
+
+	/**
+	 * Purges the list of necessary conditions.
+	 */
+	public void clearConditions()
+	{
+		conditions.clear();
 	}
 
 	/**
@@ -115,6 +126,23 @@ public class ConditionButton extends JButton
 		{
 			@Override
 			public void itemChanged()
+			{
+				me.checkAndSetEnabled();
+			}
+		});
+	}
+
+	/**
+	 * 'Watches' a JCheckBox, requiring it to be selected before continuing.
+	 * @param box The box that needs must be selected
+	 */
+	public void watch(JCheckBox box)
+	{
+		final ConditionButton me = this;
+		box.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent ignored)
 			{
 				me.checkAndSetEnabled();
 			}
