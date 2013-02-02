@@ -34,6 +34,11 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	private JButton cashButton;
 
 	/**
+	 * Button to exit the application.
+	 */
+	private JButton exitButton;
+
+	/**
 	 * BaseGUI for this panel.
 	 **/
 	private BaseGUI master;
@@ -154,10 +159,20 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		// Gap between above and pay with cash button
 		this.add(Box.createRigidArea(new Dimension(0,20)));
 
+
 		// Pay with cash button
-		cashButton = new JButton("Pay with cash");
+		cashButton = new JButton("Cash Payment");
 		cashButton.addActionListener(this);
 		this.add(cashButton);
+
+		// Gap between cash and exit button
+		this.add(Box.createVerticalStrut(10));
+
+		// Exit button
+		exitButton = new JButton("Exit");
+		exitButton.setPreferredSize(new Dimension(25, 25));
+		exitButton.addActionListener(this);
+		this.add(exitButton);
 	}
 
 	/**
@@ -198,6 +213,10 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 			idTextField.clearNumberEntered();
 			CashCustomerPurchaseScreenGUI nextGUI = new CashCustomerPurchaseScreenGUI(next, master);
 			master.pushContentPanel(nextGUI);
+		}
+		else if (event.getSource() == exitButton)
+		{
+			System.exit(0);
 		}
 	}
 }
