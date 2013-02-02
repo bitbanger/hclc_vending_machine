@@ -216,10 +216,11 @@ public class RestockerTaskListScreen {
 			if ( next.second )
 				return false;
 		}
-		vm.swapInNextLayout( status );
+		VMLayout pres = new VMLayout( status, true );
 		for ( Integer inst : instructions.keySet() ) {
 			this.removeInstruction( inst );
 		}
+		vm.swapInNextLayout( pres );
 		try {
 			vm.setNextLayout( status );
 		} catch ( BadArgumentException impossible ) {
