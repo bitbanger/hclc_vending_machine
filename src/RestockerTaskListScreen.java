@@ -115,8 +115,8 @@ public class RestockerTaskListScreen {
 				else if ( items.getRemainingQuantity() == 0 ) {
 					// Manager didn't change this row's product and it's empty
 					instructions.put(count++, new Pair<String, Boolean>(("Add " + 
-						vm.getCurrentLayout().getDepth()+ " " 
-						+ items.getProduct().getName() 
+						vm.getCurrentLayout().getDepth() 
+						+ " " + nextItems.getProduct().getName() 
 						+ " to location " + i + ", " + j), false) );
 				}
 				else if ( !items.getProduct().equals( 
@@ -182,7 +182,7 @@ public class RestockerTaskListScreen {
 				}
 				int x = Integer.parseInt( split[i + 1] );
 				int y = Integer.parseInt( split[i + 2] );
-				if ( rows[x][y] != null )
+				if ( rows[x][y] != null && rows[x][y].getRemainingQuantity() != 0 )
 					return false; // Don't add to non null rows
 				FoodItem prod = vm.getNextLayout().getRows()[x][y].getProduct();
 				int quantity = Integer.parseInt( split[1] );
