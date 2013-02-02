@@ -146,6 +146,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		{
 			master.popContentPanel();
 			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
+			master.setTitle("Login Screen");
 		}
 		else
 		{
@@ -168,6 +169,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 			{
 				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
 				master.popContentPanel();
+				master.setTitle("Login Screen");
 			}
 			else
 			{

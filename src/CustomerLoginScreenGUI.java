@@ -52,6 +52,8 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		this.controller = controller;
 		this.master = master;
 
+		master.setTitle("Login Screen");
+
 		loginButton = new ConditionButton("Login");
 		idTextField = new NumberField(NumberField.POSITIVE_Z);
 
