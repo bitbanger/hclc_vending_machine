@@ -31,7 +31,7 @@ public class ManagerUserAccountsScreen {
 
 	/**
 	 * a list of all customers
-	 * @return a collection of the customers
+	 * @return an arraylist the customers
 	 */
 	public ArrayList<Customer> listCustomers() {
 		return customers;
@@ -39,7 +39,7 @@ public class ManagerUserAccountsScreen {
 
 	/**
 	 * lists the managers
-	 * @return a collection of the managers
+	 * @return an arraylist of the managers
 	 */
 	public ArrayList<Manager> listManagers() {
 		return managers;

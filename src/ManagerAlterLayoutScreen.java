@@ -57,7 +57,7 @@ public class ManagerAlterLayoutScreen {
 	/**
 	 * Lists the food items in the database.
 	 * Note: we may want to change this to list only active items
-	 * @return A collection of food items upon success or null on any type of
+	 * @return An ArrayList of food items upon success or null on any type of
 	 * failure.
 	 **/
 	public ArrayList<FoodItem> listItems()

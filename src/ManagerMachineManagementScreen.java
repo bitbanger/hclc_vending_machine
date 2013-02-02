@@ -24,7 +24,7 @@ public class ManagerMachineManagementScreen {
 
 	/**
 	 * lists all machines
-	 * @return a collection of all machines
+	 * @return an arraylist of all machines
 	 */
 	public ArrayList<VendingMachine> listMachinessAll() {
 		return storefronts;
