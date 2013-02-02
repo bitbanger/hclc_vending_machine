@@ -108,7 +108,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		this.add(Box.createRigidArea(new Dimension(0,20)));
 
 		// Cancel button
-		JButton	cancelButton = new JButton("Cancel");
+		JButton	cancelButton = new JButton("Exit");
 		this.add(cancelButton);
 		
 		// Exits the screen on cancel

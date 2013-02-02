@@ -10,6 +10,9 @@ import java.awt.BorderLayout;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 /**
@@ -43,6 +46,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 	{
 		this.controller = controller;
 		this.master = master;
+		master.setTitle("Task List");
 		tasks = controller.getInstructions();
 		addComponents();
 	}
@@ -119,8 +123,5 @@ public class RestockerTaskListScreenGUI extends JPanel
 			else
 				insts.add(next+": "+inst.first);
 		}
-		
-		//JLabel toDoLabel = new JLabel(insts.toArray());
-		//toDoPanel.add(toDoLabel);
 	}
 }
