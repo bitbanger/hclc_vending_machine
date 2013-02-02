@@ -170,7 +170,6 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 
 		// Exit button
 		exitButton = new JButton("Exit");
-		exitButton.setPreferredSize(new Dimension(25, 25));
 		exitButton.addActionListener(this);
 		this.add(exitButton);
 	}

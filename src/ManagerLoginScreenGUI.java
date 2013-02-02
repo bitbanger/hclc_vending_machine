@@ -31,6 +31,11 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 	private ConditionButton loginButton;
 
 	/**
+	 * Button to exit the application.
+	 */
+	private JButton exitButton;
+
+	/**
 	 * BaseGUI for this panel.
 	 **/
 	private BaseGUI master;
@@ -170,10 +175,28 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		loginButton.addActionListener(this);
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
-		
+
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
 		this.add(loginPanel);
+		
+		// Add the exit button
+		exitButton = new JButton("Exit");
+		exitButton.addActionListener(new ActionListener() 
+		{
+			/**
+			 * If the user clicks the exit buton, the application will exit
+			 */
+			@Override
+			public void actionPerformed(ActionEvent event)
+			{
+				if (event.getSource() == exitButton)
+				{
+					System.exit(0);
+				}
+			}
+		});
+		this.add(exitButton);
 	}
 
 	/**
