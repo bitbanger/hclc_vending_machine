@@ -33,8 +33,16 @@ public class DatabaseLayer
 	/** Singleton instance itself. */
 	private static DatabaseLayer instance=null;
 
-	/** Connection to the database. Statements are run against this object. */
-	private Connection db;
+	/**
+	 * Instance of the database connection. If nothing is using this it should
+	 * be null.
+	 **/
+	private Connection dbInstance;
+
+	/**
+	 * Number of methods using dbInstance.
+	 **/
+	private int dbUseCounter;
 
 	/**
 	 * Selects a custom database location.
@@ -94,8 +102,34 @@ public class DatabaseLayer
 	 */
 	private DatabaseLayer() throws SQLException
 	{
-		db=DriverManager.getConnection(DB_DRIVER+dbLocation);
+		dbUseCounter = 0;
 		initializeDatabase();
+	}
+
+	/**
+	 * Connects to the database or returns the current connection.
+	 * @return A connection to the database.
+	 **/
+	private Connection connect() throws SQLException
+	{
+		if (dbInstance == null)
+			dbInstance = DriverManager.getConnection(DB_DRIVER+dbLocation);
+		++dbUseCounter;
+		return dbInstance;
+	}
+
+	/**
+	 * Decrements the counter for the number of methods using the database.
+	 * If the counter reaches 0 then the connection is closed and
+	 * dbInstance is set to null.
+	 **/
+	private void closeConnection() throws SQLException
+	{
+		if (--dbUseCounter == 0)
+		{
+			dbInstance.close();
+			dbInstance = null;
+		}
 	}
 
 	/**
@@ -104,6 +138,7 @@ public class DatabaseLayer
 	 **/
 	private void initializeDatabase() throws SQLException
 	{
+		Connection db = connect();
 		Statement stmt = db.createStatement();
 		
 		stmt.addBatch("CREATE TABLE IF NOT EXISTS Location( locationId INTEGER PRIMARY KEY AUTOINCREMENT, zipCode INTEGER, state TEXT);");
@@ -128,6 +163,7 @@ public class DatabaseLayer
 
 		stmt.executeBatch();
 		stmt.close();
+		closeConnection();
 	}
 
 	/**
@@ -137,9 +173,11 @@ public class DatabaseLayer
 	 **/
 	public void nuke() throws SQLException
 	{
+		Connection db = connect();
 		Statement stmt = db.createStatement();
 		stmt.executeUpdate("DELETE FROM Item; DELETE FROM Location; DELETE FROM VMLayout; DELETE FROM VMRow; DELETE FROM VendingMachine; DELETE FROM NearbyBusiness; DELETE FROM Customer; DELETE FROM Manager; DELETE FROM VMTransaction");
 		stmt.close();
+		closeConnection();
 	}
 
 	private boolean isFoodItemValid(FoodItem item)
@@ -223,6 +261,7 @@ public class DatabaseLayer
 	 **/
 	public FoodItem getFoodItemById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		FoodItem returnValue = null;
 		Statement stmt = db.createStatement();
 		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength, active FROM Item WHERE itemId=" + id);
@@ -232,6 +271,8 @@ public class DatabaseLayer
 			returnValue.setId(results.getInt(1));
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return returnValue;
 	}
 
@@ -242,6 +283,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<FoodItem> getFoodItemsAll() throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<FoodItem> returnSet = new ArrayList<FoodItem>();
 		Statement stmt = db.createStatement();
 		ResultSet results = stmt.executeQuery("SELECT itemId, name, price, freshLength, active FROM Item");
@@ -252,6 +294,8 @@ public class DatabaseLayer
 			returnSet.add(item);
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -264,6 +308,7 @@ public class DatabaseLayer
 	 **/
 	public void updateOrCreateFoodItem(FoodItem item) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if (item.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
@@ -273,6 +318,7 @@ public class DatabaseLayer
 			keys.next();
 			int id = keys.getInt(1);
 			item.setId(id);
+			keys.close();
 			insertStmt.close();
 		}
 		else
@@ -282,6 +328,7 @@ public class DatabaseLayer
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
+		closeConnection();
 	}
 
 	/**
@@ -295,6 +342,7 @@ public class DatabaseLayer
 	 **/
 	private VMLayout getVMLayoutById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		int maxX = -1;
 		int maxY = -1;
 		LinkedList<Pair<Row,Pair<Integer,Integer>>> raw = getRowsByVMLayoutId(id);
@@ -322,11 +370,13 @@ public class DatabaseLayer
 			nextVisit = new GregorianCalendar();
 			nextVisit.setTimeInMillis(nextVisitInt);
 		}
+		metaData.close();
 		moreInfo.close();
 
 		VMLayout layout = new VMLayout(rows, depth);
 		layout.setNextVisit(nextVisit);
 		layout.setId(id);
+		closeConnection();
 		return layout;
 	}
 
@@ -337,6 +387,7 @@ public class DatabaseLayer
 	 **/
 	private void updateOrCreateVMLayout(VMLayout layout) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if (layout.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
@@ -347,6 +398,7 @@ public class DatabaseLayer
 			keys.next();
 			int id = keys.getInt(1);
 			layout.setId(id);
+			keys.close();
 			insertStmt.close();
 		}
 		else
@@ -374,10 +426,16 @@ public class DatabaseLayer
 				updateOrCreateRow(row, x, y, layout.getId(), rowUpdateStatements, rowLinkStatements);
 			}
 		}
+		if (!db.getAutoCommit())
+		{
+			db.commit();
+			db.setAutoCommit(true);
+		}
 		rowUpdateStatements.executeBatch();
 		rowLinkStatements.executeBatch();
-		db.commit();
-		db.setAutoCommit(true);
+		rowUpdateStatements.close();
+		rowLinkStatements.close();
+		closeConnection();
 	}
 
 	/**
@@ -389,6 +447,7 @@ public class DatabaseLayer
 	 **/
 	private LinkedList<Pair<Row,Pair<Integer,Integer>>> getRowsByVMLayoutId(int layoutId) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		LinkedList<Pair<Row,Pair<Integer,Integer>>> returnSet = new LinkedList<Pair<Row,Pair<Integer,Integer>>>();
 		Statement rowStmt = db.createStatement();
 		ResultSet rowResults = rowStmt.executeQuery("SELECT VMRow.vmRowId, productId, expirationDate, remainingQuant, rowX, rowY FROM VMLayoutVMRowLink LEFT JOIN VMRow ON VMRow.vmRowId=VMLayoutVMRowLink.vmRowId WHERE layoutId=" + layoutId);
@@ -415,7 +474,9 @@ public class DatabaseLayer
 
 			returnSet.add(new Pair<Row, Pair<Integer, Integer>>(returnValue, new Pair<Integer, Integer>(rowX, rowY)));
 		}
+		rowResults.close();
 		rowStmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -432,6 +493,7 @@ public class DatabaseLayer
 	 **/
 	private void updateOrCreateRow(Row row, int x, int y, int parentLayoutId, PreparedStatement rowUpdateStatements, PreparedStatement rowLinkStatements) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if (row != null)
 		{
 			if(!isFoodItemValid(row.getProduct())) {
@@ -447,6 +509,7 @@ public class DatabaseLayer
 				ResultSet rowKeys = rowStmt.getGeneratedKeys();
 				rowKeys.next();
 				row.setId(rowKeys.getInt(1));
+				rowKeys.close();
 				rowStmt.close();
 			}
 			else
@@ -473,7 +536,9 @@ public class DatabaseLayer
 			rowLinkStatements.setInt(4, y);
 			rowLinkStatements.addBatch();
 		}
+		linkSet.close();
 		qLink.close();
+		closeConnection();
 	}
 
 	/**
@@ -485,6 +550,7 @@ public class DatabaseLayer
 	 **/
 	private Location getLocationById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		Location returnValue = null;
 		Statement locStmt = db.createStatement();
 		ResultSet locSet = locStmt.executeQuery("SELECT locationId, zipCode, state FROM Location WHERE locationId=" + id);
@@ -497,9 +563,12 @@ public class DatabaseLayer
 				busList.add(busSet.getString(1));
 			returnValue = new Location(locSet.getInt(2), locSet.getString(3), busList.toArray(new String[0]));
 			returnValue.setId(locSet.getInt(1));
+			busSet.close();
 			busStmt.close();
 		}
+		locSet.close();
 		locStmt.close();
+		closeConnection();
 		return returnValue;
 	}
 
@@ -510,6 +579,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Location> getLocationsAll() throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Location> returnSet = new ArrayList<Location>();
 		Statement locStmt = db.createStatement();
 		ResultSet locSet = locStmt.executeQuery("SELECT locationId, zipCode, state FROM Location");
@@ -524,9 +594,12 @@ public class DatabaseLayer
 			Location returnValue = new Location(locSet.getInt(2), locSet.getString(3), busList.toArray(new String[0]));
 			returnValue.setId(locSet.getInt(1));
 			returnSet.add(returnValue);
+			busSet.close();
 			busStmt.close();
 		}
+		locSet.close();
 		locStmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -538,6 +611,7 @@ public class DatabaseLayer
 	 **/
 	private void updateOrCreateLocation(Location location) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if (location.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
@@ -576,6 +650,7 @@ public class DatabaseLayer
 				busStmt.close();
 			}
 		}
+		closeConnection();
 	}
 
 	/**
@@ -587,6 +662,7 @@ public class DatabaseLayer
 	 **/
 	public VendingMachine getVendingMachineById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		VendingMachine returnValue = null;
 		Statement vmStmt = db.createStatement();
 		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId, stockingInterval FROM VendingMachine WHERE machineId=" + id);
@@ -606,6 +682,8 @@ public class DatabaseLayer
 			returnValue.setId(id);
 		}
 		vmResults.close();
+		vmStmt.close();
+		closeConnection();
 		return returnValue;
 	}
 
@@ -616,6 +694,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<VendingMachine> getVendingMachinesAll() throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<VendingMachine> returnSet = new ArrayList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
 		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, locationId, stockingInterval FROM VendingMachine");
@@ -636,6 +715,8 @@ public class DatabaseLayer
 			returnSet.add(machine);
 		}
 		vmResults.close();
+		vmStmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -647,6 +728,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<VendingMachine> returnSet = new ArrayList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
 		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.zipCode=" + zip);
@@ -667,6 +749,8 @@ public class DatabaseLayer
 			returnSet.add(machine);
 		}
 		vmResults.close();
+		vmStmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -678,6 +762,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<VendingMachine> getVendingMachinesByState(String state) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<VendingMachine> returnSet = new ArrayList<VendingMachine>();
 		Statement vmStmt = db.createStatement();
 		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=\"" + state + "\"");
@@ -698,6 +783,8 @@ public class DatabaseLayer
 			returnSet.add(machine);
 		}
 		vmResults.close();
+		vmStmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -712,6 +799,7 @@ public class DatabaseLayer
 	 **/
 	public void updateOrCreateVendingMachine(VendingMachine vm) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		updateOrCreateVMLayout(vm.getCurrentLayout());
 		updateOrCreateVMLayout(vm.getNextLayout());
 		updateOrCreateLocation(vm.getLocation());
@@ -734,6 +822,7 @@ public class DatabaseLayer
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
+		closeConnection();
 	}
 
 	/**
@@ -745,6 +834,7 @@ public class DatabaseLayer
 	 **/
 	public Customer getCustomerById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if(id==Customer.CASH_ID) //lock out cash customers specially, since they're not database-backed
 			return new Customer();
 		
@@ -757,7 +847,9 @@ public class DatabaseLayer
 			returnValue = new Customer(results.getString(3), results.getInt(2));
 			returnValue.setId(results.getInt(1));
 		}
+		results.close();
 		stmt.close();
+		closeConnection();
 		return returnValue;
 	}
 
@@ -768,6 +860,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Customer> getCustomersAll() throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Customer> returnSet = new ArrayList<Customer>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT customerId, money, name FROM Customer";
@@ -778,7 +871,9 @@ public class DatabaseLayer
 			returnValue.setId(results.getInt(1));
 			returnSet.add(returnValue);
 		}
+		results.close();
 		stmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -790,6 +885,7 @@ public class DatabaseLayer
 	 **/
 	public void updateOrCreateCustomer(Customer customer) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if (customer.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
@@ -798,6 +894,7 @@ public class DatabaseLayer
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			customer.setId(keys.getInt(1));
+			keys.close();
 			insertStmt.close();
 		}
 		else if(!customer.isCashCustomer())
@@ -808,6 +905,7 @@ public class DatabaseLayer
 			updateStmt.close();
 		}
 		//do NOT store cash customers under any circumstances
+		closeConnection();
 	}
 
 	/**
@@ -818,6 +916,7 @@ public class DatabaseLayer
 	 **/
 	public Manager getManagerById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		Manager returnValue = null;
 		Statement stmt = db.createStatement();
 		String query = "SELECT managerId, password, name FROM Manager WHERE managerId=" + id;
@@ -827,7 +926,9 @@ public class DatabaseLayer
 			returnValue = new Manager(results.getString(3), results.getString(2));
 			returnValue.setId(results.getInt(1));
 		}
+		results.close();
 		stmt.close();
+		closeConnection();
 		return returnValue;
 	}
 
@@ -838,6 +939,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Manager> getManagersAll() throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Manager> returnSet = new ArrayList<Manager>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT managerId, password, name FROM Manager";
@@ -848,7 +950,9 @@ public class DatabaseLayer
 			returnValue.setId(results.getInt(1));
 			returnSet.add(returnValue);
 		}
+		results.close();
 		stmt.close();
+		closeConnection();
 		return returnSet;
 	}
 
@@ -860,6 +964,7 @@ public class DatabaseLayer
 	 **/
 	public void updateOrCreateManager(Manager manager) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if (manager.isTempId())
 		{
 			Statement insertStmt = db.createStatement();
@@ -868,6 +973,7 @@ public class DatabaseLayer
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			manager.setId(keys.getInt(1));
+			keys.close();
 			insertStmt.close();
 		}
 		else
@@ -877,6 +983,7 @@ public class DatabaseLayer
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
+		closeConnection();
 	}
 
 	/**
@@ -889,6 +996,7 @@ public class DatabaseLayer
 	 **/
 	public Transaction getTransactionById(int id) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		Transaction returnValue = null;
 		Statement stmt = db.createStatement();
 		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE transactionId=" + id;
@@ -907,6 +1015,8 @@ public class DatabaseLayer
 			
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return returnValue;
 	}
 
@@ -921,6 +1031,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Transaction> getTransactionsByVendingMachine(VendingMachine vm) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE machineId=" + vm.getId();
@@ -940,6 +1051,8 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return transactions;
 	}
 
@@ -952,6 +1065,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Transaction> getTransactionsByZipCode(int zipCode) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT transactionId, timestamp, VMTransaction.machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction JOIN VendingMachine JOIN Location ON VMTransaction.machineId = VendingMachine.machineId AND VendingMachine.locationId = Location.locationId WHERE Location.zipCode=" + zipCode;
@@ -971,6 +1085,8 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return transactions;
 	}
 
@@ -983,6 +1099,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Transaction> getTransactionsByState(String state) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT transactionId, timestamp, VMTransaction.machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction JOIN VendingMachine JOIN Location ON VMTransaction.machineId = VendingMachine.machineId AND VendingMachine.locationId = Location.locationId WHERE Location.state=\"" + state + "\"";
@@ -1002,6 +1119,8 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return transactions;
 	}
 
@@ -1014,6 +1133,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Transaction> getTransactionsByCustomer(Customer customer) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE customerId=" + customer.getId();
@@ -1033,6 +1153,8 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return transactions;
 	}
 
@@ -1046,6 +1168,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Transaction> getTransactionsByFoodItem(FoodItem item) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction WHERE productId=" + item.getId();
@@ -1065,6 +1188,8 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return transactions;
 	}
 
@@ -1075,6 +1200,7 @@ public class DatabaseLayer
 	 **/
 	public ArrayList<Transaction> getTransactionsAll() throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 		Statement stmt = db.createStatement();
 		String query = "SELECT transactionId, timestamp, machineId, customerId, productId, rowX, rowY, balance FROM VMTransaction";
@@ -1094,6 +1220,8 @@ public class DatabaseLayer
 			transactions.add(transaction);
 		}
 		results.close();
+		stmt.close();
+		closeConnection();
 		return transactions;
 	}
 
@@ -1105,6 +1233,7 @@ public class DatabaseLayer
 	 **/
 	public void updateOrCreateTransaction(Transaction transaction) throws SQLException, BadStateException, BadArgumentException
 	{
+		Connection db = connect();
 		if(!isVendingMachineValid(transaction.getMachine())) {
 			throw new BadArgumentException("VendingMachine in Transaction is not in database, but it must be before the Transaction can be added");
 		}
@@ -1124,6 +1253,7 @@ public class DatabaseLayer
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			transaction.setId(keys.getInt(1));
+			keys.close();
 			insertStmt.close();
 		}
 		else
@@ -1133,5 +1263,6 @@ public class DatabaseLayer
 			updateStmt.executeUpdate(query);
 			updateStmt.close();
 		}
+		closeConnection();
 	}
 }
