@@ -2,6 +2,7 @@ import java.awt.Color;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -30,6 +31,9 @@ public class NumberField extends JTextField
 
 	/** Whether we're deliberately overriding validation. */
 	private boolean pleaseDontWorryAboutValidatingThis;
+	
+	/** Cached copy of the last string in the money field. We revert to this when an invalid character is entered. */
+	private String oldEntry;
 
 	/**
 	 * This should be called once to point the validation framework at the <tt>StatusBar</tt>.
@@ -55,6 +59,7 @@ public class NumberField extends JTextField
 	public NumberField(NumberFormat formatDescriptor)
 	{
 		this.formatDescriptor=formatDescriptor;
+		this.oldEntry = "";
 		setInputVerifier(new NumberFieldVerifier());
 		getDocument().addDocumentListener((NumberFieldVerifier)getInputVerifier());
 		contentsValid=false; //there *is* no int
@@ -151,13 +156,30 @@ public class NumberField extends JTextField
 		/** @inheritDoc */
 		public void insertUpdate(DocumentEvent ignored)
 		{
-			verify(null);
+			generalUpdate();
 		}
 
 		/** @inheritDoc */
 		public void removeUpdate(DocumentEvent ignored)
 		{
-			verify(null);
+			generalUpdate();
+		}
+		
+		private void generalUpdate()
+		{
+			if(verify(null) || getText().length() == 0)
+			{
+				oldEntry = getText();
+			}
+			else if(getText().length() >= 1)
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						setText(oldEntry);
+					}
+				});
+			}
 		}
 
 		/** @inheritDoc */

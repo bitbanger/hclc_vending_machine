@@ -1,6 +1,10 @@
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -15,6 +19,11 @@ public class MoneyField extends JTextField
 	 * The status bar to use for error reporting.
 	 **/
 	private StatusBar statusBar;
+	
+	/**
+	 * Cached copy of the last string in the money field. We revert to this when an invalid character is entered.
+	 **/
+	private String oldEntry;
 
 	/**
 	 * Create a new MoneyField using the given status bar for error reporting.
@@ -24,6 +33,7 @@ public class MoneyField extends JTextField
 	{
 		super(20);
 		this.statusBar = statusBar;
+		this.oldEntry = "";
 		monetaryAmount = -1;
 		MoneyInputVerifier verifier = new MoneyInputVerifier();
 		setInputVerifier(verifier);
@@ -91,13 +101,30 @@ public class MoneyField extends JTextField
 		/** @inheritDoc */
 		public void insertUpdate(DocumentEvent ignored)
 		{
-			verify(null);
+			generalUpdate();
 		}
 
 		/** @inheritDoc */
 		public void removeUpdate(DocumentEvent ignored)
 		{
-			verify(null);
+			generalUpdate();
+		}
+		
+		private void generalUpdate()
+		{
+			if(verify(null) || getText().length() == 0)
+			{
+				oldEntry = getText();
+			}
+			else if(getText().length() >= 1)
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						setText(oldEntry);
+					}
+				});
+			}
 		}
 	}
 }
