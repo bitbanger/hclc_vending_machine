@@ -219,7 +219,7 @@ public class RestockerTaskListScreen {
 				return false;
 		}
 		VMLayout pres = new VMLayout( status, true );
-		Set<Integer> insts = instructions.keySet();
+		ArrayList<Integer> insts = new ArrayList<Integer>( instructions.keySet() );
 		for ( Integer inst : insts ) {
 			this.removeInstruction( inst );
 		}
