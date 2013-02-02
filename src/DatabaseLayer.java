@@ -237,7 +237,7 @@ public class DatabaseLayer
 
 	/**
 	 * Gets all of the items in the database.
-	 * @return A collection of all of the items in the database.
+	 * @return An ArrayList of all of the items in the database.
 	 * @throws SQLException in case of a database error
 	 **/
 	public ArrayList<FoodItem> getFoodItemsAll() throws SQLException, BadStateException, BadArgumentException
@@ -505,7 +505,7 @@ public class DatabaseLayer
 
 	/**
 	 * Fetches all of the locations from the database
-	 * @return A collection of all the locations
+	 * @return An ArrayList of all the locations
 	 * @throws SQLException in case of a database error.
 	 **/
 	public ArrayList<Location> getLocationsAll() throws SQLException, BadStateException, BadArgumentException
@@ -611,7 +611,7 @@ public class DatabaseLayer
 
 	/**
 	 * Fetches all of the vending machines in the database.
-	 * @return Collection of all of the vending machines in the database.
+	 * @return ArrayList of all of the vending machines in the database.
 	 * @throws SQLException in case of a database error
 	 **/
 	public ArrayList<VendingMachine> getVendingMachinesAll() throws SQLException, BadStateException, BadArgumentException
@@ -642,7 +642,7 @@ public class DatabaseLayer
 	/**
 	 * Fetches all of the vending machines at a given zip code.
 	 * @param zip The zip code to fetch the vending machines from.
-	 * @return Collection of all of the vending machines at the given zip code.
+	 * @return ArrayList of all of the vending machines at the given zip code.
 	 * @throws SQLException in case of a database error
 	 **/
 	public ArrayList<VendingMachine> getVendingMachinesByZip(int zip) throws SQLException, BadStateException, BadArgumentException
@@ -673,7 +673,7 @@ public class DatabaseLayer
 	/**
 	 * Fetches all of the vending machines in a state.
 	 * @param state The state to fetch the vending machines from.
-	 * @return Collection of all of the vending machines in the given state.
+	 * @return ArrayList of all of the vending machines in the given state.
 	 * @throws SQLException in case of a database error
 	 **/
 	public ArrayList<VendingMachine> getVendingMachinesByState(String state) throws SQLException, BadStateException, BadArgumentException
@@ -763,7 +763,7 @@ public class DatabaseLayer
 
 	/**
 	 * Fetches all of the customers from the database
-	 * @return A collection of all the managers
+	 * @return An ArrayList of all the managers
 	 * @throws SQLException in case of a database error.
 	 **/
 	public ArrayList<Customer> getCustomersAll() throws SQLException, BadStateException, BadArgumentException
@@ -833,7 +833,7 @@ public class DatabaseLayer
 
 	/**
 	 * Fetches all of the managers from the database
-	 * @return A collection of all the managers
+	 * @return An ArrayList of all the managers
 	 * @throws SQLException in case of a database error.
 	 **/
 	public ArrayList<Manager> getManagersAll() throws SQLException, BadStateException, BadArgumentException
@@ -915,7 +915,7 @@ public class DatabaseLayer
 	 * machine.
 	 * @param vm The vending machine at which the transactions you desire
 	 * occurred.
-	 * @return A collection containing the transactions that occurred at the
+	 * @return An ArrayList containing the transactions that occurred at the
 	 * given vending machine.
 	 * @throws SQLException in case of a database error
 	 **/
@@ -946,7 +946,7 @@ public class DatabaseLayer
 	/**
 	 * Fetches all of the transactions that occurred at the given zip code
 	 * @param zipCode The zip code at which the desired transactions occurred.
-	 * @return A collection containing the transactions that occurred at the
+	 * @return An ArrayList containing the transactions that occurred at the
 	 * given zip code.
 	 * @throws SQLException in case of a database error
 	 **/
@@ -977,7 +977,7 @@ public class DatabaseLayer
 	/**
 	 * Fetches all of the transactions that occurred in the given state
 	 * @param state The state in which the desired transactions occurred.
-	 * @return A collection containing the transactions that occurred in the
+	 * @return An ArrayList containing the transactions that occurred in the
 	 * given state.
 	 * @throws SQLException in case of a database error
 	 **/
@@ -1008,7 +1008,7 @@ public class DatabaseLayer
 	/**
 	 * Fetches all of the transactions the given customer has made.
 	 * @param customer The customer that performed the transactions you desire.
-	 * @return A collection containing the transactions the given customer
+	 * @return An ArrayList containing the transactions the given customer
 	 * performed.
 	 * @throws SQLException in case of a database error
 	 **/
@@ -1070,7 +1070,7 @@ public class DatabaseLayer
 
 	/**
 	 * Fetches all of the transactions that have ever occurred.
-	 * @return A collection of all of the transactions.
+	 * @return An ArrayList of all of the transactions.
 	 * @throws SQLException in case of a database error
 	 **/
 	public ArrayList<Transaction> getTransactionsAll() throws SQLException, BadStateException, BadArgumentException
