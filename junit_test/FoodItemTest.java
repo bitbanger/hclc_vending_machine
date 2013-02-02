@@ -11,20 +11,6 @@ import java.util.GregorianCalendar;
  */
 @RunWith(JUnit4.class)
 public class FoodItemTest {
-	private TestUtilitiesSimple util=null;
-
-	private void noTestReadyUtilities()
-	{
-		if(util==null)
-			try
-			{
-				util=new TestUtilitiesSimple();
-			}
-			catch(Exception checked)
-			{
-				throw new IllegalStateException("Failed initializing test utilities");
-			}
-	}
 
 	@Test
 	public void testNormalConstruction() throws BadArgumentException {
@@ -123,10 +109,10 @@ public class FoodItemTest {
 	}
 
 	@Test
-	public void testMakeActive()
+	public void testMakeActive() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		FoodItem noop=util.items.get(0), change=util.items.get(3);
+		FoodItem noop = new FoodItem("Twix", 175, 1000);
+		FoodItem change = new FoodItem("Fish Sandwich", 200, 100000);
 		FoodItem noCop=new FoodItem(noop), chgCopy=new FoodItem(change);
 		
 		noop.makeActive(true);
@@ -141,8 +127,8 @@ public class FoodItemTest {
 	@Test
 	public void testSetFreshLength() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		FoodItem noop=util.items.get(0), change=util.items.get(3);
+		FoodItem noop = new FoodItem("Twix", 175, 1000);
+		FoodItem change = new FoodItem("Fish Sandwich", 200, 100000);
 		FoodItem noCop=new FoodItem(noop), chgCopy=new FoodItem(change);
 		
 		long old=noop.getFreshLength();
@@ -160,8 +146,8 @@ public class FoodItemTest {
 	@Test
 	public void testSetName() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		FoodItem noop=util.items.get(0), change=util.items.get(3);
+		FoodItem noop = new FoodItem("Twix", 175, 1000);
+		FoodItem change = new FoodItem("Fish Sandwich", 200, 100000);
 		FoodItem noCop=new FoodItem(noop), chgCopy=new FoodItem(change);
 		
 		String old=noop.getName();
@@ -179,8 +165,8 @@ public class FoodItemTest {
 	@Test
 	public void testSetPrice() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		FoodItem noop=util.items.get(0), change=util.items.get(3);
+		FoodItem noop = new FoodItem("Twix", 175, 1000);
+		FoodItem change = new FoodItem("Fish Sandwich", 200, 100000);
 		FoodItem noCop=new FoodItem(noop), chgCopy=new FoodItem(change);
 		
 		int old=noop.getPrice();
@@ -198,35 +184,35 @@ public class FoodItemTest {
 	@Test(expected=BadArgumentException.class)
 	public void testSetNegativeFreshLength() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		util.items.get(1).setFreshLength(-1);
+		FoodItem change = new FoodItem("Snickers", 175, 1000, false);
+		change.setFreshLength(-1);
 	}
 
 	@Test(expected=BadArgumentException.class)
 	public void testSetZeroFreshLength() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		util.items.get(1).setFreshLength(0);
+		FoodItem change = new FoodItem("Snickers", 175, 1000, false);
+		change.setFreshLength(0);
 	}
 
 	@Test(expected=BadArgumentException.class)
 	public void testSetNullName() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		util.items.get(1).setName(null);
+		FoodItem change = new FoodItem("Snickers", 175, 1000, false);
+		change.setName(null);
 	}
 
 	@Test(expected=BadArgumentException.class)
 	public void testSetNegativePrice() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		util.items.get(1).setPrice(-1);
+		FoodItem change = new FoodItem("Snickers", 175, 1000, false);
+		change.setPrice(-1);
 	}
 
 	@Test
 	public void testSetZeroPrice() throws BadArgumentException
 	{
-		noTestReadyUtilities();
-		util.items.get(1).setPrice(0);
+		FoodItem change = new FoodItem("Snickers", 175, 1000, false);
+		change.setPrice(0);
 	}
 }
