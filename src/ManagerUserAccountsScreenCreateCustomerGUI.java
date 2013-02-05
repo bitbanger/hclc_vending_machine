@@ -139,7 +139,7 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 		} else if(event.getSource() == confirmButton) {
 			controller.addCustomer(nameField.getText(), U.parseMoney(initialBalanceField.getText()));
 			
-			solsScreen.refreshYourselfYouSmellAweful();
+			solsScreen.refreshYourselfYouSmellAwful();
 			
 			master.popContentPanel();
 		}

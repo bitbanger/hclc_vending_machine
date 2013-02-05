@@ -200,7 +200,7 @@ public class ManagerUserAccountsScreenChangeManagerPasswordGUI extends JPanel im
 				controller.addManager(nameField.getText(), new String(passwordField.getPassword()));
 			}
 			
-			solsScreen.refreshYourselfYouSmellAweful();
+			solsScreen.refreshYourselfYouSmellAwful();
 			
 			master.popContentPanel();
 		}

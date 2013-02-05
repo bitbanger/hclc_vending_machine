@@ -68,7 +68,7 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	/**
 	 * Causes us to refresh ourselves with a sigh.
 	 */
-	public void refreshYourselfYouSmellAweful()
+	public void refreshYourselfYouSmellAwful()
 	{
 		managerList.setListData(controller.listManagers().toArray());
 		customerList.setListData(controller.listCustomers().toArray());
