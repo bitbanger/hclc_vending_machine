@@ -128,6 +128,7 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(returnHomeButton);
+		buttonPanel.add(Box.createHorizontalStrut(10)); // Creates a space between the two buttons
 		buttonPanel.add(showTransactionsButton);
 		buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
@@ -143,9 +144,9 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		this.add(itemLabel);
 		this.add(itemList);
 		this.add(Box.createGlue());
+		this.add(Box.createVerticalStrut(10)); // Creates a space between the items text field and the buttons
 		this.add(buttonPanel);
 		this.add(Box.createGlue());
-		
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}
 	
