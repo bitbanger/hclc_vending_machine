@@ -29,7 +29,7 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 	private JTextField nameField;
 	
 	/** The field for the customer's initial money balance */
-	private JTextField initialBalanceField;
+	private MoneyField initialBalanceField;
 	
 	/** Button to return to the user accounts screen */
 	private JButton returnHomeButton;
@@ -56,7 +56,7 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 		nameField = new JTextField();
 		nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)nameField.getPreferredSize().getHeight()));
 		
-		initialBalanceField = new JTextField();
+		initialBalanceField = new MoneyField(master.getStatusBar());
 		initialBalanceField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)initialBalanceField.getPreferredSize().getHeight()));
 		
 		nameField.getDocument().addDocumentListener(new DocumentListener() {
@@ -110,7 +110,7 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 		confirmButton.addCondition(new ConditionButtonCondition() {
 			public boolean checkCondition() {
 				return (!nameField.getText().equals("")) &&
-					   U.parseMoney(initialBalanceField.getText()) != U.BAD_MONEY;
+					   initialBalanceField.areContentsValid();
 			}
 		});
 		confirmButton.checkAndSetEnabled();

@@ -24,6 +24,9 @@ public class MoneyField extends JTextField
 	 * Cached copy of the last string in the money field. We revert to this when an invalid character is entered.
 	 **/
 	private String oldEntry;
+	
+	/** Whether we're deliberately overriding validation. */
+	private boolean pleaseDontWorryAboutValidatingThis;
 
 	/**
 	 * Create a new MoneyField using the given status bar for error reporting.
@@ -38,6 +41,7 @@ public class MoneyField extends JTextField
 		MoneyInputVerifier verifier = new MoneyInputVerifier();
 		setInputVerifier(verifier);
 		getDocument().addDocumentListener(verifier);
+		pleaseDontWorryAboutValidatingThis=false;
 	}
 
 	/**
@@ -62,8 +66,10 @@ public class MoneyField extends JTextField
 	 **/
 	public void clearMoneyEntered()
 	{
+		pleaseDontWorryAboutValidatingThis=true;
 		monetaryAmount = -1;
 		setText("");
+		pleaseDontWorryAboutValidatingThis=false;
 	}
 
 	/**
@@ -77,10 +83,16 @@ public class MoneyField extends JTextField
 		public boolean verify(JComponent _)
 		{
 			monetaryAmount = U.parseMoney(getText());
+			
+			if(pleaseDontWorryAboutValidatingThis) {
+				statusBar.clearStatus();
+				return true;
+			}
+			
 			if (monetaryAmount == U.BAD_MONEY)
 			{
-				if (!getText().equals(""))
-					statusBar.setStatus("Invalid monetary amount", StatusBar.STATUS_BAD_COLOR);
+				//if (!getText().equals(""))
+				statusBar.setStatus("Invalid monetary amount", StatusBar.STATUS_BAD_COLOR);
 				return false;
 			}
 			else if (monetaryAmount == U.TOO_MUCH_MONEY)
