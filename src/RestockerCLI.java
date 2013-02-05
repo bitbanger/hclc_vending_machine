@@ -32,7 +32,7 @@ public class RestockerCLI {
 		CLIUtilities.printTitle("List of Tasks to Perform");
 	
 		tasks = restockerTaskListScreen.getInstructions();
-		SortedSet<Integer> list = new TreeSet();
+		SortedSet<Integer> list = new TreeSet<Integer>();
 		list.addAll( tasks.keySet() );
 		for ( Integer task : list ) {
 			System.out.print(task + ": " + tasks.get(task).first);
