@@ -1,6 +1,8 @@
 import java.util.Collection;
+import java.util.SortedSet;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.TreeSet;
 /**
  * CLI for the Restocker's perspective.
  * Provides an entry point for the Restocker.
@@ -30,8 +32,9 @@ public class RestockerCLI {
 		CLIUtilities.printTitle("List of Tasks to Perform");
 	
 		tasks = restockerTaskListScreen.getInstructions();
-
-		for ( Integer task : tasks.keySet() ) {
+		SortedSet<Integer> list = new TreeSet();
+		list.addAll( tasks.keySet() );
+		for ( Integer task : list ) {
 			System.out.print(task + ": " + tasks.get(task).first);
 			if ( tasks.get(task).second )
 				System.out.print("\tREQUIRED");
