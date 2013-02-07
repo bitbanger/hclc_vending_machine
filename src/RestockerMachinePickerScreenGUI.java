@@ -126,9 +126,12 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		ConditionButton selectButton = new ConditionButton("Select");
 		
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(cancelButton);
-		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(selectButton);
+		buttonPanel.add(Box.createGlue());
+
+		buttonPanel.add(Box.createHorizontalStrut(400));
+
+		buttonPanel.add(cancelButton);
 		
 		this.add(buttonPanel);
 
