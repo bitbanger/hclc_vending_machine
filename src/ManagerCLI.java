@@ -582,7 +582,7 @@ public class ManagerCLI
 	private static void editItem(ManagerStockedItemsScreen screen)
 	{
 		if(screen.listItems().size() == 0) {
-			System.out.println("No food items currently exist! Please add one to continue.");
+			System.out.println("No items currently exist! Please add one to continue.");
 			return;
 		}
 
