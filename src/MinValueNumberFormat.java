@@ -40,4 +40,10 @@ public class MinValueNumberFormat extends NumberFormat
 		else
 			return "Please enter only a number greater than or equal to "+MINIMUM;
 	}
+
+	/** @return the minimum acceptable value */
+	public int getMinimum()
+	{
+		return MINIMUM;
+	}
 }

@@ -109,7 +109,7 @@ public class CustomerLoginScreen {
 		}
 		catch(InstantiationException absentInactive) //not found in database (null) or inactive
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, absentInactive);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, absentInactive);
 			return null;
 		}
 		catch(Exception databaseError) //more serious error came from database

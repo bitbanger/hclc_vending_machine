@@ -33,7 +33,7 @@ public class ManagerLoginScreen {
 		}
 		catch(Exception databaseProblem)
 		{
-			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.WARN, databaseProblem);
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return null;
 		}
 	}

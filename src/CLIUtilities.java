@@ -79,7 +79,7 @@ public class CLIUtilities {
 
 		int selectedOption = -1;
 		do {
-			selectedOption = promptInt("Select an option") - 1;
+			selectedOption = promptInt("Select an option", new DoublyBoundedNumberFormat(1, options.length+1)) - 1;
 		} while(selectedOption < 0 || selectedOption >= options.length);
 
 		return selectedOption;
@@ -99,7 +99,7 @@ public class CLIUtilities {
 
 		int selectedOption = -1;
 		do {
-			selectedOption = promptInt("Select an option") - 1;
+			selectedOption = promptInt("Select an option", new DoublyBoundedNumberFormat(1, options.size()+1)) - 1;
 		} while(selectedOption < 0 || selectedOption >= options.size());
 
 		return selectedOption;
