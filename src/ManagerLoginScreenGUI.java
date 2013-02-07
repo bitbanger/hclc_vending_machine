@@ -88,8 +88,9 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
 
 		// Label for manager id text box
-		JLabel idLabel = new JLabel("Enter ID");
+		JLabel idLabel = new JLabel("Enter ID:");
 		idPanel.add(idLabel);
+		idPanel.add(Box.createHorizontalStrut(62)); // Creates space between ID label and text field
 
 		// Gap between label and text box
 		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -103,7 +104,7 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
 		
 		// Label for password text box
-		JLabel passLabel = new JLabel("Enter password");
+		JLabel passLabel = new JLabel("Enter password:");
 		passPanel.add(passLabel);
 		
 		// Gap between label and text box
@@ -156,9 +157,6 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		JPanel loginButtonPanel = new JPanel();
 		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
 
-		// Aligns the button to the right
-		loginButtonPanel.add(Box.createGlue());
-
 		// Add the login button
 		final NumberField tempField = idTextField;
 		loginButton.addCondition(new ConditionButtonCondition()
@@ -182,6 +180,10 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		
 		// Add the exit button
 		exitButton = new JButton("Exit");
+		loginButtonPanel.add(Box.createHorizontalStrut(270));  // Spaces out the buttons
+		loginButtonPanel.add(exitButton);
+		
+		// Add the exit button ActionListener
 		exitButton.addActionListener(new ActionListener() 
 		{
 			/**
@@ -196,7 +198,6 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 				}
 			}
 		});
-		this.add(exitButton);
 	}
 
 	/**
