@@ -49,7 +49,7 @@ public class CustomerPurchaseScreenTest {
 		Customer user = helper.customers.get(0);
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
-		Assert.assertTrue( "GOOD".equals( screen.tryPurchase( 
+		Assert.assertTrue( "Good".equals( screen.tryPurchase( 
 			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
@@ -61,7 +61,7 @@ public class CustomerPurchaseScreenTest {
 		Customer user = helper.customers.get(0);
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
-		Assert.assertTrue( "INVALID LOCATION".equals( screen.tryPurchase( 
+		Assert.assertTrue( "Invalid location".equals( screen.tryPurchase( 
 			new Pair<Integer, Integer> (0, 15) ) ) );
 	}
 
@@ -73,7 +73,7 @@ public class CustomerPurchaseScreenTest {
 		Customer user = helper.customers.get(0);
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
-		Assert.assertTrue( "NO PRODUCT".equals( screen.tryPurchase( 
+		Assert.assertTrue( "No product".equals( screen.tryPurchase( 
 			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
@@ -88,7 +88,7 @@ public class CustomerPurchaseScreenTest {
 		Customer user = helper.customers.get(0);
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
-		Assert.assertTrue( "ITEM SOLD OUT".equals( screen.tryPurchase( 
+		Assert.assertTrue( "Item sold out".equals( screen.tryPurchase( 
 			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
@@ -103,7 +103,7 @@ public class CustomerPurchaseScreenTest {
 		Customer user = helper.customers.get(0);
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
-		Assert.assertTrue( "ITEM INACTIVE".equals( screen.tryPurchase( 
+		Assert.assertTrue( "Item inactive".equals( screen.tryPurchase( 
 			new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
@@ -116,7 +116,7 @@ public class CustomerPurchaseScreenTest {
 		user.setMoney( 0 );
 		CustomerPurchaseScreen screen = new 
 			CustomerPurchaseScreen( user, help );
-		Assert.assertTrue( "INSUFFICIENT FUNDS".equals( 
+		Assert.assertTrue( "Insufficient funds".equals( 
 			screen.tryPurchase( new Pair<Integer, Integer> (0, 0) ) ) );
 	}
 
@@ -201,7 +201,7 @@ public class CustomerPurchaseScreenTest {
 		VendingMachine help=helper.machines.get(1);
 		Customer user=helper.customers.get(0);
 		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
-		Assert.assertTrue(screen.tryPurchase(helper.items.get(0)).equals("GOOD"));
+		Assert.assertTrue(screen.tryPurchase(helper.items.get(0)).equals("Good"));
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class CustomerPurchaseScreenTest {
 		Customer user=helper.customers.get(0);
 		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
 		FoodItem howAboutW = new FoodItem("W", 125, 125, true);
-		Assert.assertTrue(screen.tryPurchase(howAboutW).equals("ITEM NOT FOUND"));
+		Assert.assertTrue(screen.tryPurchase(howAboutW).equals("Item not found"));
 	}
 
 	/**
@@ -231,6 +231,6 @@ public class CustomerPurchaseScreenTest {
 		Customer user=helper.customers.get(0);
 		CustomerPurchaseScreen screen=new CustomerPurchaseScreen(user, help);
 		FoodItem howAboutW = null;
-		Assert.assertTrue(screen.tryPurchase(howAboutW).equals("ITEM NOT FOUND"));
+		Assert.assertTrue(screen.tryPurchase(howAboutW).equals("Item not found"));
 	}
 }

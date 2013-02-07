@@ -61,19 +61,19 @@ public class CustomerPurchaseScreen {
 		Row[][] rows = locs.getRows();
 		if ( product.first < 0 || rows.length <= product.first ||
 			product.second < 0 || rows[product.first].length <= product.second )
-			return "INVALID LOCATION"; //not a valid location
+			return "Invalid location"; //not a valid location
 		if ( rows[product.first][product.second] == null)
-			return "NO PRODUCT"; //nothing to see here
+			return "No product"; //nothing to see here
 		if ( rows[product.first][product.second].getRemainingQuantity() <= 0 )
-			return "ITEM SOLD OUT"; //check if there is some remaining
+			return "Item sold out"; //check if there is some remaining
 		if ( !rows[product.first][product.second].getProduct().isActive() )
-			return "ITEM INACTIVE"; //check if product disabled
+			return "Item inactive"; //check if product disabled
 		
 		FoodItem item = rows[product.first][product.second].getProduct();
 		int cash = getBalance();
 		int price = item.getPrice();
 		if ( cash < price )
-			return "INSUFFICIENT FUNDS"; //insufficient funds
+			return "Insufficient funds"; //insufficient funds
 		
 		try
 		{
@@ -89,7 +89,7 @@ public class CustomerPurchaseScreen {
 		{
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.ERROR, databaseProblem);
 		}
-		return "GOOD";
+		return "Good";
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class CustomerPurchaseScreen {
 
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 		}
-		return "ITEM NOT FOUND";
+		return "Item not found";
 	}
 
 	/**
