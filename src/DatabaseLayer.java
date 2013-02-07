@@ -311,9 +311,12 @@ public class DatabaseLayer
 		Connection db = connect();
 		if (item.isTempId())
 		{
-			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO Item(name, price, freshLength, active) VALUES(\"%s\", %d, %d, %d)", item.getName(), item.getPrice(), item.getFreshLength(), item.isActive() ? 1 : 0);
-			insertStmt.executeUpdate(query);
+			PreparedStatement insertStmt = db.prepareStatement("INSERT INTO Item(name, price, freshLength, active) VALUES(?, ?, ?, ?)");
+			insertStmt.setString(1, item.getName());
+			insertStmt.setInt(2, item.getPrice());
+			insertStmt.setLong(3, item.getFreshLength());
+			insertStmt.setInt(4, item.isActive() ? 1 : 0);
+			insertStmt.executeUpdate();
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			int id = keys.getInt(1);
@@ -323,9 +326,13 @@ public class DatabaseLayer
 		}
 		else
 		{
-			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Item SET name=\"%s\", price=%d, freshLength=%d, active=%d WHERE itemId=%d", item.getName(), item.getPrice(), item.getFreshLength(), item.isActive() ? 1 : 0, item.getId());
-			updateStmt.executeUpdate(query);
+			PreparedStatement updateStmt = db.prepareStatement("UPDATE Item SET name=?, price=?, freshLength=?, active=? WHERE itemId=?");
+			updateStmt.setString(1, item.getName());
+			updateStmt.setInt(2, item.getPrice());
+			updateStmt.setLong(3, item.getFreshLength());
+			updateStmt.setInt(4, item.isActive() ? 1 : 0);
+			updateStmt.setInt(5, item.getId());
+			updateStmt.executeUpdate();
 			updateStmt.close();
 		}
 		closeConnection();
@@ -614,9 +621,11 @@ public class DatabaseLayer
 		Connection db = connect();
 		if (location.isTempId())
 		{
-			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO Location(zipCode, state) VALUES(%d, \"%s\")", location.getZipCode(), location.getState());
-			insertStmt.executeUpdate(query);
+			PreparedStatement insertStmt = db.prepareStatement("INSERT INTO Location(zipCode, state) VALUES(?, ?)");
+			insertStmt.setInt(1, location.getZipCode());
+			insertStmt.setString(2, location.getState());
+	 		
+			insertStmt.executeUpdate();
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			int id = keys.getInt(1);
@@ -625,17 +634,20 @@ public class DatabaseLayer
 
 			for (String business : location.getNearbyBusinesses())
 			{
-				Statement busStmt = db.createStatement();
-				String busQuery = String.format("INSERT INTO NearbyBusiness(locationId, name) VALUES(%d, \"%s\")", location.getId(), business);
-				busStmt.executeUpdate(busQuery);
+				PreparedStatement busStmt = db.prepareStatement("INSERT INTO NearbyBusiness(locationId, name) VALUES(?, ?)");
+				busStmt.setInt(1, location.getId());
+				busStmt.setString(2, business);
+				busStmt.executeUpdate();
 				busStmt.close();
 			}
 		}
 		else
 		{
-			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Location SET zipCode=%d, state=\"%s\" WHERE locationId=%d", location.getZipCode(), location.getState(), location.getId());
-			updateStmt.executeUpdate(query);
+			PreparedStatement updateStmt = db.prepareStatement("UPDATE Location SET zipCode=?, state=? WHERE locationId=?");
+			updateStmt.setInt(1, location.getZipCode());
+			updateStmt.setString(2, location.getState());
+			updateStmt.setInt(3, location.getId());
+			updateStmt.executeUpdate();
 			updateStmt.close();
 
 			Statement delStatement = db.createStatement();
@@ -644,9 +656,10 @@ public class DatabaseLayer
 
 			for (String business : location.getNearbyBusinesses())
 			{
-				Statement busStmt = db.createStatement();
-				String busQuery = String.format("INSERT INTO NearbyBusiness(locationId, name) VALUES(%d, \"%s\")", location.getId(), business);
-				busStmt.executeUpdate(busQuery);
+				PreparedStatement busStmt = db.prepareStatement("INSERT INTO NearbyBusiness(locationId, name) VALUES(?, ?)");
+				busStmt.setInt(1, location.getId());
+				busStmt.setString(2, business);
+				busStmt.executeUpdate();
 				busStmt.close();
 			}
 		}
@@ -764,8 +777,9 @@ public class DatabaseLayer
 	{
 		Connection db = connect();
 		ArrayList<VendingMachine> returnSet = new ArrayList<VendingMachine>();
-		Statement vmStmt = db.createStatement();
-		ResultSet vmResults = vmStmt.executeQuery("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=\"" + state + "\"");
+		PreparedStatement vmStmt = db.prepareStatement("SELECT machineId, active, currentLayoutId, nextLayoutId, VendingMachine.locationId, stockingInterval FROM VendingMachine JOIN Location ON Location.locationId = VendingMachine.locationId WHERE Location.state=?");
+		vmStmt.setString(1, state);
+		ResultSet vmResults = vmStmt.executeQuery();
 		while (vmResults.next())
 		{
 			int id = vmResults.getInt(1);
@@ -888,9 +902,10 @@ public class DatabaseLayer
 		Connection db = connect();
 		if (customer.isTempId())
 		{
-			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO Customer(money, name) VALUES(%d, \"%s\")", customer.getMoney(), customer.getName());
-			insertStmt.executeUpdate(query);
+			PreparedStatement insertStmt = db.prepareStatement("INSERT INTO Customer(money, name) VALUES(?, ?)");
+			insertStmt.setInt(1, customer.getMoney());
+			insertStmt.setString(2, customer.getName());
+			insertStmt.executeUpdate();
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			customer.setId(keys.getInt(1));
@@ -899,9 +914,11 @@ public class DatabaseLayer
 		}
 		else if(!customer.isCashCustomer())
 		{
-			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Customer SET money=%d, name=\"%s\" WHERE customerId=%d", customer.getMoney(), customer.getName(), customer.getId());
-			updateStmt.executeUpdate(query);
+			PreparedStatement updateStmt = db.prepareStatement("UPDATE Customer SET money=?, name=? WHERE customerId=?");
+			updateStmt.setInt(1, customer.getMoney());
+			updateStmt.setString(2, customer.getName());
+			updateStmt.setInt(3, customer.getId());
+			updateStmt.executeUpdate();
 			updateStmt.close();
 		}
 		//do NOT store cash customers under any circumstances
@@ -967,9 +984,10 @@ public class DatabaseLayer
 		Connection db = connect();
 		if (manager.isTempId())
 		{
-			Statement insertStmt = db.createStatement();
-			String query = String.format("INSERT INTO Manager(password, name) VALUES(\"%s\", \"%s\")", manager.getPassword(), manager.getName());
-			insertStmt.executeUpdate(query);
+			PreparedStatement insertStmt = db.prepareStatement("INSERT INTO Manager(password, name) VALUES(?, ?)");
+			insertStmt.setString(1, manager.getPassword());
+			insertStmt.setString(2, manager.getName());
+			insertStmt.executeUpdate();
 			ResultSet keys = insertStmt.getGeneratedKeys();
 			keys.next();
 			manager.setId(keys.getInt(1));
@@ -978,9 +996,11 @@ public class DatabaseLayer
 		}
 		else
 		{
-			Statement updateStmt = db.createStatement();
-			String query = String.format("UPDATE Manager SET password=\"%s\", name=\"%s\" WHERE managerId=%d", manager.getPassword(), manager.getName(), manager.getId());
-			updateStmt.executeUpdate(query);
+			PreparedStatement updateStmt = db.prepareStatement("UPDATE Manager SET password=?, name=? WHERE managerId=?");
+			updateStmt.setString(1, manager.getPassword());
+			updateStmt.setString(2, manager.getName());
+			updateStmt.setInt(3, manager.getId());
+			updateStmt.executeUpdate();
 			updateStmt.close();
 		}
 		closeConnection();
