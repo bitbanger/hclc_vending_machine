@@ -22,20 +22,6 @@ public class VendingMachine extends ModelBase
 	private VMLayout nextLayout;
 
 	/**
-	 * Simple constructor.
-	 * Creates an instance with the specified <tt>location</tt> and layout.
-	 * Initially, the machine is considered to be active, but lacks any next layout.
-	 * @param location the <tt>VendingMachine</tt>'s abode
-	 * @param stockingInterval how many days between consecutive restockings
-	 * @param currentLayout the <tt>VendingMachine</tt>'s layout
-	 * @throws BadArgumentException if <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>, or if <tt>stockingInterval</tt> is not positive
-	 */
-	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout) throws BadArgumentException
-	{
-		this(location, stockingInterval, currentLayout, new VMLayout(currentLayout, true), true);
-	}
-
-	/**
 	 * Thorough constructor.
 	 * Creates an instance with the specified <tt>location</tt> and layout.
 	 * Both the future layout and the machine's activity are also supplied.
@@ -65,6 +51,20 @@ public class VendingMachine extends ModelBase
 		this.currentLayout=currentLayout;
 		this.active=active;
 		this.nextLayout = nextLayout;
+	}
+
+	/**
+	 * Simple constructor.
+	 * Creates an instance with the specified <tt>location</tt> and layout.
+	 * Initially, the machine is considered to be active, but lacks any next layout.
+	 * @param location the <tt>VendingMachine</tt>'s abode
+	 * @param stockingInterval how many days between consecutive restockings
+	 * @param currentLayout the <tt>VendingMachine</tt>'s layout
+	 * @throws BadArgumentException if <tt>location</tt> or <tt>currentLayout</tt> is <tt>null</tt>, or if <tt>stockingInterval</tt> is not positive
+	 */
+	public VendingMachine(Location location, int stockingInterval, VMLayout currentLayout) throws BadArgumentException
+	{
+		this(location, stockingInterval, currentLayout, new VMLayout(currentLayout, true), true);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class VendingMachine extends ModelBase
 		if(stockingInterval<=0)
 			throw new BadArgumentException("Stocking interval must be positive");
 		
-		GregorianCalendar latestStocking=lastPossibleVisit(stockingInterval);
+		GregorianCalendar latestStocking=VendingMachine.lastPossibleVisit(stockingInterval);
 		
 		if(currentLayout.getNextVisit().compareTo(latestStocking)>0) //we now want to visit sooner
 			currentLayout.setNextVisit(latestStocking);
@@ -188,7 +188,7 @@ public class VendingMachine extends ModelBase
 	{
 		currentLayout=nextLayout;
 		nextLayout=new VMLayout(currentLayout, true); //deep copy
-		currentLayout.setNextVisit(lastPossibleVisit(stockingInterval)); //visit after stockingInterval
+		currentLayout.setNextVisit(VendingMachine.lastPossibleVisit(stockingInterval)); //visit after stockingInterval
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class VendingMachine extends ModelBase
 	 * @param offset the number of days from now to next restock
 	 * @return the resulting timestamp
 	 */
-	private GregorianCalendar lastPossibleVisit(int offset)
+	private static GregorianCalendar lastPossibleVisit(int offset)
 	{
 		GregorianCalendar visitation=new GregorianCalendar(); //now
 		
