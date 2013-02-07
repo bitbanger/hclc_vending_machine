@@ -147,7 +147,7 @@ public class FoodItem extends ModelBase {
 	@Override
 	public String toString() {
 		return super.toString() + " " + 
-			   String.format("%s food item %s, costs %.2f, expires in %d days", 
+			   String.format("%s item %s, costs %.2f, expires in %d days", 
 			   				 active ? "Active" : "Inactive",
 			   				 name,
 			   				 ((double)price) / 100,
