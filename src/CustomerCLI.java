@@ -111,7 +111,7 @@ public class CustomerCLI {
 					if(CLIUtilities.yesOrNo("Would you like to proceed with your purchase?")) {
 						
 						String message=account.tryPurchase(new Pair<Integer, Integer>(CLIUtilities.promptInt("Enter X", true), CLIUtilities.promptInt("Enter Y", true)));
-						if(message.equals("GOOD")) {
+						if(message.equals("Good")) {
 							System.out.println("Purchase complete: remaining balance is " + U.formatMoney(account.getBalance()));
 							break screen;
 						}
@@ -130,7 +130,7 @@ public class CustomerCLI {
 					}
 					int chosenIndex = CLIUtilities.option(items);
 					String freqMessage = account.tryPurchase(items.get(chosenIndex));
-					if (freqMessage.equals("GOOD"))
+					if (freqMessage.equals("Good"))
 					{
 						System.out.println("Purchase complete: remaining balance is " + U.formatMoney(account.getBalance()));
 						break screen;
