@@ -57,6 +57,11 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	private ConditionButton editBusinessButton;
 
 	/**
+	 * Button that removes a nearby business. KaPow
+	 **/
+	private ConditionButton removeBusinessButton;
+
+	/**
 	 * The list of nearby businesses.
 	 **/
 	private Vector<String> businesses;
@@ -75,6 +80,7 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		businessField = new JTextField();
 		addBusinessButton = new JButton("Add Business");
 		editBusinessButton = new ConditionButton("Edit Business");
+		removeBusinessButton = new ConditionButton("Remove Business");
 		if (location != null)
 			businesses = new Vector<String>(Arrays.asList(location.getNearbyBusinesses()));
 		else
@@ -139,6 +145,10 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		businessButtonPanel.add(addBusinessButton);
 		businessButtonPanel.add(Box.createGlue());
 
+		removeBusinessButton.setEnabled(false);
+		businessButtonPanel.add(removeBusinessButton);
+		businessButtonPanel.add(Box.createGlue());
+
 		editBusinessButton.setEnabled(false);
 		businessButtonPanel.add(editBusinessButton);
 
@@ -176,23 +186,28 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	private void addLogic()
 	{
 		addBusinessButton.addActionListener(this);
+		removeBusinessButton.addActionListener(this);
 		editBusinessButton.addActionListener(this);
 
-		editBusinessButton.addCondition(new ConditionButtonCondition()
+		ConditionButtonCondition itemSelected = new ConditionButtonCondition()
 		{
 			@Override
 			public boolean checkCondition()
 			{
 				return businessList.getSelectedValue() != null;
 			}
-		});
-		
+		};
+
+		editBusinessButton.addCondition(itemSelected);
+		removeBusinessButton.addCondition(itemSelected);
+
 		businessList.addListSelectionListener(new ListSelectionListener()
 		{
 			@Override
 			public void valueChanged(ListSelectionEvent _)
 			{
 				editBusinessButton.checkAndSetEnabled();
+				removeBusinessButton.checkAndSetEnabled();
 				businessField.setText((String)businessList.getSelectedValue());
 				businessField.setEnabled(true);
 			}
@@ -240,6 +255,11 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		else if (source == editBusinessButton)
 		{
 			businesses.set(businessList.getSelectedIndex(), businessField.getText());
+			refreshData();
+		}
+		else if (source == removeBusinessButton)
+		{
+			businesses.remove(businessList.getSelectedIndex());
 			refreshData();
 		}
 	}
