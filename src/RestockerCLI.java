@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.Scanner;
@@ -68,19 +69,19 @@ public class RestockerCLI {
 	 * @param restockerMachinePickerScreen The state of the RestockerMachinePickerScreen
 	 */
 	private static void pickMachine(RestockerMachinePickerScreen restockerMachinePickerScreen) {
-		Collection<VendingMachine> vms = RestockerMachinePickerScreen.listActiveMachines();
+		ArrayList<VendingMachine> vms = RestockerMachinePickerScreen.listActiveMachines();
 
 		int idNumber;
 	
 		CLIUtilities.printTitle("Please Pick a Machine");
 		
-		CLIUtilities.printCollection(vms);
+		//CLIUtilities.printCollection(vms);
 
 			
 		RestockerTaskListScreen restockerTaskListScreen = null;
 
 		while (restockerTaskListScreen == null){
-			idNumber = CLIUtilities.promptInt("Please give ID number");
+			idNumber = CLIUtilities.option(vms)+1;
 
 			restockerTaskListScreen = restockerMachinePickerScreen.tryMachine(idNumber);
 		}

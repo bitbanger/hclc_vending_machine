@@ -30,6 +30,11 @@ public class DoublyBoundedNumberFormat extends MinValueNumberFormat
 	@Override
 	public String toString()
 	{
-		return "Please enter an integer between "+getMinimum()+" and "+(UPPER-1);
+		int maximum=UPPER-1;
+		
+		if(maximum==getMinimum())
+			return "Please enter the integer "+maximum;
+		else
+			return "Please enter an integer between "+getMinimum()+" and "+maximum;
 	}
 }
