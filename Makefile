@@ -56,12 +56,12 @@ launchers:
 	$(foreach class,${EXEC},echo -e '#!${SHELLPATH}\n. ./vars.include\n${JAVA} ${class} "$$@"' > ${RUNPREFIX}${class}${POSTFIX} ; chmod +x ${RUNPREFIX}${class}${POSTFIX};)
 
 clean: cleanbin cleandoc cleantbin
-	- rm ${RUNPREFIX}*${POSTFIX}
-	- rm *${INCPOSTFIX}
 	- rm ${TESTSTEM}${POSTFIX}
 	- rm Manifest
 
 distclean: clean cleandist
+	- rm ${RUNPREFIX}*${POSTFIX}
+	- rm *${INCPOSTFIX}
 
 cleanbin:
 	- rm -r ${BINDIR}
