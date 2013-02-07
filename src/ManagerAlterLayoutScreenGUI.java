@@ -76,7 +76,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	
 		changeRowButton = new ConditionButton("Change Row");
 		emptyRowButton = new ConditionButton("Empty Row");
-		commitChangesButton = new JButton("Commit Changes");
+		commitChangesButton = new JButton("Commit Layout Changes");
 		logoutButton = new JButton("Return to Home Screen");
 
 		addComponents();
