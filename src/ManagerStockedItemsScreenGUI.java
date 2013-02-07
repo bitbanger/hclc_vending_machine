@@ -104,6 +104,7 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 			public void actionPerformed(ActionEvent ignored)
 			{
 				master.popContentPanel();
+				master.getStatusBar().clearStatus();
 				master.setTitle("Home Screen");
 			}
 		});
