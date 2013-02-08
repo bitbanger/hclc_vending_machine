@@ -73,14 +73,14 @@ public class ManagerMachineManagementScreen {
 		}
 		return machines;
 	}
-
+	
 	/**
 	 * @param vm		Vending machine whose interval to change
-	 * @param interval	New restocking interval
+	 * @param interval	Proposed new restocking interval
 	 *
-	 * @return	true if success, else false
+	 * @return	0 if valid stocking interval, -1 if unexpected failure, any other integer to represent the minimum number of days for the new stocking interval
 	 */
-	public int changeMachineStockingInterval(VendingMachine vm, int interval) {
+	public int stockingIntervalValidity(VendingMachine vm, int interval) {
 		try {
 			Row[][] rows = vm.getNextLayout().getRows();
 			int shortestConflictingFreshLength = -1;
@@ -98,15 +98,36 @@ public class ManagerMachineManagementScreen {
 					}
 				}
 			}
-
-			if(shortestConflictingFreshLength > -1) {
+			
+			if(shortestConflictingFreshLength == -1) {
+				return 0;
+			} else {
 				return shortestConflictingFreshLength;
 			}
+		} catch ( Exception databaseProblem ) {
+			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
+			return -1;
+		}
+	}
 
-			vm.setStockingInterval(interval);
-			db.updateOrCreateVendingMachine(vm);
-			storefronts = db.getVendingMachinesAll();
-			return 0;
+	/**
+	 * @param vm		Vending machine whose interval to change
+	 * @param interval	Proposed new restocking interval
+	 *
+	 * @return	0 if valid stocking interval, -1 if unexpected failure, any other integer to represent the minimum number of days for the new stocking interval
+	 * 			(only 0 guarantees a successful change)
+	 */
+	public int changeMachineStockingInterval(VendingMachine vm, int interval) {
+		try {
+			int validity = stockingIntervalValidity(vm, interval);
+			
+			if(validity == 0) {
+				vm.setStockingInterval(interval);
+				db.updateOrCreateVendingMachine(vm);
+				storefronts = db.getVendingMachinesAll();
+			}
+			
+			return validity;
 		} catch ( Exception databaseProblem ) {
 			ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.INFO, databaseProblem);
 			return -1;
