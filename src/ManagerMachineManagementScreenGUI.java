@@ -46,6 +46,11 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 	 * Changes the location of the selected machine.
 	 **/
 	private ConditionButton locationButton;
+	
+	/**
+	 * Changes the stocking interval of the selected machine.
+	 **/
+	private ConditionButton intervalButton;
 
 	/**
 	 * List of machines.
@@ -75,6 +80,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		deactivateButton = new ConditionButton("Deactivate Machine");
 		reactivateButton = new ConditionButton("Reactivate Machine");
 		locationButton = new ConditionButton("Change Machine Location");
+		intervalButton = new ConditionButton("Change Machine Stocking Interval");
 		machineList = new JList();
 		exitButton = new JButton("Return to Home Screen");
 
@@ -103,6 +109,8 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(locationButton);
 		buttonPanel.add(Box.createGlue());
+		buttonPanel.add(intervalButton);
+		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(exitButton);
 		buttonPanel.add(Box.createGlue());
 
@@ -129,6 +137,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		final ConditionButton deactivateButtonTemp = deactivateButton;
 		final ConditionButton reactivateButtonTemp = reactivateButton;
 		final ConditionButton locationButtonTemp = locationButton;
+		final ConditionButton intervalButtonTemp = intervalButton;
 		final JList machineListTemp = machineList;
 
 		// Add action listeners for buttons
@@ -136,6 +145,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		deactivateButton.addActionListener(this);
 		reactivateButton.addActionListener(this);
 		locationButton.addActionListener(this);
+		intervalButton.addActionListener(this);
 		exitButton.addActionListener(this);
 
 		// Deactivate button should be enabled iff an active vending machine is selected
@@ -173,6 +183,16 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 				return machineListTemp.getSelectedValue() != null;
 			}
 		});
+		
+		// Interval button should be active iff a vending machine is selected
+		intervalButtonTemp.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				return machineListTemp.getSelectedValue() != null;
+			}
+		});
 
 		// Makes changes in the list recheck the conditions
 		machineList.addListSelectionListener(new ListSelectionListener()
@@ -183,6 +203,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 				deactivateButtonTemp.checkAndSetEnabled();
 				reactivateButtonTemp.checkAndSetEnabled();
 				locationButtonTemp.checkAndSetEnabled();
+				intervalButtonTemp.checkAndSetEnabled();
 			}
 		});
 	}
@@ -219,6 +240,13 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		{
 			ChangeLocationGUI setLocationPanel = new ChangeLocationGUI(controller, master, (VendingMachine)machineList.getSelectedValue(), this);
 			master.pushContentPanel(setLocationPanel);
+		}
+		
+		// Set interval button
+		else if (source == intervalButton)
+		{
+			ManagerMachineManagementScreenChangeIntervalGUI nextGUI = new ManagerMachineManagementScreenChangeIntervalGUI(controller, master, (VendingMachine)machineList.getSelectedValue(), this);
+			master.pushContentPanel(nextGUI);
 		}
 
 		// Add machine button
