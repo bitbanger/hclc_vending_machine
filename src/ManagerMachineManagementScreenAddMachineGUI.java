@@ -46,7 +46,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	/**
 	 * Field for the manager to enter the stocking interval.
 	 **/
-	private NumberField stockingIntervalField;
+	private StockingIntervalField stockingIntervalField;
 
 	/**
 	 * Field for the manager to enter the number of rows in the vending machine.
@@ -90,7 +90,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 
 		// Create GUI components
 		locationPicker = new LocationPickerPanel(null);
-		stockingIntervalField = new NumberField(NumberField.POSITIVE_Z);
+		stockingIntervalField = new StockingIntervalField(controller, master.getStatusBar());
 		rowField = new NumberField(NumberField.POSITIVE_Z);
 		colField = new NumberField(NumberField.POSITIVE_Z);
 		depthField = new NumberField(NumberField.POSITIVE_Z);
