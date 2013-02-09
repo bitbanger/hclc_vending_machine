@@ -1,5 +1,4 @@
 import java.awt.Color;
-import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -34,6 +33,9 @@ public class NumberField extends JTextField
 	
 	/** Cached copy of the last string in the money field. We revert to this when an invalid character is entered. */
 	private String oldEntry;
+	
+	/** Number field verifier */
+	private NumberFieldVerifier verifier;
 
 	/**
 	 * This should be called once to point the validation framework at the <tt>StatusBar</tt>.
@@ -60,8 +62,8 @@ public class NumberField extends JTextField
 	{
 		this.formatDescriptor=formatDescriptor;
 		this.oldEntry = "";
-		setInputVerifier(new NumberFieldVerifier());
-		getDocument().addDocumentListener((NumberFieldVerifier)getInputVerifier());
+		this.verifier = new NumberFieldVerifier();
+		getDocument().addDocumentListener(verifier);
 		contentsValid=false; //there *is* no int
 		pleaseDontWorryAboutValidatingThis=false;
 	}
@@ -72,7 +74,7 @@ public class NumberField extends JTextField
 	 */
 	public boolean areContentsValid()
 	{
-		getInputVerifier().verify(null);
+		this.verifier.verify();
 		return contentsValid;
 	}
 
@@ -112,10 +114,10 @@ public class NumberField extends JTextField
 	 * Verifies input and prints any errors to the status bar as focus is about to be lost.
 	 * In case of any such errors, the focus is retained until they are fixed.
 	 */
-	private class NumberFieldVerifier extends InputVerifier implements DocumentListener
+	private class NumberFieldVerifier implements DocumentListener
 	{
 		/** @inheritDoc */
-		public boolean verify(JComponent ignored)
+		public boolean verify()
 		{
 			int choice;
 			
@@ -148,6 +150,12 @@ public class NumberField extends JTextField
 			}
 			finally
 			{
+				if(contentsValid) {
+					setBackground(Color.WHITE);
+				} else {
+					setBackground(Color.PINK);
+				}
+				
 				return contentsValid;
 			}
 		}
@@ -166,7 +174,7 @@ public class NumberField extends JTextField
 		
 		private void generalUpdate()
 		{
-			if(verify(null) || getText().length() == 0)
+			if(verify() || getText().length() == 0)
 			{
 				oldEntry = getText();
 			}

@@ -8,6 +8,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import java.awt.Color;
+
 public class MoneyField extends JTextField
 {
 	/**
@@ -25,6 +27,9 @@ public class MoneyField extends JTextField
 	 **/
 	private String oldEntry;
 	
+	/** Money input verifier */
+	private MoneyInputVerifier verifier;
+	
 	/** Whether we're deliberately overriding validation. */
 	private boolean pleaseDontWorryAboutValidatingThis;
 
@@ -38,8 +43,7 @@ public class MoneyField extends JTextField
 		this.statusBar = statusBar;
 		this.oldEntry = "";
 		monetaryAmount = -1;
-		MoneyInputVerifier verifier = new MoneyInputVerifier();
-		setInputVerifier(verifier);
+		verifier = new MoneyInputVerifier();
 		getDocument().addDocumentListener(verifier);
 		pleaseDontWorryAboutValidatingThis=false;
 	}
@@ -50,7 +54,7 @@ public class MoneyField extends JTextField
 	 */
 	public boolean areContentsValid()
 	{
-		return getInputVerifier().verify(null);
+		return verifier.verify();
 	}
 
 	/**
@@ -75,35 +79,45 @@ public class MoneyField extends JTextField
 	/**
 	 * Verifies monetary input.
 	 **/
-	private class MoneyInputVerifier extends InputVerifier implements DocumentListener
-	{
+	private class MoneyInputVerifier implements DocumentListener
+	{	
 		/**
 		 * @inheritDoc
 		 **/
-		public boolean verify(JComponent _)
+		public boolean verify()
 		{
 			monetaryAmount = U.parseMoney(getText());
 			
+			boolean retVal = false;
+			
 			if(pleaseDontWorryAboutValidatingThis) {
-				return true;
+				retVal = true;
 			}
 			
 			if (monetaryAmount == U.BAD_MONEY)
 			{
 				//if (!getText().equals(""))
 				statusBar.setStatus("Invalid monetary amount", StatusBar.STATUS_BAD_COLOR);
-				return false;
+				retVal = false;
 			}
 			else if (monetaryAmount == U.TOO_MUCH_MONEY)
 			{
 				statusBar.setStatus("Monetary amount too large", StatusBar.STATUS_BAD_COLOR);
-				return false;
+				retVal = false;
 			}
 			else
 			{
 				statusBar.clearStatus(StatusBar.PRIORITY_INVALID_INPUT);
-				return true;
+				retVal = true;
 			}
+			
+			if(retVal) {
+				setBackground(Color.WHITE);
+			} else {
+				setBackground(Color.PINK);
+			}
+			
+			return retVal;
 		}
 
 		/** @inheritDoc */
@@ -123,7 +137,7 @@ public class MoneyField extends JTextField
 		
 		private void generalUpdate()
 		{
-			if(verify(null) || getText().length() == 0)
+			if(verify() || getText().length() == 0)
 			{
 				oldEntry = getText();
 			}
