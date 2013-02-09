@@ -78,11 +78,9 @@ public class ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI extend
 		returnToMainScreenButton.setAlignmentX(LEFT_ALIGNMENT);
 		returnToMainScreenButton.addActionListener(this);
 		
-		this.add(Box.createGlue());
 		this.add(transactionList);
-		this.add(Box.createGlue());
+		add(Box.createRigidArea(new Dimension(0, 20)));
 		this.add(returnToMainScreenButton);
-		this.add(Box.createGlue());
 		
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}

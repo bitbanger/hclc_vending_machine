@@ -134,19 +134,25 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
 		// Add everything to the visible panel
-		this.add(Box.createGlue());
 		this.add(machineLabel);
+		add(Box.createRigidArea(new Dimension(0, 5)));
 		this.add(machineList);
-		this.add(Box.createGlue());
+
+		add(Box.createRigidArea(new Dimension(0, 20)));
+
 		this.add(customerLabel);
+		add(Box.createRigidArea(new Dimension(0, 5)));
 		this.add(customerList);
-		this.add(Box.createGlue());
+
+		add(Box.createRigidArea(new Dimension(0, 20)));
+
 		this.add(itemLabel);
+		add(Box.createRigidArea(new Dimension(0, 5)));
 		this.add(itemList);
-		this.add(Box.createGlue());
-		this.add(Box.createVerticalStrut(10)); // Creates a space between the items text field and the buttons
+
+		add(Box.createRigidArea(new Dimension(0, 50)));
+
 		this.add(buttonPanel);
-		this.add(Box.createGlue());
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}
 	
