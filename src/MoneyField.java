@@ -49,6 +49,7 @@ public class MoneyField extends JTextField
 		verifier = new MoneyInputVerifier();
 		getDocument().addDocumentListener(verifier);
 		pleaseDontWorryAboutValidatingThis=false;
+		setBackground(Color.PINK);
 	}
 
 	/**

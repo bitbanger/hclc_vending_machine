@@ -66,6 +66,7 @@ public class NumberField extends JTextField
 		getDocument().addDocumentListener(verifier);
 		contentsValid=false; //there *is* no int
 		pleaseDontWorryAboutValidatingThis=false;
+		setBackground(Color.PINK);
 	}
 
 	/**
