@@ -1,6 +1,5 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -10,9 +9,12 @@ import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import java.awt.Dimension;
 import java.util.ArrayList;
+import javax.swing.JTabbedPane;
+import java.awt.GridLayout;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Manager GUI screen to manage accounts.
@@ -80,16 +82,25 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	/** Lays out components on the JPanel */
 	private void addComponents() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		this.setAlignmentX(LEFT_ALIGNMENT);
+
+		JTabbedPane tabPane = new JTabbedPane();
+		add(tabPane);
+
+		JPanel managerTab = new JPanel();
+		managerTab.setBorder(new EmptyBorder(10,10,10,10));
+		managerTab.setLayout(new BoxLayout(managerTab, BoxLayout.X_AXIS));
+		tabPane.addTab("Managers", managerTab);
+
+		JPanel customerTab = new JPanel();
+		customerTab.setBorder(new EmptyBorder(10,10,10,10));
+		customerTab.setLayout(new BoxLayout(customerTab, BoxLayout.X_AXIS));
+		tabPane.addTab("Customers", customerTab);
 		
 		// Create a JList of all the machines in the database
 		managerList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		managerList.setAlignmentX(LEFT_ALIGNMENT);
 		
 		// Create a JList of all the customers in the database
 		customerList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		customerList.setAlignmentX(LEFT_ALIGNMENT);
 		
 		// Only one thing should be selected at a time
 		managerList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -97,20 +108,21 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 		
 		// Create the show transactions button and add ourselves as an action listener
 		editSelectionButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		editSelectionButton.setAlignmentX(LEFT_ALIGNMENT);
+	
 		newManagerButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		newManagerButton.setAlignmentX(LEFT_ALIGNMENT);
+
 		newCustomerButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		newCustomerButton.setAlignmentX(LEFT_ALIGNMENT);
+
 		
 		// Keep the button appropriate
 		editSelectionButton.addCondition(new ConditionButtonCondition()
 		{
 			public boolean checkCondition()
 			{
-				return !managerList.isSelectionEmpty() ^ !customerList.isSelectionEmpty();
+				return !managerList.isSelectionEmpty();
 			}
 		});
+
 		
 		// Add all listeners
 		managerList.addListSelectionListener(this);
@@ -119,10 +131,10 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 		newCustomerButton.addActionListener(this);
 		editSelectionButton.addActionListener(this);
 		
-		JButton returnHomeButton = new JButton("Return to Home Screen");
-		returnHomeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		returnHomeButton.setAlignmentX(LEFT_ALIGNMENT);
-		returnHomeButton.addActionListener(new ActionListener()
+		JButton returnHomeButtonManager = new JButton("Return to Home Screen");
+		returnHomeButtonManager.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		returnHomeButtonManager.setAlignmentX(LEFT_ALIGNMENT);
+		returnHomeButtonManager.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent ignored)
 			{
@@ -130,26 +142,40 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 				master.setTitle("Home Screen");
 			}
 		});
-		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.add(editSelectionButton);
-		buttonPanel.add(newManagerButton);
-		buttonPanel.add(newCustomerButton);
-		buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
-		
-		// Add everything to the visible panel
-		this.add(Box.createGlue());
-		this.add(new JLabel("Managers:"));
-		this.add(managerList);
-		this.add(Box.createGlue());
-		this.add(new JLabel("Customers:"));
-		this.add(customerList);
-		this.add(Box.createGlue());
-		this.add(buttonPanel);
-		this.add(Box.createGlue());
-		this.add(returnHomeButton);
+
+		JButton returnHomeButtonCustomer = new JButton("Return to Home Screen");
+		returnHomeButtonCustomer.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		returnHomeButtonCustomer.setAlignmentX(LEFT_ALIGNMENT);
+		returnHomeButtonCustomer.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ignored)
+			{
+				master.popContentPanel();
+				master.setTitle("Home Screen");
+			}
+		});
+
+		JPanel managerLeftPanel = new JPanel();
+		managerLeftPanel.setLayout(new GridLayout(0,1,0,20));
+		managerTab.add(managerLeftPanel);
+
+		managerLeftPanel.add(newManagerButton);
+		managerLeftPanel.add(editSelectionButton);
+		managerLeftPanel.add(returnHomeButtonManager);
+
+		managerTab.add(Box.createRigidArea(new Dimension(50, 0)));
+		managerTab.add(new JScrollPane(managerList));
+
+		JPanel customerLeftPanel = new JPanel();
+		customerLeftPanel.setLayout(new GridLayout(0,1,0,20));
+		customerTab.add(customerLeftPanel);
+
+		customerLeftPanel.add(newCustomerButton);
+		customerLeftPanel.add(Box.createRigidArea(new Dimension(0,0)));
+		customerLeftPanel.add(returnHomeButtonCustomer);
+
+		customerTab.add(Box.createRigidArea(new Dimension(50, 0)));
+		customerTab.add(new JScrollPane(customerList));
 		
 		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}
