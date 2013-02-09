@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import java.awt.Dimension;
 import java.util.Vector;
 import java.util.Arrays;
+import java.awt.GridLayout;
 
 /**
  * Allows the user to select a location.
@@ -127,57 +128,76 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		businessPanel.setLayout(new BoxLayout(businessPanel, BoxLayout.Y_AXIS));
 		add(businessPanel);
 
+		JPanel listPanel = new JPanel();
+		listPanel.setLayout(new GridLayout());
+		//businessList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		JScrollPane scrollPane = new JScrollPane(businessList);
-		businessPanel.add(scrollPane);
+		//scrollPane.setAlignmentX(LEFT_ALIGNMENT);
+		//scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		listPanel.add(scrollPane);
+		listPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		businessPanel.add(listPanel);
 
-		businessPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		businessPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-		businessField.setColumns(30);
-		businessField.setMaximumSize(businessField.getPreferredSize());
-		businessPanel.add(businessField);
+		JPanel addBusinessPanel = new JPanel();
+		addBusinessPanel.setLayout(new BoxLayout(addBusinessPanel, BoxLayout.X_AXIS));
+		addBusinessPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		addBusinessButton.setAlignmentX(RIGHT_ALIGNMENT);
+		addBusinessPanel.setAlignmentX(LEFT_ALIGNMENT);
+		addBusinessPanel.add(addBusinessButton);
+		businessPanel.add(addBusinessPanel);
 
-		scrollPane.setMaximumSize(new Dimension((int)businessField.getPreferredSize().getWidth(), Integer.MAX_VALUE));
+		businessPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		JPanel businessFieldPanel = new JPanel();
+		businessFieldPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		businessFieldPanel.setAlignmentX(LEFT_ALIGNMENT);
+		businessFieldPanel.setLayout(new BoxLayout(businessFieldPanel, BoxLayout.X_AXIS));
+		businessFieldPanel.add(new JLabel("Business Name:"));
+		businessFieldPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		//businessField.setColumns(10);
+		businessField.setAlignmentX(LEFT_ALIGNMENT);
+		//businessField.setMaximumSize(businessField.getPreferredSize());
+		businessFieldPanel.add(businessField);
+		businessPanel.add(businessFieldPanel);
+
+		businessPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		JPanel businessButtonPanel = new JPanel();
+		businessButtonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		businessButtonPanel.setAlignmentX(LEFT_ALIGNMENT);
 		businessButtonPanel.setLayout(new BoxLayout(businessButtonPanel, BoxLayout.X_AXIS));
 		businessPanel.add(businessButtonPanel);
 
-		businessButtonPanel.add(addBusinessButton);
-		businessButtonPanel.add(Box.createGlue());
-
 		removeBusinessButton.setEnabled(false);
+		//removeBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)removeBusinessButton.getHeight()));
 		businessButtonPanel.add(removeBusinessButton);
-		businessButtonPanel.add(Box.createGlue());
+		businessButtonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		editBusinessButton.setEnabled(false);
+		//editBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)editBusinessButton.getHeight()));
 		businessButtonPanel.add(editBusinessButton);
+
+		businessPanel.setMaximumSize(businessPanel.getPreferredSize());
 
 		add(Box.createRigidArea(new Dimension(20, 0)));
 
-		JPanel zipAndStatePanel = new JPanel();
+		scrollPane.setMaximumSize(new Dimension((int)businessField.getPreferredSize().getWidth(), Integer.MAX_VALUE));
+
+		LabeledFieldPanel zipAndStatePanel = new LabeledFieldPanel();
 		zipAndStatePanel.setAlignmentY(TOP_ALIGNMENT);
-		zipAndStatePanel.setLayout(new BoxLayout(zipAndStatePanel, BoxLayout.Y_AXIS));
 		add(zipAndStatePanel);
 
-		JPanel zipPanel = new JPanel();
-		zipPanel.setLayout(new BoxLayout(zipPanel, BoxLayout.X_AXIS));
-		zipAndStatePanel.add(zipPanel);
-
-		zipPanel.add(new JLabel("Zip Code:"));
 		zipCodeField.setColumns(10);
 		zipCodeField.setMaximumSize(zipCodeField.getPreferredSize());
-		zipPanel.add(zipCodeField);
+		zipAndStatePanel.addLabeledTextField("Zip Code:", zipCodeField);
 
-		zipAndStatePanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-		JPanel statePanel = new JPanel();
-		statePanel.setLayout(new BoxLayout(statePanel, BoxLayout.X_AXIS));
-		zipAndStatePanel.add(statePanel);
-	
-		statePanel.add(new JLabel("State:"));
 		stateField.setColumns(30);
 		stateField.setMaximumSize(stateField.getPreferredSize());
-		statePanel.add(stateField);
+		zipAndStatePanel.addLabeledTextField("State:", stateField);
+
+		add(Box.createGlue());
 	}
 
 	/**
