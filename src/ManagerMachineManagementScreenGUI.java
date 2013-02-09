@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import java.awt.GridLayout;
 
 /**
  * Screen that allows the manager to manage machines
@@ -103,25 +104,18 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+		buttonPanel.setLayout(new GridLayout(0, 1, 0, 20));
 		add(buttonPanel);
 
-		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(addMachineButton);
-		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(deactivateButton);
-		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(reactivateButton);
-		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(locationButton);
-		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(intervalButton);
-		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(exitButton);
-		buttonPanel.add(Box.createGlue());
 
-		add(Box.createGlue());
-		
+		add(Box.createRigidArea(new Dimension(50, 0)));
+
 		machineList.setMaximumSize(new Dimension((int)machineList.getPreferredSize().getHeight(), Integer.MAX_VALUE));
 		add(new JScrollPane(machineList));
 	}
