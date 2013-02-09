@@ -1,4 +1,5 @@
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
 import java.awt.event.ActionListener;
@@ -10,7 +11,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.Dimension;
 
 /**
- * Changes the location of a vending machine.
+ * Changes the stocking interval of a vending machine.
  * 
  * @author Lane Lawley
  */
@@ -41,7 +42,7 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 	private BaseGUI master;
 	
 	/**
-	 * Machine that is getting its location changed.
+	 * Machine that is getting its stocking interval changed.
 	 */
 	private VendingMachine machine;
 	
@@ -51,7 +52,7 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 	private ManagerMachineManagementScreenGUI parent;
 	
 	/**
-	 * Creates a new ChangeLocationGUI to change the location of the given
+	 * Creates a new GUI to change the stocking interval of the given
 	 * vending machine.
 	 * 
 	 * @param controller
@@ -59,7 +60,7 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 	 * @param master
 	 *            The master frame.
 	 * @param machine
-	 *            The machine to change the location for.
+	 *            The machine to change the interval for.
 	 * @param parent
 	 *            The parent screen. Used to refresh the list.
 	 */
@@ -116,7 +117,7 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 					if(validity == -1) {
 						master.getStatusBar().setStatus("An error occurred while attempting to change the stocking interval", StatusBar.STATUS_BAD_COLOR, StatusBar.PRIORITY_REJECTED_CONFIG);
 					} else if(validity > 0) {
-						master.getStatusBar().setStatus("Due to your items, the interval must be at at least " + validity + " days", StatusBar.STATUS_BAD_COLOR, StatusBar.PRIORITY_REJECTED_CONFIG);
+						master.getStatusBar().setStatus("Due to expiration concerns, this should be at most " + validity + " days", StatusBar.STATUS_BAD_COLOR, StatusBar.PRIORITY_REJECTED_CONFIG);
 					}
 				}
 			}
@@ -129,7 +130,13 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 	private void addComponents() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		add(stockingField);
+		JPanel inputPanel = new JPanel();
+		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.X_AXIS));
+		inputPanel.add(new JLabel("New Stocking Interval: "));
+		inputPanel.add(Box.createGlue());
+		inputPanel.add(stockingField);
+		
+		add(inputPanel);
 		
 		add(Box.createRigidArea(new Dimension(0, 20)));
 		
