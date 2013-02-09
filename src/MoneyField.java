@@ -10,6 +10,13 @@ import javax.swing.event.DocumentListener;
 
 import java.awt.Color;
 
+/**
+ * A validating field accepting monetary amounts.
+ * The user is prevented from entering any invalid characters into the box.
+ * In case the entered input is invalid, the box turns pink for visual identification.
+ * Validation errors are explained to the <tt>StatusBar</tt>.
+ * @author Matthew Koontz <mjk3979@rit.edu>
+ */
 public class MoneyField extends JTextField
 {
 	/**

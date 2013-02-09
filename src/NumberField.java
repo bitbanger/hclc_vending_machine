@@ -7,8 +7,9 @@ import javax.swing.event.DocumentListener;
 
 /**
  * A validating field accepting integers.
- * The user will be unable to leave the field until he or she enters a legal value.
- * Validation errors are reported to the <tt>StatusBar</tt>.
+ * The user is prevented from entering any invalid characters into the box.
+ * In case the entered input is invalid, the box turns pink for visual identification.
+ * Validation errors are explained to the <tt>StatusBar</tt>.
  * @author Sol Boucher <slb1566@rit.edu>
  */
 public class NumberField extends JTextField
