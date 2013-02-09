@@ -63,14 +63,20 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 	private JButton exitButton;
 
 	/**
+	 * the prior view
+	 */
+	private ManagerHomeScreenGUI prior;
+
+	/**
 	 * Creates the panel with the given controller and frame.
 	 * @param controller The controller for this view.
 	 * @param master The BaseGUI instance this panel is contained in.
 	 **/
-	public ManagerMachineManagementScreenGUI(ManagerMachineManagementScreen controller, BaseGUI master)
+	public ManagerMachineManagementScreenGUI(ManagerMachineManagementScreen controller, BaseGUI master, ManagerHomeScreenGUI last)
 	{
 		this.controller = controller;
 		this.master = master;
+		prior = last;
 
 		master.setTitle("Machine Management");
 
@@ -262,6 +268,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
 			master.setTitle("Home Screen");
+			prior.refreshYourself();
 		}
 
 		// Update data in list

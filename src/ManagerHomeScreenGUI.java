@@ -25,7 +25,7 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 	/**
 	 * The button that brings the manager to the view stats screen.
 	 **/
-	private JButton statsButton;
+	private ConditionButton statsButton;
 
 	/**
 	 * The button that brings the manager to the item management screen.
@@ -35,7 +35,7 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 	/**
 	 * The button that brings the manager to the alter layout screen.
 	 **/
-	private JButton layoutButton;
+	private ConditionButton layoutButton;
 
 	/**
 	 * The button that brings the manager to the manage users screen.
@@ -67,9 +67,9 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 
 		master.getStatusBar().setStatus(String.format("Welcome, %s", controller.getUserName()), StatusBar.STATUS_GOOD_COLOR);
 
-		statsButton = new JButton("View Machine Statistics");
+		statsButton = new ConditionButton("View Machine Statistics");
 		stockedItemsButton = new JButton("Manage Stocked Items");
-		layoutButton = new JButton("Alter Machine Layout");
+		layoutButton = new ConditionButton("Alter Machine Layout");
 		accountsButton = new JButton("Manage User Accounts");
 		machinesButton = new JButton("Manage Machines");
 		logoutButton = new JButton("Log Out");
@@ -86,7 +86,19 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		
+		statsButton.addCondition(new ConditionButtonCondition()
+		{
+			/**
+			 * The button should only be enabled if there are machines
+			 */
+			@Override
+			public boolean checkCondition()
+			{
+				return ( !controller.displayVendingMachines().isEmpty() );
+			}
+		});
 		statsButton.addActionListener(this);
+		statsButton.checkAndSetEnabled();
 		statsButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		add(statsButton);
 
@@ -98,7 +110,19 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
+		layoutButton.addCondition(new ConditionButtonCondition()
+		{
+			/**
+			 * The button should only be enabled if there are machines
+			 */
+			@Override
+			public boolean checkCondition()
+			{
+				return !controller.displayVendingMachines().isEmpty();
+			}
+		});
 		layoutButton.addActionListener(this);
+		layoutButton.checkAndSetEnabled();
 		layoutButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		add(layoutButton);
 
@@ -119,6 +143,14 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		logoutButton.addActionListener(this);
 		logoutButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		add(logoutButton);
+	}
+
+	/**
+	 * REFRESH DEM CONDITIONS
+	 */
+	public void refreshYourself() {
+		statsButton.checkAndSetEnabled();
+		layoutButton.checkAndSetEnabled();
 	}
 
 	/**
@@ -155,7 +187,7 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 		else if (source == machinesButton)
 		{
 			ManagerMachineManagementScreen next = controller.manageMachines();
-			ManagerMachineManagementScreenGUI nextGUI = new ManagerMachineManagementScreenGUI(next, master);
+			ManagerMachineManagementScreenGUI nextGUI = new ManagerMachineManagementScreenGUI(next, master, this);
 			master.pushContentPanel(nextGUI);
 		}
 		else if (source == logoutButton)
