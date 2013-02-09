@@ -1,6 +1,5 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,9 +13,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.awt.GridLayout;
 
 public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implements ActionListener {
 	/** Controller instance to allow this screen's manipulation of the model */
@@ -51,13 +50,9 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 	private void addComponents() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		this.setAlignmentX(CENTER_ALIGNMENT);
-		
 		nameField = new JTextField();
-		nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)nameField.getPreferredSize().getHeight()));
 		
 		initialBalanceField = new MoneyField(master.getStatusBar());
-		initialBalanceField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)initialBalanceField.getPreferredSize().getHeight()));
 		
 		nameField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -90,20 +85,17 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 				confirmButton.checkAndSetEnabled();
 			}
 		});
+
+		LabeledFieldPanel fieldPanel = new LabeledFieldPanel();
+		fieldPanel.setAlignmentX(LEFT_ALIGNMENT);
+		add(fieldPanel);
 		
-		JPanel namePanel = new JPanel();
-		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
-		namePanel.add(new JLabel("Customer Name: "));
-		namePanel.add(nameField);
+		fieldPanel.addLabeledTextField("Customer Name: ", nameField);
+		fieldPanel.addLabeledTextField("Initial Balance: ", initialBalanceField);
 		
-		JPanel initialBalancePanel = new JPanel();
-		initialBalancePanel.setLayout(new BoxLayout(initialBalancePanel, BoxLayout.X_AXIS));
-		initialBalancePanel.add(new JLabel("Initial Balance: "));
-		initialBalancePanel.add(initialBalanceField);
-		
-		returnHomeButton = new JButton("Return to User Accounts Screen");
+		returnHomeButton = new JButton("Cancel");
 		//returnHomeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		returnHomeButton.setAlignmentX(CENTER_ALIGNMENT);
+		returnHomeButton.setAlignmentX(LEFT_ALIGNMENT);
 		returnHomeButton.addActionListener(this);
 		
 		confirmButton = new ConditionButton("Add Customer");
@@ -114,21 +106,18 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 			}
 		});
 		confirmButton.checkAndSetEnabled();
-		confirmButton.setAlignmentX(CENTER_ALIGNMENT);
+		confirmButton.setAlignmentX(LEFT_ALIGNMENT);
 		confirmButton.addActionListener(this);
-		
+
+		add(Box.createRigidArea(new Dimension(0, 20)));
+
 		JPanel buttonPanel = new JPanel();
+		buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(returnHomeButton);
+		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(confirmButton);
-		
-		this.add(Box.createGlue());
-		this.add(namePanel);
-		this.add(Box.createGlue());
-		this.add(initialBalancePanel);
-		this.add(Box.createGlue());
-		this.add(buttonPanel);
-		this.add(Box.createGlue());
+		add(buttonPanel);
 	}
 	
 	@Override
