@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 /**
  * Changes the location of a vending machine.
@@ -83,18 +84,36 @@ public class ManagerMachineManagementScreenChangeLocationGUI extends JPanel impl
 	 **/
 	private void addComponents()
 	{
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		add(Box.createGlue());
 
-		add(locationPicker);
+		JPanel innerLayout = new JPanel();
+		innerLayout.setLayout(new BoxLayout(innerLayout, BoxLayout.Y_AXIS));
 
-		add(Box.createRigidArea(new Dimension(0, 20)));
+		innerLayout.add(Box.createGlue());
+
+		innerLayout.add(locationPicker);
+		locationPicker.setAlignmentX(CENTER_ALIGNMENT);
+
+		innerLayout.add(Box.createRigidArea(new Dimension(0, 50)));
 
 		JPanel bottomPanel = new JPanel();
-		add(bottomPanel);
+		innerLayout.add(bottomPanel);
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
-		bottomPanel.add(cancelButton);
 		bottomPanel.add(Box.createGlue());
+		bottomPanel.add(cancelButton);
+		bottomPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 		bottomPanel.add(confirmButton);
+		bottomPanel.add(Box.createGlue());
+		bottomPanel.setAlignmentX(CENTER_ALIGNMENT);
+
+		innerLayout.setMaximumSize(innerLayout.getPreferredSize());
+
+		innerLayout.setAlignmentY(CENTER_ALIGNMENT);
+
+		add(innerLayout);
+
+		add(Box.createGlue());
 	}
 
 	/**
