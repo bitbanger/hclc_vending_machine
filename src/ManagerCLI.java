@@ -429,9 +429,19 @@ public class ManagerCLI
 		}
 		String[] busArray = businesses.toArray(new String[0]);
 		
-		int restocking = CLIUtilities.promptInt("Restocking interval (days)");
-		
 		ArrayList<VendingMachine> machs=screen.listMachinessAll();
+		
+		int restocking, validity=0;
+		do
+		{
+			restocking=CLIUtilities.promptInt("Restocking interval (days)");
+			if(machs.size()!=0) //there's a machine, so a layout must be established
+				validity=screen.stockingIntervalValidity(machs.get(0), restocking);
+			if(validity>0)
+				System.out.println("That stocking interval will allow items to expire... please restock at least every "+validity+" days");
+		}
+		while(validity!=0);
+		
 		VMLayout layout=null;
 		if(machs.size()==0)
 		{
