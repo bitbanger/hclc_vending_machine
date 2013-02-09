@@ -27,6 +27,9 @@ public class MoneyField extends JTextField
 	 **/
 	private String oldEntry;
 	
+	/** The current validity. */
+	private boolean contentsValid;
+	
 	/** Money input verifier */
 	private MoneyInputVerifier verifier;
 	
@@ -54,7 +57,7 @@ public class MoneyField extends JTextField
 	 */
 	public boolean areContentsValid()
 	{
-		return verifier.verify();
+		return verifier.verify(false);
 	}
 
 	/**
@@ -84,40 +87,41 @@ public class MoneyField extends JTextField
 		/**
 		 * @inheritDoc
 		 **/
-		public boolean verify()
+		public boolean verify(boolean changeStatusBar)
 		{
 			monetaryAmount = U.parseMoney(getText());
 			
 			boolean retVal = false;
 			
 			if(pleaseDontWorryAboutValidatingThis) {
-				retVal = true;
+				contentsValid = !getText().equals("");
 			}
-			
-			if (monetaryAmount == U.BAD_MONEY)
+			else if (monetaryAmount == U.BAD_MONEY)
 			{
-				//if (!getText().equals(""))
-				statusBar.setStatus("Invalid monetary amount", StatusBar.STATUS_BAD_COLOR);
-				retVal = false;
+				if(changeStatusBar)
+					statusBar.setStatus("Invalid monetary amount", StatusBar.STATUS_BAD_COLOR);
+				contentsValid = false;
 			}
 			else if (monetaryAmount == U.TOO_MUCH_MONEY)
 			{
-				statusBar.setStatus("Monetary amount too large", StatusBar.STATUS_BAD_COLOR);
-				retVal = false;
+				if(changeStatusBar)
+					statusBar.setStatus("Monetary amount too large", StatusBar.STATUS_BAD_COLOR);
+				contentsValid = false;
 			}
 			else
 			{
-				statusBar.clearStatus(StatusBar.PRIORITY_INVALID_INPUT);
-				retVal = true;
+				if(changeStatusBar)
+					statusBar.clearStatus(StatusBar.PRIORITY_INVALID_INPUT);
+				contentsValid = true;
 			}
 			
-			if(retVal) {
+			if(contentsValid) {
 				setBackground(Color.WHITE);
 			} else {
 				setBackground(Color.PINK);
 			}
 			
-			return retVal;
+			return contentsValid;
 		}
 
 		/** @inheritDoc */
@@ -137,7 +141,7 @@ public class MoneyField extends JTextField
 		
 		private void generalUpdate()
 		{
-			if(verify() || getText().length() == 0)
+			if(verify(true) || getText().length() == 0)
 			{
 				oldEntry = getText();
 			}

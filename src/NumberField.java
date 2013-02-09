@@ -74,7 +74,7 @@ public class NumberField extends JTextField
 	 */
 	public boolean areContentsValid()
 	{
-		this.verifier.verify();
+		this.verifier.verify(false);
 		return contentsValid;
 	}
 
@@ -117,47 +117,49 @@ public class NumberField extends JTextField
 	private class NumberFieldVerifier implements DocumentListener
 	{
 		/** @inheritDoc */
-		public boolean verify()
+		public boolean verify(boolean changeStatusBar)
 		{
 			int choice;
 			
 			if(pleaseDontWorryAboutValidatingThis)
 			{
-				return true;
+				contentsValid = !getText().equals("");
 			}
-			
-			try
+			else
 			{
-				choice=Integer.parseInt(getText());
-				
-				if(formatDescriptor.validate(choice))
+				try
 				{
-					bar.clearStatus(StatusBar.PRIORITY_INVALID_INPUT);
-					contentsValid=true;
+					choice=Integer.parseInt(getText());
+					
+					if(formatDescriptor.validate(choice))
+					{
+						if(changeStatusBar)
+							bar.clearStatus(StatusBar.PRIORITY_INVALID_INPUT);
+						contentsValid=true;
+					}
+					else
+					{
+						if(changeStatusBar)
+							bar.setColor(bar.STATUS_BAD_COLOR);
+						//the format descriptor will have set the status appropriately
+						contentsValid=false;
+					}
 				}
-				else
+				catch(NumberFormatException nai)
 				{
-					bar.setColor(bar.STATUS_BAD_COLOR);
-					//the format descriptor will have set the status appropriately
+					if(changeStatusBar)
+						bar.setStatus("Please enter only an integral number", StatusBar.STATUS_BAD_COLOR);
 					contentsValid=false;
 				}
 			}
-			catch(NumberFormatException nai)
-			{
-				bar.setStatus("Please enter only an integral number");
-				bar.setColor(bar.STATUS_BAD_COLOR);
-				contentsValid=false;
+			
+			if(contentsValid) {
+				setBackground(Color.WHITE);
+			} else {
+				setBackground(Color.PINK);
 			}
-			finally
-			{
-				if(contentsValid) {
-					setBackground(Color.WHITE);
-				} else {
-					setBackground(Color.PINK);
-				}
-				
-				return contentsValid;
-			}
+			
+			return contentsValid;
 		}
 
 		/** @inheritDoc */
@@ -174,7 +176,7 @@ public class NumberField extends JTextField
 		
 		private void generalUpdate()
 		{
-			if(verify() || getText().length() == 0)
+			if(verify(true) || getText().length() == 0)
 			{
 				oldEntry = getText();
 			}
@@ -183,6 +185,7 @@ public class NumberField extends JTextField
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
+						System.out.println("fff");
 						pleaseDontWorryAboutValidatingThis=true;
 						setText(oldEntry);
 						pleaseDontWorryAboutValidatingThis=false;
