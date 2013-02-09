@@ -113,31 +113,32 @@ public class NumberField extends JTextField
 
 	/**
 	 * Substitutes wrapper logic around the normal validation routines.
-	 * It is only safe to perform this action once per instance.
-	 * @param oracle the wrapping listener
+	 * This is intended to allow checks to be performed during form validation but <i>not</i> during direct input.
+	 * This is desirable if the user must be able to enter invalid info (e.g. in the process of providing legitimate input).
+	 * It is only recommended that one perform this action once per instance.
+	 * Otherwise, the instance will contain a massively-wrapped validator subject to unpredictable interactions.
+	 * @param oracle the logic, along with any interface feedback, describing the additional validation criterion
 	 */
 	public void substituteFeedbackLoop(final ConditionButtonCondition oracle)
 	{
-		getDocument().removeDocumentListener(verifier);
+		getDocument().removeDocumentListener(verifier); //we'll no longer consult the plain validator directly
 		verifier=new NumberFieldVerifier()
 		{
 			@Override
 			public boolean verify(boolean changeStatusBar)
 			{
-				boolean mainVerdict=super.verify(changeStatusBar);
-				boolean supplementalCall=oracle.checkCondition(); //must run second
+				boolean mainVerdict=super.verify(changeStatusBar); //see what the main validator would do
+				boolean supplementalCall=oracle.checkCondition(); //the addon must be run last, in case it modifies the status/color
 				
-				if(changeStatusBar)
-				{
-					contentsValid=mainVerdict;
-				}
-				else
-					contentsValid=mainVerdict && supplementalCall;
+				if(changeStatusBar) //this is the class's internal validation loop
+					contentsValid=mainVerdict; //vetoing the change would reverse it!
+				else //this is a condition button's form-validity checker
+					contentsValid=mainVerdict && supplementalCall; //vetoing the change will only disallow form submission
 				
 				return contentsValid;
 			}
 		};
-		getDocument().addDocumentListener(verifier);
+		getDocument().addDocumentListener(verifier); //use the wrapper for all future validation
 	}
 
 	/**
