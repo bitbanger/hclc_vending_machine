@@ -16,7 +16,7 @@ public class ManagerGUI
 	public static void main(String[] args) throws Exception
 	{
 		GUIUtilities.setNativeLookAndFeel();
-		BaseGUI base = new BaseGUI("Manager GUI");
+		BaseGUI base = new BaseGUI("HCLC's Smart VM Manager");
 		ManagerLoginScreen controller = new ManagerLoginScreen();
 		ManagerLoginScreenGUI gui = new ManagerLoginScreenGUI(controller, base);
 		base.pushContentPanel(gui);

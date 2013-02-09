@@ -11,7 +11,7 @@ public class CustomerGUI
 	public static void main(String[] args) throws Exception
 	{
 		GUIUtilities.setNativeLookAndFeel();
-		BaseGUI base = new BaseGUI("Login Screen");
+		BaseGUI base = new BaseGUI("HCLC's Smart Vending Machine");
 		CustomerMachinePickerScreen controller = new CustomerMachinePickerScreen();
 		CustomerMachinePickerScreenGUI gui = new CustomerMachinePickerScreenGUI(controller, base);
 		base.pushContentPanel(gui);
