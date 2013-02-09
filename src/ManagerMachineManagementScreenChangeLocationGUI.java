@@ -16,7 +16,7 @@ public class ManagerMachineManagementScreenChangeLocationGUI extends JPanel impl
 	/**
 	 * Saves the data.
 	 **/
-	private JButton confirmButton;
+	private ConditionButton confirmButton;
 
 	/**
 	 * Cancels the changes.
@@ -62,7 +62,7 @@ public class ManagerMachineManagementScreenChangeLocationGUI extends JPanel impl
 		this.machine = machine;
 		this.parent = parent;
 
-		confirmButton = new JButton("Confirm Location Change");
+		confirmButton = new ConditionButton("Confirm Location Change");
 		cancelButton = new JButton("Cancel Location Change");
 
 		locationPicker = new LocationPickerPanel(machine.getLocation());
@@ -77,6 +77,7 @@ public class ManagerMachineManagementScreenChangeLocationGUI extends JPanel impl
 	{
 		cancelButton.addActionListener(this);
 		confirmButton.addActionListener(this);
+		locationPicker.haveWatched(confirmButton, master.getStatusBar());
 	}
 
 	/**
