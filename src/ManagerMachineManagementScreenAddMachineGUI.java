@@ -164,106 +164,80 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	 **/
 	private void addComponents()
 	{
-		// Set the layout of this panel to a horizontal layout
+		// Wraps the layout to prevent weird changes when resizing
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-		// Add the location picker after making it top aligned
-		locationPicker.setAlignmentY(TOP_ALIGNMENT);
-		add(locationPicker);
+		// Set the layout of this panel to a vertical layout
+		JPanel innerLayout = new JPanel();
+		innerLayout.setLayout(new BoxLayout(innerLayout, BoxLayout.Y_AXIS));
 
-		// Make the panel to be displayed on the right of the location picker.
+		// Add the location picker
+		locationPicker.setAlignmentX(LEFT_ALIGNMENT);
+		innerLayout.add(locationPicker);
+		add(innerLayout);
+		add(Box.createGlue());
+
+		innerLayout.add(Box.createRigidArea(new Dimension(0, 50)));
+
+		// Make the panel to be displayed below the location picker.
 		// It will contain the other fields and the confirm and cancel buttons.
 		// It will have a vertical layout.
 		JPanel rightPanel = new JPanel();
+		rightPanel.setAlignmentX(LEFT_ALIGNMENT);
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		rightPanel.setAlignmentY(TOP_ALIGNMENT);
-		add(rightPanel);
+		innerLayout.add(rightPanel);
 
 		// Make the panel to hold the other fields (stocking interval, rows, etc.)
 		// It will have a grid bag layout.
-		JPanel attributePanel = new JPanel();
-		GridBagConstraints con = new GridBagConstraints();
-		attributePanel.setLayout(new GridBagLayout());
+		LabeledFieldPanel attributePanel = new LabeledFieldPanel();
+		attributePanel.setAlignmentX(LEFT_ALIGNMENT);
 		rightPanel.add(attributePanel);
 
-		// Set up the common grid bag constraints for all components.
-		con.gridwidth = 1;
-		con.gridheight = 1;
-		con.weighty=1;
-		con.fill = GridBagConstraints.HORIZONTAL;
-
-		// Add the label for stocking interval.
-		con.gridx=0;
-		con.gridy=0;
-		con.weightx=0;
-		attributePanel.add(new JLabel("Stocking interval (days):"), con);
-
 		// Add the field for stocking interval.
-		con.weightx=1;
-		con.gridx=1;
 		stockingIntervalField.setColumns(20);
 		stockingIntervalField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)stockingIntervalField.getPreferredSize().getHeight()));
-		attributePanel.add(stockingIntervalField, con);
+		attributePanel.addLabeledTextField("Stocking interval (days):", stockingIntervalField);
 		
-		// Add the label for rows
-		con.gridx=0;
-		con.gridy=1;
-		con.weightx=0;
-		attributePanel.add(new JLabel("Number of rows:"), con);
-
 		// Add the field for rows
-		con.weightx=1;
-		con.gridx=1;
 		rowField.setColumns(20);
 		rowField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)rowField.getPreferredSize().getHeight()));
-		attributePanel.add(rowField, con);
+		attributePanel.addLabeledTextField("Number of rows:", rowField);
 		
-		// Add the label for columns.
-		con.gridx=0;
-		con.gridy=2;
-		con.weightx=0;
-		attributePanel.add(new JLabel("Number of columns:"), con);
-
 		// Add the field for columns.
-		con.weightx=1;
-		con.gridx=1;
 		colField.setColumns(20);
 		colField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)colField.getPreferredSize().getHeight()));
-		attributePanel.add(colField, con);
-
-		// Add the label for depth.
-		con.gridx=0;
-		con.gridy=3;
-		con.weightx=0;
-		attributePanel.add(new JLabel("Depth of machine:"), con);
+		attributePanel.addLabeledTextField("Number of columns:", colField);
 
 		// Add the field for depth.
-		con.weightx=1;
-		con.gridx=1;
 		depthField.setColumns(20);
 		depthField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)depthField.getPreferredSize().getHeight()));
-		attributePanel.add(depthField, con);
+		attributePanel.addLabeledTextField("Depth of machine:", depthField);
 
 		// Space between fields and buttons.
 		rightPanel.add(Box.createGlue());
 
 		// Create panel to hold the cancel and confirm buttons.
 		JPanel bottomPanel = new JPanel();
+		bottomPanel.setAlignmentX(LEFT_ALIGNMENT);
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
 		rightPanel.add(bottomPanel);
 
-		// Right aligns the buttons
+		// Helps center align the buttons
 		bottomPanel.add(Box.createGlue());
 
 		// Add the cancel button
 		bottomPanel.add(cancelButton);
 
 		// Space between buttons.
-		bottomPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		bottomPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 
 		// Add the confirmation button.
 		bottomPanel.add(confirmButton);
 
+		// Helps center align the buttons
+		bottomPanel.add(Box.createGlue());
+
+		innerLayout.setMaximumSize(innerLayout.getPreferredSize());
 	}
 
 	/**
