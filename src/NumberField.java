@@ -75,7 +75,9 @@ public class NumberField extends JTextField
 	 */
 	public boolean areContentsValid()
 	{
+		System.out.println(contentsValid);
 		this.verifier.verify(false);
+		System.out.println(contentsValid+"\n");
 		return contentsValid;
 	}
 
@@ -109,6 +111,39 @@ public class NumberField extends JTextField
 		{
 			bar.setStatus(message);
 		}
+	}
+
+	/**
+	 * Substitutes wrapper logic around the normal validation routines.
+	 * It is only safe to perform this action once per instance.
+	 * @param checker the wrapping listener
+	 */
+	public void substituteFeedbackLoop(final ConditionButtonCondition oracle)
+	{
+		getDocument().removeDocumentListener(verifier);
+		verifier=new NumberFieldVerifier()
+		{
+			@Override
+			public boolean verify(boolean changeStatusBar)
+			{
+				boolean mainVerdict;
+				boolean allowInvalidInput=oracle.checkCondition();
+				
+				if(allowInvalidInput)
+					pleaseDontWorryAboutValidatingThis=true;
+				mainVerdict=super.verify(changeStatusBar);
+				if(oracle.checkCondition())
+					pleaseDontWorryAboutValidatingThis=false;
+				
+				contentsValid=mainVerdict && allowInvalidInput;
+				
+				if(changeStatusBar)
+					return mainVerdict;
+				else
+					return contentsValid;
+			}
+		};
+		getDocument().addDocumentListener(verifier);
 	}
 
 	/**

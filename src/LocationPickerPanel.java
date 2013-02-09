@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +16,7 @@ import javax.swing.JLabel;
 import java.awt.Dimension;
 import java.util.Vector;
 import java.util.Arrays;
+import java.awt.Color;
 import java.awt.GridLayout;
 
 /**
@@ -257,6 +260,65 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	public String[] getNearbyBusinesses()
 	{
 		return businesses.toArray(new String[0]);
+	}
+
+	/**
+	 * Has the ZIP code field watched by the specified validation button.
+	 * @param button that needs to know whether everything's okay
+	 * @param bar to which to report validation problems
+	 */
+	public void haveWatched(final ConditionButton button, final StatusBar bar)
+	{
+		final ConditionButtonCondition conditioner=new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				if(zipCodeField.getText().length()!=5)
+				{
+					zipCodeField.setBackground(Color.PINK);
+					bar.setStatus("ZIP codes must be exactly 5 digits long", bar.STATUS_BAD_COLOR, bar.PRIORITY_REJECTED_CONFIG);
+					return false;
+				}
+				else
+				{
+					bar.clearStatus(bar.PRIORITY_REJECTED_CONFIG);
+					return true;
+				}
+			}
+		};
+		
+		zipCodeField.substituteFeedbackLoop(conditioner);
+		/*new DocumentListener()
+		{
+			@Override
+			public void changedUpdate(DocumentEvent ignored) {}
+			
+			@Override
+			public void insertUpdate(DocumentEvent ignored)
+			{
+				conditioner.checkCondition();
+				button.checkAndSetEnabled();
+			}
+			
+			@Override
+			public void removeUpdate(DocumentEvent ignored)
+			{
+				conditioner.checkCondition();
+				button.checkAndSetEnabled();
+			}
+		});*/
+		
+		//button.addCondition(conditioner);
+		button.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				return zipCodeField.areContentsValid();
+			}
+		});
+		button.watch(zipCodeField);
 	}
 
 	/**

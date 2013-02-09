@@ -120,6 +120,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 
 		// Make the confirm button watch all of the components that could change the
 		// enabled condition.
+		locationPicker.haveWatched(confirmButton, master.getStatusBar());
 		confirmButton.watch(stockingIntervalField);
 		confirmButton.watch(rowField);
 		confirmButton.watch(colField);
