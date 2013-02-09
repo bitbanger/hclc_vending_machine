@@ -126,9 +126,11 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		ConditionButton selectButton = new ConditionButton("Select");
 		
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(selectButton);
-		buttonPanel.add(Box.createHorizontalStrut(400));  // Creating space between Select and Exit buttons
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		buttonPanel.add(cancelButton);
+		buttonPanel.add(Box.createGlue());  // Creating space between Select and Exit buttons
+		buttonPanel.add(selectButton);
 		this.add(buttonPanel);
 
 		// Displays task into status bar	

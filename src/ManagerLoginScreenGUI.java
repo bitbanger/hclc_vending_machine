@@ -156,7 +156,11 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		// Panel to align the login button to the right
 		JPanel loginButtonPanel = new JPanel();
 		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
+		loginButtonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
+		// Add the exit button
+		exitButton = new JButton("Exit");
+		
 		// Add the login button
 		final NumberField tempField = idTextField;
 		loginButton.addCondition(new ConditionButtonCondition()
@@ -171,17 +175,14 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 			}
 		});
 		loginButton.addActionListener(this);
+		loginButtonPanel.add(exitButton);
+		loginButtonPanel.add(Box.createGlue());  // Spaces out the buttons
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
 
 		// Add the login panel to main panel
 		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
 		this.add(loginPanel);
-		
-		// Add the exit button
-		exitButton = new JButton("Exit");
-		loginButtonPanel.add(Box.createHorizontalStrut(270));  // Spaces out the buttons
-		loginButtonPanel.add(exitButton);
 		
 		// Add the exit button ActionListener
 		exitButton.addActionListener(new ActionListener() 

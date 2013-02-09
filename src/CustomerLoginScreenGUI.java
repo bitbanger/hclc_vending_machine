@@ -163,19 +163,21 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		this.add(Box.createRigidArea(new Dimension(0,20)));
 		
 		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
 		// Pay with cash button
 		cashButton = new JButton("Cash Payment");
 		cashButton.addActionListener(this);
 
 		// Gap between cash and exit button
-		this.add(Box.createVerticalStrut(10));
 
 		// Exit button
-		exitButton = new JButton("Return to Machine Picker");
+		exitButton = new JButton("Back to Selector");
 		exitButton.addActionListener(this);
 		
 		buttonPanel.add(exitButton);
+		buttonPanel.add(Box.createRigidArea(new Dimension(50,0)));
 		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(cashButton);
 		

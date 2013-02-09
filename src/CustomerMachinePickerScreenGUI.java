@@ -125,6 +125,8 @@ public class CustomerMachinePickerScreenGUI extends JPanel {
 		ConditionButton selectButton = new ConditionButton("Select");
 		
 		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(selectButton);
