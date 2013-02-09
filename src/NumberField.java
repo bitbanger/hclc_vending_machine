@@ -114,7 +114,7 @@ public class NumberField extends JTextField
 	/**
 	 * Substitutes wrapper logic around the normal validation routines.
 	 * It is only safe to perform this action once per instance.
-	 * @param checker the wrapping listener
+	 * @param oracle the wrapping listener
 	 */
 	public void substituteFeedbackLoop(final ConditionButtonCondition oracle)
 	{
