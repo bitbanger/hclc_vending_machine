@@ -417,8 +417,8 @@ public class ManagerCLI
 	 **/
 	private static void addMachine(ManagerMachineManagementScreen screen)
 	{
-		String state = CLIUtilities.prompt("Enter the state where the machine resides"); // TODO: better location picker
-		int zipcode = CLIUtilities.promptInt("Enter the ZIP code of the machine", true);
+		String state = CLIUtilities.prompt("Enter the state where the machine resides");
+		int zipcode = CLIUtilities.promptZipCode("Enter the ZIP code of the machine", 5);
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)
 		{
@@ -507,7 +507,7 @@ public class ManagerCLI
 		VendingMachine machine = vmChooser(screen.listMachinessAll());
 
 		String state = CLIUtilities.prompt("Enter the state where the machine resides"); // TODO: better location picker
-		int zipcode = CLIUtilities.promptInt("Enter the ZIP code of the machine", true);
+		int zipcode = CLIUtilities.promptZipCode("Enter the ZIP code of the machine", 5);
 		
 		LinkedList<String> businesses = new LinkedList<String>();
 		while (true)

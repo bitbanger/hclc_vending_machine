@@ -228,6 +228,48 @@ public class CLIUtilities {
 	}
 
 	/**
+	 * Prompts for a <b>nonnegative</b> zip code.
+	 * @param prompt the prompt to the screen
+	 * @param length the required number of digits
+	 */
+	public static int promptZipCode(String prompt, int length)
+	{
+		NumberFormat.setCommunicator(STDOUT_WRAPPER);
+		
+		boolean invalid=false;
+		int choice=-1;
+		
+		do
+		{
+			String input;
+			
+			invalid=false;
+			input=prompt(prompt);
+			
+			try
+			{
+				choice=Integer.parseInt(input);
+				
+				if(input.length()!=length) //this is where the magic happens
+				{
+					System.out.println("Please enter exactly "+length+" digits");
+					invalid=true;
+					continue;
+				}
+			}
+			catch(NumberFormatException nai)
+			{
+				System.out.println("Please enter only an integral number");
+				invalid=true;
+				continue;
+			}
+		}
+		while(!MinValueNumberFormat.ZERO.checkLoudly(choice, invalid));
+		
+		return choice;
+	}
+
+	/**
 	 * Prompts the user (Y/N) for a message.
 	 *
 	 * @param  prompt	The message to display to the user before they select Y/N
