@@ -14,6 +14,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.GridLayout;
+import javax.swing.Box;
+import java.awt.Dimension;
 
 /**
  * Content panel for managing the items carried in machines.
@@ -79,26 +82,44 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 	private void addComponents()
 	{
 		//overall layout and item selecter:
-		setLayout(new BorderLayout());
-		add(new JScrollPane(products), BorderLayout.CENTER);
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 		
 		//panel of left controls:
-		JPanel controls=new JPanel();
-		controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
-		controls.add(new JLabel("Item name"));
-		controls.add(nameField);
-		controls.add(new JLabel("Item price"));
-		controls.add(priceField);
-		controls.add(new JLabel("Item fresh length"));
-		controls.add(freshnessField);
-		controls.add(enableBox);
-		controls.add(updateSelected);
-		controls.add(addNew);
-		add(controls, BorderLayout.WEST);
-		
-		//a way to get back to Kansas:
+		LabeledFieldPanel controls=new LabeledFieldPanel();
+		controls.setAlignmentX(LEFT_ALIGNMENT);
+		leftPanel.add(controls);
+		controls.addLabeledTextField("Item name:", nameField);
+		controls.addLabeledTextField("Item price:", priceField);
+		controls.addLabeledTextField("Item fresh length:", freshnessField);
+
+		enableBox.setAlignmentX(LEFT_ALIGNMENT);
+		leftPanel.add(enableBox);
+
+		leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(0,1,0,10));
+		buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
+		leftPanel.add(buttonPanel);
+
+		updateSelected.setAlignmentX(LEFT_ALIGNMENT);
+		buttonPanel.add(updateSelected);
+
+		addNew.setAlignmentX(LEFT_ALIGNMENT);
+		buttonPanel.add(addNew);
+
+		leftPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+
+		JPanel takeMeHomePanel = new JPanel();
+		takeMeHomePanel.setLayout(new GridLayout(1,1));
+		takeMeHomePanel.setAlignmentX(LEFT_ALIGNMENT);
+		leftPanel.add(takeMeHomePanel);
+
 		JButton takeMeHome=new JButton("Return to Home Screen");
-		add(takeMeHome, BorderLayout.SOUTH);
+		takeMeHomePanel.add(takeMeHome);
 		takeMeHome.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent ignored)
@@ -108,6 +129,14 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 				master.setTitle("Home Screen");
 			}
 		});
+
+		leftPanel.setMaximumSize(leftPanel.getPreferredSize());
+
+		add(leftPanel);
+
+		add(Box.createRigidArea(new Dimension(50, 0)));
+
+		add(new JScrollPane(products));
 		
 		//teach our components how to behave:
 		FieldUpdated changed=new FieldUpdated();
