@@ -269,7 +269,7 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	 */
 	public void haveWatched(final ConditionButton button, final StatusBar bar)
 	{
-		final ConditionButtonCondition conditioner=new ConditionButtonCondition()
+		zipCodeField.substituteFeedbackLoop(new ConditionButtonCondition()
 		{
 			@Override
 			public boolean checkCondition()
@@ -286,30 +286,7 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 					return true;
 				}
 			}
-		};
-		
-		zipCodeField.substituteFeedbackLoop(conditioner);
-		/*new DocumentListener()
-		{
-			@Override
-			public void changedUpdate(DocumentEvent ignored) {}
-			
-			@Override
-			public void insertUpdate(DocumentEvent ignored)
-			{
-				conditioner.checkCondition();
-				button.checkAndSetEnabled();
-			}
-			
-			@Override
-			public void removeUpdate(DocumentEvent ignored)
-			{
-				conditioner.checkCondition();
-				button.checkAndSetEnabled();
-			}
-		});*/
-		
-		//button.addCondition(conditioner);
+		});
 		button.addCondition(new ConditionButtonCondition()
 		{
 			@Override

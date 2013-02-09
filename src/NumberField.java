@@ -75,9 +75,7 @@ public class NumberField extends JTextField
 	 */
 	public boolean areContentsValid()
 	{
-		System.out.println(contentsValid);
 		this.verifier.verify(false);
-		System.out.println(contentsValid+"\n");
 		return contentsValid;
 	}
 
@@ -126,21 +124,17 @@ public class NumberField extends JTextField
 			@Override
 			public boolean verify(boolean changeStatusBar)
 			{
-				boolean mainVerdict;
-				boolean allowInvalidInput=oracle.checkCondition();
-				
-				if(allowInvalidInput)
-					pleaseDontWorryAboutValidatingThis=true;
-				mainVerdict=super.verify(changeStatusBar);
-				if(oracle.checkCondition())
-					pleaseDontWorryAboutValidatingThis=false;
-				
-				contentsValid=mainVerdict && allowInvalidInput;
+				boolean mainVerdict=super.verify(changeStatusBar);
+				boolean supplementalCall=oracle.checkCondition(); //must run second
 				
 				if(changeStatusBar)
-					return mainVerdict;
+				{
+					contentsValid=mainVerdict;
+				}
 				else
-					return contentsValid;
+					contentsValid=mainVerdict && supplementalCall;
+				
+				return contentsValid;
 			}
 		};
 		getDocument().addDocumentListener(verifier);
