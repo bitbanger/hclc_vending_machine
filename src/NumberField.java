@@ -216,7 +216,6 @@ public class NumberField extends JTextField
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						System.out.println("fff");
 						pleaseDontWorryAboutValidatingThis=true;
 						setText(oldEntry);
 						pleaseDontWorryAboutValidatingThis=false;
