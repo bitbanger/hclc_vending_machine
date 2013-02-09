@@ -56,7 +56,8 @@ public class RestockerCLI {
 				System.out.println("========\nRestocking NOT completed.");
 				break;
 			} else {
-				restockerTaskListScreen.removeInstruction( response );
+				if ( !restockerTaskListScreen.removeInstruction( response ) )
+					System.out.println("Please remove from that row prior to adding new items");	
 			}
 		}
 
