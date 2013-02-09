@@ -129,13 +129,14 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		add(businessPanel);
 
 		JPanel listPanel = new JPanel();
-		listPanel.setLayout(new GridLayout());
+		listPanel.setLayout(new GridLayout(1,1,0,0));
 		//businessList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		JScrollPane scrollPane = new JScrollPane(businessList);
 		//scrollPane.setAlignmentX(LEFT_ALIGNMENT);
 		//scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		listPanel.add(scrollPane);
 		listPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		listPanel.setAlignmentX(LEFT_ALIGNMENT);
 		businessPanel.add(listPanel);
 
 		businessPanel.add(Box.createRigidArea(new Dimension(0, 5)));
@@ -143,7 +144,6 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		JPanel addBusinessPanel = new JPanel();
 		addBusinessPanel.setLayout(new BoxLayout(addBusinessPanel, BoxLayout.X_AXIS));
 		addBusinessPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		addBusinessButton.setAlignmentX(RIGHT_ALIGNMENT);
 		addBusinessPanel.setAlignmentX(LEFT_ALIGNMENT);
 		addBusinessPanel.add(addBusinessButton);
 		businessPanel.add(addBusinessPanel);
