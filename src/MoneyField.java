@@ -85,7 +85,6 @@ public class MoneyField extends JTextField
 			monetaryAmount = U.parseMoney(getText());
 			
 			if(pleaseDontWorryAboutValidatingThis) {
-				statusBar.clearStatus();
 				return true;
 			}
 			
@@ -102,7 +101,7 @@ public class MoneyField extends JTextField
 			}
 			else
 			{
-				statusBar.clearStatus();
+				statusBar.clearStatus(StatusBar.PRIORITY_INVALID_INPUT);
 				return true;
 			}
 		}
@@ -133,7 +132,9 @@ public class MoneyField extends JTextField
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
+						pleaseDontWorryAboutValidatingThis = true;
 						setText(oldEntry);
+						pleaseDontWorryAboutValidatingThis = false;
 					}
 				});
 			}

@@ -114,9 +114,9 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 					int validity = controller.stockingIntervalValidity(machine, stockingField.getNumber());
 					
 					if(validity == -1) {
-						master.getStatusBar().setStatus("An error occurred while attempting to change the stocking interval", StatusBar.STATUS_BAD_COLOR);
+						master.getStatusBar().setStatus("An error occurred while attempting to change the stocking interval", StatusBar.STATUS_BAD_COLOR, StatusBar.PRIORITY_REJECTED_CONFIG);
 					} else if(validity > 0) {
-						master.getStatusBar().setStatus("Due to your items, your stocking interval must be at at least " + validity + " days", StatusBar.STATUS_BAD_COLOR);
+						master.getStatusBar().setStatus("Due to your items, the interval must be at at least " + validity + " days", StatusBar.STATUS_BAD_COLOR, StatusBar.PRIORITY_REJECTED_CONFIG);
 					}
 				}
 			}

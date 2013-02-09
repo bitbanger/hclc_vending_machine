@@ -121,7 +121,6 @@ public class NumberField extends JTextField
 			
 			if(pleaseDontWorryAboutValidatingThis)
 			{
-				bar.clearStatus();
 				return true;
 			}
 			
@@ -131,7 +130,7 @@ public class NumberField extends JTextField
 				
 				if(formatDescriptor.validate(choice))
 				{
-					bar.clearStatus();
+					bar.clearStatus(StatusBar.PRIORITY_INVALID_INPUT);
 					contentsValid=true;
 				}
 				else
@@ -176,7 +175,9 @@ public class NumberField extends JTextField
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
+						pleaseDontWorryAboutValidatingThis=true;
 						setText(oldEntry);
+						pleaseDontWorryAboutValidatingThis=false;
 					}
 				});
 			}
