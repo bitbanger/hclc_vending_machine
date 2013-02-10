@@ -58,6 +58,7 @@ public class ConditionButton extends JButton
 	public void addCondition(ConditionButtonCondition condition)
 	{
 		conditions.add(condition);
+		checkAndSetEnabled(); //make sure we're immediately enabled if appropriate
 	}
 
 	/**
