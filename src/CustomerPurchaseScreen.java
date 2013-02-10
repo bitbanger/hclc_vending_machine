@@ -22,6 +22,11 @@ public class CustomerPurchaseScreen {
  	/** The current VendingMachine */
 	private VendingMachine machine;
 
+	/**
+	 * Item that the customer purchased
+	 **/
+	private FoodItem purchasedItem;
+
 	/** 
 	 * The Standard CustomerPurchaseScreen constructor.
 	 * @param cust the current customer
@@ -30,6 +35,7 @@ public class CustomerPurchaseScreen {
 	public CustomerPurchaseScreen( Customer cust, VendingMachine vm ) {
 		user = cust;
 		machine = vm;
+		purchasedItem = null;
 	}
 
 	/** 
@@ -70,6 +76,7 @@ public class CustomerPurchaseScreen {
 			return "Item inactive"; //check if product disabled
 		
 		FoodItem item = rows[product.first][product.second].getProduct();
+		purchasedItem = item;
 		int cash = getBalance();
 		int price = item.getPrice();
 		if ( cash < price )
@@ -144,6 +151,15 @@ public class CustomerPurchaseScreen {
 	 */
 	public int getBalance() {
 		return user.getMoney();
+	}
+
+	/**
+	 * @return The item purchased by the user or null if no item has been
+	 * purchased yet.
+	 **/
+	public FoodItem getPurchasedItem()
+	{
+		return purchasedItem;
 	}
 
 	/**
