@@ -74,6 +74,11 @@ public class RestockerTaskListScreenGUI extends JPanel
 	{
 		Map<Integer, Pair<String, Boolean>> generatedTasks=controller.getInstructions();
 		
+		if(generatedTasks.size()>0)
+			master.getStatusBar().clearStatus();
+		else //no tasks to display
+			master.getStatusBar().setStatus("There are no tasks to perform", StatusBar.STATUS_WARN_COLOR);
+		
 		doneButton.clearConditions();
 		tasks=new JCheckBox[generatedTasks.size()];
 		for(int index : generatedTasks.keySet())
@@ -133,8 +138,8 @@ public class RestockerTaskListScreenGUI extends JPanel
 						controller.removeInstruction(index+1);
 				
 				controller.completeStocking();
-				master.getStatusBar().setStatus("Restocking complete!", StatusBar.STATUS_GOOD_COLOR);
 				master.popContentPanel();
+				master.getStatusBar().setStatus("Restocking complete!", StatusBar.STATUS_GOOD_COLOR);
 			}
 		});
 		cancelButton.addActionListener(new ActionListener()
@@ -143,6 +148,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 			public void actionPerformed(ActionEvent ignored)
 			{
 				master.popContentPanel();
+				master.getStatusBar().setStatus("Restocking canceled", StatusBar.STATUS_WARN_COLOR);
 			}
 		});
 		

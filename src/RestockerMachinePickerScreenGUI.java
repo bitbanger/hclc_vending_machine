@@ -53,7 +53,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		machines = new JList(controller.listActiveMachines().toArray());
 		machines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		master.getStatusBar().setStatus("Need to Restock", StatusBar.STATUS_GOOD_COLOR);
+		master.getStatusBar().clearStatus();
 
 		addComponents();
 	}
@@ -138,7 +138,6 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		selectButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e){
-				master.getStatusBar().setStatus("" + machines.getSelectedValue()); 
 				try {
 					RestockerTaskListScreen next = controller.tryMachine( 
 						((VendingMachine)machines.getSelectedValue()).getId());

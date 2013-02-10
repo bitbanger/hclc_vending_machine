@@ -186,8 +186,8 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 				result = controller.tryPurchase(selected);
 			if (result.equals("Good"))
 			{
-				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
 				master.popContentPanel();
+				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
 				master.setTitle("Login Screen");
 			}
 			else
