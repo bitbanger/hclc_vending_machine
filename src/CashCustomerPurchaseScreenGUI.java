@@ -92,6 +92,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		// adds the vending machine layout panel
+		vmButtons.setAlignmentX(LEFT_ALIGNMENT);
 		add(vmButtons);
 
 		// Spacing between panel and bottom controls
@@ -100,6 +101,8 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 
 		// Panel for entering money
 		JPanel enterAmountPanel = new JPanel();
+		enterAmountPanel.setAlignmentX(LEFT_ALIGNMENT);
+		enterAmountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		enterAmountPanel.setLayout(new BoxLayout(enterAmountPanel, BoxLayout.X_AXIS));
 		add(enterAmountPanel);
 
@@ -153,6 +156,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 
 		// Panel for bottom controls
 		JPanel bottomPanel = new JPanel();
+		bottomPanel.setAlignmentX(LEFT_ALIGNMENT);
 		add(bottomPanel);
 
 		// Horizontal layout for bottom controls
