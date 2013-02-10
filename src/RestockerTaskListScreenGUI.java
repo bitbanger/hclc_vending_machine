@@ -148,6 +148,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 		// Adds stuff and aligns the button to the right
 		buttonsPanel.add(cancelButton);
 		buttonsPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		buttonsPanel.add(Box.createGlue());
 		buttonsPanel.add(doneButton);
 
 		// Put those buttons on board
