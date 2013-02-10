@@ -102,7 +102,7 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	{
 		if (location != null)
 		{
-			zipCodeField.setText(location.getZipCode()+"");
+			zipCodeField.setText(location.retrieveFormattedZipCode());
 			stateField.setText(location.getState());
 		}
 		refreshData();
