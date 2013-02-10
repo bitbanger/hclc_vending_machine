@@ -256,6 +256,12 @@ public class CLIUtilities {
 					invalid=true;
 					continue;
 				}
+				else if(input.charAt(0)=='-')
+				{
+					System.out.println("Please enter only a nonnegative ZIP code");
+					invalid=true;
+					continue;
+				}
 			}
 			catch(NumberFormatException nai)
 			{
