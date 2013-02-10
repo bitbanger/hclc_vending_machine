@@ -53,7 +53,7 @@ public class StockingIntervalField extends NumberField
 						if(validity>0) //not a great choice
 						{
 							setBackground(Color.PINK);
-							bar.setStatus("Due to expiration concerns, this should be at most "+validity+" days", bar.STATUS_BAD_COLOR);
+							bar.setStatusConditionally("Due to expiration concerns, this should be at most "+validity+" days", bar.STATUS_BAD_COLOR, bar.PRIORITY_SUPPLEMENTAL_VALIDATION);
 						}
 						
 						return validity==0;

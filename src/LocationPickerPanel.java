@@ -279,7 +279,7 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 				if(!weregood)
 				{
 					zipCodeField.setBackground(Color.PINK);
-					bar.setStatus("ZIP codes must be exactly 5 digits long", bar.STATUS_BAD_COLOR);
+					bar.setStatusConditionally("ZIP codes must be exactly 5 digits long", bar.STATUS_BAD_COLOR, bar.PRIORITY_SUPPLEMENTAL_VALIDATION);
 				}
 				
 				return weregood;

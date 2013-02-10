@@ -27,15 +27,25 @@ public class StatusBar extends JPanel
 	public static final Color STATUS_WARN_COLOR = Color.yellow;
 	
 	/**
+	 * Priority for messages indicating that invalid input was accepted.
+	 */
+	public static final int PRIORITY_SUPPLEMENTAL_VALIDATION = 0;
+
+	/**
 	 * Priority for messages informing the user that their input is invalid.
 	 **/
-	public static final int PRIORITY_INVALID_INPUT = 0;
+	public static final int PRIORITY_INVALID_INPUT = 1;
 	
 	/**
 	 * Priority for messages informing the user that their action has been rejected by the system for causing an invalid state.
 	 * An example of an invalid state is altering the stocking interval such that items would expire before a visit.
 	 **/
-	public static final int PRIORITY_REJECTED_CONFIG = 1;
+	public static final int PRIORITY_REJECTED_CONFIG = 2;
+
+	/**
+	 * Default priority.
+	 */
+	private static final int DEFAULT_PRIORITY = PRIORITY_INVALID_INPUT;
 
 	/**
 	 * Label that holds the text for the status bar
@@ -59,6 +69,19 @@ public class StatusBar extends JPanel
 		statusLabel = new JLabel("status");
 		add(statusLabel);
 	}
+
+	/**
+	 * Sets the text, color, and priority only if the provided priority is equal to at least the current priority.
+	 * Otherwise, everything remains as it currently is.
+	 * @param status	The string to display.
+	 * @param color		The color of the status bar.
+	 * @param priority	The priority of the message.
+	 */
+	public void setStatusConditionally(String status, Color color, int priority)
+	{
+		if(priority>=currentPriority)
+			setStatus(status, color, priority);
+	}
 	
 	/**
 	 * Sets the status text and color of the status bar, as well as the priority of the message.
@@ -81,7 +104,7 @@ public class StatusBar extends JPanel
 	{
 		statusLabel.setText(status);
 		setBackground(color);
-		currentPriority = 0;
+		currentPriority = DEFAULT_PRIORITY;
 	}
 	
 	/**
@@ -101,7 +124,7 @@ public class StatusBar extends JPanel
 	public void setStatus(String status)
 	{
 		statusLabel.setText(status);
-		currentPriority = 0;
+		currentPriority = DEFAULT_PRIORITY;
 	}
 
 	/**
@@ -110,6 +133,7 @@ public class StatusBar extends JPanel
 	public void clearStatus()
 	{
 		setStatus(" ", STATUS_GOOD_COLOR);
+		currentPriority=0; //allow low-priority messages in again
 	}
 	
 	/**
@@ -122,6 +146,7 @@ public class StatusBar extends JPanel
 		if(priority >= currentPriority)
 		{
 			setStatus(" ", STATUS_GOOD_COLOR);
+			currentPriority=0; //allow low-priority messages in again
 		}
 	}
 
