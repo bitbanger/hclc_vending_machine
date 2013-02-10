@@ -51,6 +51,7 @@ public class CustomerPurchaseScreenTest {
 			CustomerPurchaseScreen( user, help );
 		Assert.assertTrue( "Good".equals( screen.tryPurchase( 
 			new Pair<Integer, Integer> (0, 0) ) ) );
+		Assert.assertTrue( screen.getPurchasedItem().equals( help.getCurrentLayout().getRows()[0][0].getProduct() ) ); // now also tests that the 
 	}
 
 	@Test
