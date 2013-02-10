@@ -72,10 +72,6 @@ public class ManagerUserAccountsScreenChangeManagerPasswordGUI extends JPanel im
 		nameField = new JTextField();
 		passwordField = new JPasswordField();
 		confirmPasswordField = new JPasswordField();
-		nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)nameField.getPreferredSize().getHeight()));
-		passwordField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)passwordField.getPreferredSize().getHeight()));
-		confirmPasswordField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)confirmPasswordField.getPreferredSize().getHeight()));
-		//nameField.setAlignmentX(CENTER_ALIGNMENT);
 		
 		if(toChange != null) {
 			nameField.setText(toChange.getName());
@@ -132,28 +128,7 @@ public class ManagerUserAccountsScreenChangeManagerPasswordGUI extends JPanel im
 			}
 		});
 		
-		JPanel namePanel = new JPanel();
-		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
-		namePanel.add(new JLabel("Manager Name: "));
-		namePanel.add(nameField);
-		
-		JPanel passwordPanel = new JPanel();
-		passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.X_AXIS));
-		passwordPanel.add(new JLabel("Manager Password: "));
-		passwordPanel.add(passwordField);
-		
-		JPanel confirmPasswordPanel = new JPanel();
-		confirmPasswordPanel.setLayout(new BoxLayout(confirmPasswordPanel, BoxLayout.X_AXIS));
-		confirmPasswordPanel.add(new JLabel("Confirm Manager Password: "));
-		confirmPasswordPanel.add(confirmPasswordField);
-		//passwordField.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		//passwordField.setAlignmentX(CENTER_ALIGNMENT);
-		//confirmPasswordField.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		//confirmPasswordField.setAlignmentX(CENTER_ALIGNMENT);
-		
-		returnHomeButton = new JButton("Return to User Accounts Screen");
-		//returnHomeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		returnHomeButton.setAlignmentX(CENTER_ALIGNMENT);
+		returnHomeButton = new JButton("Cancel");
 		returnHomeButton.addActionListener(this);
 		
 		confirmButton = new ConditionButton(confirmButtonText);
@@ -169,23 +144,23 @@ public class ManagerUserAccountsScreenChangeManagerPasswordGUI extends JPanel im
 			}
 		});
 		confirmButton.checkAndSetEnabled();
-		confirmButton.setAlignmentX(CENTER_ALIGNMENT);
 		confirmButton.addActionListener(this);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(returnHomeButton);
+		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(confirmButton);
 		
-		this.add(Box.createGlue());
-		this.add(namePanel);
-		this.add(Box.createGlue());
-		this.add(passwordPanel);
-		this.add(Box.createGlue());
-		this.add(confirmPasswordPanel);
-		this.add(Box.createGlue());
+		LabeledFieldPanel fieldsPanel = new LabeledFieldPanel();
+		fieldsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		nameField.setColumns(20);
+		fieldsPanel.addLabeledTextField("Manager name:", nameField);
+		fieldsPanel.addLabeledTextField("Manager Password:", passwordField);
+		fieldsPanel.addLabeledTextField("Confirm Manager Password:", confirmPasswordField);
+		this.add(fieldsPanel);
+
 		this.add(buttonPanel);
-		this.add(Box.createGlue());
 	}
 	
 	@Override
