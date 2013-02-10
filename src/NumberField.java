@@ -94,6 +94,7 @@ public class NumberField extends JTextField
 	/**
 	 * Retrieves the number entered by the user.
 	 * @return dat numbah
+	 * @throws NumberFormatException if the current contents are invalid
 	 */
 	public int getNumber()
 	{
@@ -172,8 +173,7 @@ public class NumberField extends JTextField
 					else
 					{
 						if(changeStatusBar)
-							bar.setColor(bar.STATUS_BAD_COLOR);
-						//the format descriptor will have set the status appropriately
+							bar.setStatus(String.valueOf(formatDescriptor), bar.STATUS_BAD_COLOR);
 						contentsValid=false;
 					}
 				}
