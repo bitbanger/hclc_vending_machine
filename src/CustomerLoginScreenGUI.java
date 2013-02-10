@@ -11,6 +11,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 /**
  * Content panel for the customer login screen.
@@ -49,6 +50,16 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	private NumberField idTextField;
 
 	/**
+	 * Panel that should only be displayed after a customer purchases an item.
+	 **/
+	private JPanel purchaseItemPanel;
+
+	/**
+	 * Label that displays the item that has been purchased
+	 **/
+	private JLabel purchaseItemLabel;
+
+	/**
 	 * Creates the panel with the given controller instance.
 	 * @param controller The controller instance to use.
 	 **/
@@ -62,6 +73,8 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 
 		loginButton = new ConditionButton("Login");
 		idTextField = new NumberField(NumberField.POSITIVE_Z);
+		purchaseItemPanel = new JPanel();
+		purchaseItemLabel = new JLabel();
 
 		master.getStatusBar().clearStatus();
 		addComponents();
@@ -154,7 +167,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
 		
-		loginPanel.setAlignmentX(CENTER_ALIGNMENT);
+		loginPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
 
 		// Add the login panel to main panel
@@ -183,10 +196,35 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		buttonPanel.add(Box.createGlue());
 		buttonPanel.add(cashButton);
 		
-		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
-		
+		buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
+
 		this.add(buttonPanel);
-		
+
+
+		purchaseItemPanel.setLayout(new BoxLayout(purchaseItemPanel, BoxLayout.Y_AXIS));
+		purchaseItemPanel.setAlignmentX(LEFT_ALIGNMENT);
+
+		purchaseItemPanel.add(Box.createRigidArea(new Dimension(0, 100)));
+
+		JLabel purchaseItemIcon = new JLabel(new ImageIcon(ImageLoader.loadItemPurchaseImage()));
+		purchaseItemIcon.setAlignmentX(CENTER_ALIGNMENT);
+		purchaseItemPanel.add(purchaseItemIcon);
+
+		purchaseItemPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		purchaseItemLabel.setAlignmentX(CENTER_ALIGNMENT);
+		purchaseItemPanel.add(purchaseItemLabel);
+
+		purchaseItemPanel.setVisible(false);
+
+		add(purchaseItemPanel);
+	}
+
+	public void refreshItemPurchased(boolean display, String labelText)
+	{
+		purchaseItemLabel.setText(labelText);
+		purchaseItemPanel.setVisible(display);
+		master.pack();
 	}
 
 	/**
@@ -215,7 +253,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 				idTextField.clearNumberEntered();
 
 				// Set up the next screen
-				CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master);
+				CustomerPurchaseScreenGUI nextGUI = new CustomerPurchaseScreenGUI(next, master, this);
 
 				// Display the next screen
 				master.pushContentPanel(nextGUI);

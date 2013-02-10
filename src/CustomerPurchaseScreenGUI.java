@@ -45,15 +45,21 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 	private CustomerFavoritesPanel favoritesPanel;
 
 	/**
+	 * CustomerLoginScreen that created this screen.
+	 **/
+	private CustomerLoginScreenGUI parent;
+
+	/**
 	 * Creates the panel using the given arguments.
 	 * @param controller The controller instance for this GUI.
 	 * @param master The master for this GUI.
 	 **/
-	public CustomerPurchaseScreenGUI(CustomerPurchaseScreen controller, BaseGUI master)
+	public CustomerPurchaseScreenGUI(CustomerPurchaseScreen controller, BaseGUI master, CustomerLoginScreenGUI parent)
 	{
 		master.getStatusBar().clearStatus();
 		this.master = master;
 		this.controller = controller;
+		this.parent = parent;
 		vmButtons = new VMLayoutPanel(controller.listLayout(), false);
 
 		master.getStatusBar().setStatus(String.format("Welcome, %s", controller.getUser().getName()), StatusBar.STATUS_GOOD_COLOR);
@@ -166,6 +172,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 			master.popContentPanel();
 			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
 			master.setTitle("Login Screen");
+			parent.refreshItemPurchased(false, "");
 		}
 		else
 		{
@@ -189,6 +196,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 				master.popContentPanel();
 				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
 				master.setTitle("Login Screen");
+				parent.refreshItemPurchased(true, "Thank you for purchasing " + controller.getPurchasedItem().getName());
 			}
 			else
 			{
