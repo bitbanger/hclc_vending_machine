@@ -149,6 +149,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 			}
 		});
 		loginButton.addActionListener(this);
+		idTextField.addActionListener(this);
 		loginButtonPanel.add(loginButton);
 		loginPanel.add(loginButtonPanel);
 		
@@ -196,7 +197,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent event)
 	{
 		// If the login button was pressed
-		if (event.getSource() == loginButton)
+		if (event.getSource() == loginButton || idTextField.areContentsValid() && event.getSource() == idTextField)
 		{
 			
 			// Get the next controller

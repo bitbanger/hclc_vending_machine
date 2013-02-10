@@ -161,6 +161,17 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		// Add the exit button
 		exitButton = new JButton("Exit");
 		
+		// Allow pressing enter to advance from ID field to password field:
+		idTextField.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent ignored)
+			{
+				if(idTextField.areContentsValid())
+					passTextField.requestFocusInWindow();
+			}
+		});
+		
 		// Add the login button
 		final NumberField tempField = idTextField;
 		loginButton.addCondition(new ConditionButtonCondition()
@@ -175,6 +186,7 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 			}
 		});
 		loginButton.addActionListener(this);
+		passTextField.addActionListener(this);
 		loginButtonPanel.add(exitButton);
 		loginButtonPanel.add(Box.createGlue());  // Spaces out the buttons
 		loginButtonPanel.add(loginButton);
@@ -209,22 +221,25 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		// Get the next controller
-		ManagerHomeScreen next = controller.tryLogin(Integer.parseInt(idTextField.getText()), new String(passTextField.getPassword()));
-		
-		passTextField.setText(""); //clear password
-		
-		// If the credentials didn't use an auth token
-		if (next == null)
+		if(idTextField.areContentsValid())
 		{
-			master.getStatusBar().setStatus("Invalid username/password combo", StatusBar.STATUS_BAD_COLOR);
-		}
-		else
-		{
-			ManagerHomeScreenGUI nextGUI = new ManagerHomeScreenGUI(next, master);
-			idTextField.clearNumberEntered(); //clear ID
+			// Get the next controller
+			ManagerHomeScreen next = controller.tryLogin(Integer.parseInt(idTextField.getText()), new String(passTextField.getPassword()));
 			
-			master.pushContentPanel(nextGUI);
+			passTextField.setText(""); //clear password
+			
+			// If the credentials didn't use an auth token
+			if (next == null)
+			{
+				master.getStatusBar().setStatus("Invalid username/password combo", StatusBar.STATUS_BAD_COLOR);
+			}
+			else
+			{
+				ManagerHomeScreenGUI nextGUI = new ManagerHomeScreenGUI(next, master);
+				idTextField.clearNumberEntered(); //clear ID
+				
+				master.pushContentPanel(nextGUI);
+			}
 		}
 	}
 }
