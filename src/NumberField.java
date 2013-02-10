@@ -130,7 +130,10 @@ public class NumberField extends JTextField
 			public boolean verify(boolean changeStatusBar)
 			{
 				boolean mainVerdict=super.verify(changeStatusBar); //see what the main validator would do
-				boolean supplementalCall=oracle.checkCondition(); //the addon must be run last, in case it modifies the status/color
+				boolean supplementalCall=false;
+				
+				if(mainVerdict) //only then do we want to ask the oracle (or we'll cover up the stock verification's status bar output)
+					supplementalCall=oracle.checkCondition(); //must be run last, in case it modifies the status bar/field color
 				
 				if(changeStatusBar) //this is the class's internal validation loop
 					contentsValid=mainVerdict; //vetoing the change would reverse it!
