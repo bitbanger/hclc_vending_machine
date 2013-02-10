@@ -20,6 +20,7 @@ LICDIR=license
 SRCDIR=src
 TBDIR=tbin
 TESTDIR=junit_test
+IMAGEDIR=img
 
 #launcher scripts
 INCPOSTFIX=.include
@@ -30,7 +31,7 @@ TESTSTEM=testsuite
 #targets
 devel: classes documents launchers
 
-classes:
+classes: images
 	- mkdir ${BINDIR}
 	${JAVAC} -d ${BINDIR} -cp ${SRCDIR}$(subst $(empty) :$(empty),:,$(foreach library,${LIBS},:${LIBDIR}/${library})) ${SRCDIR}/*.java
 
@@ -39,6 +40,10 @@ tests: classes
 	${JAVAC} -d ${TBDIR} -cp ${TESTDIR}:${BINDIR}$(subst $(empty) :$(empty),:,$(foreach library,${TESTLIBS},:${LIBDIR}/${library})) ${TESTDIR}/*.java
 	echo -e "#!${SHELLPATH}\ncd ${TBDIR}\n${JAVA} -cp ../${TBDIR}:../${BINDIR}$(subst $(empty) :$(empty),:,$(foreach library,${TESTLIBS},:../${LIBDIR}/${library})$(foreach library,${LIBS},:../${LIBDIR}/${library})) ${TESTCHAIN} $(patsubst ${TESTDIR}/%.java,%,$(wildcard $(shell grep -le '@Test' ${TESTDIR}/*.java)))" > ${TESTSTEM}${POSTFIX}
 	chmod +x ${TESTSTEM}${POSTFIX}
+
+images: 
+	- mkdir ${BINDIR}
+	- cp ${IMAGEDIR}/* ${BINDIR}
 
 distribution: classes
 	- mkdir ${DISTDIR}
