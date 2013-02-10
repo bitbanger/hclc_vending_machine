@@ -38,6 +38,9 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 	 **/
 	private JButton purchaseButton;
 
+	/**
+	 * Panel that allows the user to select from frequently bought items.
+	 **/
 	private CustomerFavoritesPanel favoritesPanel;
 
 	/**
@@ -57,6 +60,9 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		addLogic();
 	}
 
+	/**
+	 * Adds logic to the components.
+	 **/
 	private void addLogic()
 	{
 		vmButtons.addVendingMachineItemChangedListener(new VendingMachineItemChangedListener()
