@@ -29,7 +29,7 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 	/**
 	 * Number field for stocking interval
 	 */
-	private NumberField stockingField;
+	private StockingIntervalField stockingField;
 	
 	/**
 	 * Controller instance.
@@ -72,7 +72,8 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 		this.machine = machine;
 		this.parent = parent;
 		
-		stockingField = new NumberField(NumberField.POSITIVE_Z);
+		stockingField = new StockingIntervalField(controller, master.getStatusBar());
+		stockingField.setText(String.valueOf(machine.getStockingInterval()));
 		
 		confirmButton = new ConditionButton("Confirm Interval Change");
 		cancelButton = new JButton("Cancel Interval Change");
@@ -88,40 +89,10 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 		confirmButton.addActionListener(this);
 		confirmButton.addCondition(new ConditionButtonCondition() {
 			public boolean checkCondition() {
-				return stockingField.areContentsValid() &&
-					   controller.stockingIntervalValidity(machine, stockingField.getNumber()) == 0;
+				return stockingField.areContentsValid();
 			}
 		});
-		
-		stockingField.getDocument().addDocumentListener(new DocumentListener() {
-			/** @inheritDoc */
-			public void removeUpdate(DocumentEvent arg0) {
-				generalUpdate();
-			}
-			
-			/** @inheritDoc */
-			public void insertUpdate(DocumentEvent arg0) {
-				generalUpdate();
-			}
-			
-			/** @inheritDoc */
-			public void changedUpdate(DocumentEvent arg0) {
-			}
-			
-			private void generalUpdate() {
-				confirmButton.checkAndSetEnabled();
-				
-				if(stockingField.areContentsValid()) {
-					int validity = controller.stockingIntervalValidity(machine, stockingField.getNumber());
-					
-					if(validity == -1) {
-						master.getStatusBar().setStatus("An error occurred while attempting to change the stocking interval", StatusBar.STATUS_BAD_COLOR, StatusBar.PRIORITY_REJECTED_CONFIG);
-					} else if(validity > 0) {
-						master.getStatusBar().setStatus("Due to expiration concerns, this should be at most " + validity + " days", StatusBar.STATUS_BAD_COLOR, StatusBar.PRIORITY_REJECTED_CONFIG);
-					}
-				}
-			}
-		});
+		confirmButton.watch(stockingField);
 	}
 	
 	/**
