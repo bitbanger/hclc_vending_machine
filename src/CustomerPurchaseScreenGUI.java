@@ -3,6 +3,7 @@ import javax.swing.BoxLayout;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -97,17 +98,29 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		// Sets the layout to a vertical layout
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		// Creates the preset panel
+		JPanel presetPanel = new JPanel();
+		presetPanel.setLayout(new BoxLayout(presetPanel, BoxLayout.X_AXIS));
+		add(presetPanel);
+
+		// Creates the preset items label
+		JLabel presetItems = new JLabel("Preset Items");
+		presetPanel.add(Box.createVerticalStrut(35));
+		presetPanel.add(presetItems);
+
+		// Creates the top panel
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		add(topPanel);
 
 		// adds the vending machine layout panel
 		topPanel.add(vmButtons);
-
 		topPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 		
+		// Creates the favorites panel
 		favoritesPanel = new CustomerFavoritesPanel(controller.getFrequentlyBought(), vmButtons.getNumberOfRows());
 		topPanel.add(favoritesPanel);
+
 
 		// Spacing between panel and bottom controls
 		add(Box.createGlue());
@@ -137,7 +150,6 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		// Purchase button
 		purchaseButton = new JButton("Purchase!");
 		bottomPanel.add(purchaseButton);
-
 	}
 
 	/**
