@@ -52,6 +52,7 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 	 * @param master		BaseGUI container for this panel
 	 */
 	public ManagerReportStatsScreenGUI(ManagerReportStatsScreen controller, BaseGUI master) {
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 		

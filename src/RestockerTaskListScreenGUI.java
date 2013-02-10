@@ -56,6 +56,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 	 **/
 	public RestockerTaskListScreenGUI(RestockerTaskListScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 		tasks = null;

@@ -54,6 +54,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 	 **/
 	public CustomerLoginScreenGUI(CustomerLoginScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 

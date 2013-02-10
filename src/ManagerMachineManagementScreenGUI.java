@@ -75,6 +75,7 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 	 **/
 	public ManagerMachineManagementScreenGUI(ManagerMachineManagementScreen controller, BaseGUI master, ManagerHomeScreenGUI last)
 	{
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 		prior = last;

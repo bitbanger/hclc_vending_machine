@@ -46,6 +46,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 	 **/
 	public RestockerMachinePickerScreenGUI(RestockerMachinePickerScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.master = master;
 		this.controller = controller;
 

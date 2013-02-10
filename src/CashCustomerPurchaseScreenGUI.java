@@ -68,6 +68,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 	 **/
 	public CashCustomerPurchaseScreenGUI(CashCustomerPurchaseScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.master = master;
 		this.controller = controller;
 		this.moneyEntered = 0;

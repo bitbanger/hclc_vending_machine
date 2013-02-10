@@ -56,6 +56,7 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 	 **/
 	public ManagerLoginScreenGUI(ManagerLoginScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 

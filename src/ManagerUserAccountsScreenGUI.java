@@ -52,6 +52,7 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	 * @param master		BaseGUI container for this panel
 	 */
 	public ManagerUserAccountsScreenGUI(ManagerUserAccountsScreen controller, BaseGUI master) {
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 

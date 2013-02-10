@@ -60,6 +60,7 @@ public class ManagerHomeScreenGUI extends JPanel implements ActionListener
 	 **/
 	public ManagerHomeScreenGUI(ManagerHomeScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 

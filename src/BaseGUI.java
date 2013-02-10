@@ -104,6 +104,7 @@ public class BaseGUI extends JFrame
 
 	/**
 	 * Pops the top off the stack of content panels and displays the next one.
+	 * Also clears the status bar.
 	 **/
 	public void popContentPanel()
 	{
@@ -112,6 +113,7 @@ public class BaseGUI extends JFrame
 			getContentPane().remove(currentPanel);
 		contentStack.pop();
 		displayTop();
+		statusBar.clearStatus();
 	}
 
 	/**

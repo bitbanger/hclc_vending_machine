@@ -48,6 +48,7 @@ public class CustomerMachinePickerScreenGUI extends JPanel {
 	 **/
 	public CustomerMachinePickerScreenGUI(
 			CustomerMachinePickerScreen controller, BaseGUI master) {
+		master.getStatusBar().clearStatus();
 		this.master = master;
 		this.controller = controller;
 		

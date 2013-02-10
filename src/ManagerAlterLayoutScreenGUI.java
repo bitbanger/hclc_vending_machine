@@ -66,6 +66,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 	 **/
 	public ManagerAlterLayoutScreenGUI(ManagerAlterLayoutScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.controller = controller;
 		this.master = master;
 

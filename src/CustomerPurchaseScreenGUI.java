@@ -51,6 +51,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 	 **/
 	public CustomerPurchaseScreenGUI(CustomerPurchaseScreen controller, BaseGUI master)
 	{
+		master.getStatusBar().clearStatus();
 		this.master = master;
 		this.controller = controller;
 		vmButtons = new VMLayoutPanel(controller.listLayout(), false);
