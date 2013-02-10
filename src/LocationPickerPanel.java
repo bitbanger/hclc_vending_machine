@@ -274,17 +274,15 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 			@Override
 			public boolean checkCondition()
 			{
-				if(zipCodeField.getText().length()!=5)
+				boolean weregood=zipCodeField.getText().length()==5;
+				
+				if(!weregood)
 				{
 					zipCodeField.setBackground(Color.PINK);
 					bar.setStatus("ZIP codes must be exactly 5 digits long", bar.STATUS_BAD_COLOR);
-					return false;
 				}
-				else
-				{
-					bar.clearStatus(bar.PRIORITY_INVALID_INPUT);
-					return true;
-				}
+				
+				return weregood;
 			}
 		});
 		button.addCondition(new ConditionButtonCondition()
