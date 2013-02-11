@@ -200,6 +200,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 
 			// Refresh the content of the VM layout panel
 			vmButtons.refreshContent(controller.listRows());
+			master.pack();
 		}
 
 		// Empty row button clicked
@@ -218,6 +219,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 
 			// Refresh the content of the VM layout panel
 			vmButtons.refreshContent(controller.listRows());
+			master.pack();
 		}
 
 		// Commit changes clicked
