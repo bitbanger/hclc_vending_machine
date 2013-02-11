@@ -128,20 +128,18 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Object source = event.getSource();
-		
-		master.popContentPanel();
-		
 		if (source == confirmButton) {
 			if(controller.changeMachineStockingInterval(machine, stockingField.getNumber()) == 0) {
+				master.popContentPanel();
 				master.getStatusBar().setStatus("Stocking interval changed successfully", StatusBar.STATUS_GOOD_COLOR);
 			} else {
+				master.popContentPanel();
 				master.getStatusBar().setStatus("An error occurred while attempting to change the stocking interval", StatusBar.STATUS_BAD_COLOR);
 			}
 			parent.refreshList();
 		} else if (source == cancelButton) {
+			master.popContentPanel();
 			master.getStatusBar().setStatus("Stocking interval changes canceled", StatusBar.STATUS_WARN_COLOR);
 		}
-		
-		master.popContentPanel();
 	}
 }
