@@ -175,6 +175,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 		displayMoneyEntered();
 
 		// Spacing between label and buttons
+		bottomPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 		bottomPanel.add(Box.createGlue());
 
 		// Cancel button

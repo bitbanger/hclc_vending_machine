@@ -147,6 +147,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		bottomPanel.add(fundLabel);
 
 		// Spacing between label and buttons
+		bottomPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 		bottomPanel.add(Box.createGlue());
 
 		// Cancel button
