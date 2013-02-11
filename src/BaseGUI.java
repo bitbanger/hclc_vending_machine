@@ -55,6 +55,7 @@ public class BaseGUI extends JFrame
 	 **/
 	private void addBaseComponents()
 	{
+		setIconImage(ImageLoader.loadWindowIcon());
 		setLayout(new BorderLayout());
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));

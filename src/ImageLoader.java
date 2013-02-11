@@ -14,6 +14,11 @@ public class ImageLoader
 	private static final String IMAGE_ROOT = "/";
 
 	/**
+	 * Path to window icon.
+	 */
+	private static final String WINDOW_ICON = "favicon.jpg";
+
+	/**
 	 * Path to item purchased notification image.
 	 **/
 	private static final String PURCHASE_ITEM = "item_purchase.png";
@@ -38,6 +43,14 @@ public class ImageLoader
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * Loads the window icon image.
+	 */
+	public static BufferedImage loadWindowIcon()
+	{
+		return loadImageByName(WINDOW_ICON);
 	}
 
 	/**
