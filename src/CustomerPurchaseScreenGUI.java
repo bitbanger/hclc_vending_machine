@@ -45,7 +45,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 	private CustomerFavoritesPanel favoritesPanel;
 
 	/**
-	 * CustomerLoginScreen that created this screen.
+	 * CustomerLoginScreenGUI that created this screen.
 	 **/
 	private CustomerLoginScreenGUI parent;
 
@@ -53,6 +53,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 	 * Creates the panel using the given arguments.
 	 * @param controller The controller instance for this GUI.
 	 * @param master The master for this GUI.
+	 * @param parent CustomerLoginScreenGUI that created this screen
 	 **/
 	public CustomerPurchaseScreenGUI(CustomerPurchaseScreen controller, BaseGUI master, CustomerLoginScreenGUI parent)
 	{
