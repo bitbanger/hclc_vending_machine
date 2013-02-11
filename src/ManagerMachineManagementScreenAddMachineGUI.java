@@ -131,6 +131,9 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		if (machines.size() == 0)
 		{
 			oldLayout = null;
+			rowField.setText(VMLayout.DEFAULT_HEIGHT+"");
+			colField.setText(VMLayout.DEFAULT_WIDTH+"");
+			depthField.setText(VMLayout.DEFAULT_DEPTH+"");
 		}
 		else
 		{
