@@ -83,6 +83,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 
 		// Add a scroll pane
 		JScrollPane scrollPanel = new JScrollPane(machines);
+		scrollPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		this.add(scrollPanel);		
 
 	
@@ -93,20 +94,7 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		// Gap between customer id text box and login button
 		loginPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-		// Panel to align the login button to the right
-		JPanel loginButtonPanel = new JPanel();
-		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
-
-		// Aligns the button to the right
-		loginButtonPanel.add(Box.createGlue());
-
-		
-		// Add the login panel to main panel
-		loginPanel.setMaximumSize(loginPanel.getPreferredSize());
 		this.add(loginPanel);
-
-		// Gap between above and pay with cash button
-		this.add(Box.createRigidArea(new Dimension(0,20)));
 
 		// Cancel button
 		JButton	cancelButton = new JButton("Exit");
@@ -120,15 +108,11 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 			}
 		});
 
-		// Gap between above and cancel button
-		this.add(Box.createRigidArea(new Dimension(50,0)));
-
 		// Done button
 		ConditionButton selectButton = new ConditionButton("Select");
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(Box.createGlue());  // Creating space between Select and Exit buttons
 		buttonPanel.add(selectButton);
@@ -172,9 +156,5 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 				selectButtonFinal.checkAndSetEnabled();
 			}
 		});
-
-		JPanel toDoPanel = new JPanel();
-		toDoPanel.setLayout(new BoxLayout(toDoPanel, BoxLayout.Y_AXIS));
-		toDoPanel.setAlignmentX(RIGHT_ALIGNMENT);
 	}
 }
