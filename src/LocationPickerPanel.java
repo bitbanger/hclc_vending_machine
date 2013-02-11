@@ -1,9 +1,11 @@
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
@@ -301,6 +303,48 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 			}
 		});
 		button.watch(zipCodeField);
+		
+		businessField.getDocument().addDocumentListener(new DocumentListener()
+		{
+			@Override
+			public void changedUpdate(DocumentEvent ignored) {}
+			
+			private void doTheActualStuff()
+			{
+				if(businessField.getText().equals(""))
+				{
+					businessField.setBackground(Color.PINK);
+					if(((JFrame)SwingUtilities.getRoot(businessField)).getFocusOwner()==businessField)
+						bar.setStatus("Business names must be non-empty", bar.STATUS_BAD_COLOR);
+				}
+				else
+				{
+					businessField.setBackground(Color.WHITE);
+					bar.clearStatus();
+				}
+				editBusinessButton.checkAndSetEnabled();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent ignored)
+			{
+				doTheActualStuff();
+			}
+			
+			@Override
+			public void removeUpdate(DocumentEvent ignored)
+			{
+				doTheActualStuff();
+			}
+		});
+		editBusinessButton.addCondition(new ConditionButtonCondition()
+		{
+			@Override
+			public boolean checkCondition()
+			{
+				return !businessField.getText().equals("");
+			}
+		});
 	}
 
 	/**

@@ -425,6 +425,11 @@ public class ManagerCLI
 			String bus = CLIUtilities.prompt("Enter a nearby business (or type DONE to finish)");
 			if (bus.equals("DONE"))
 				break;
+			else if(bus.equals(""))
+			{
+				System.out.println("Business names must be non-empty");
+				continue;
+			}
 			businesses.add(bus);
 		}
 		String[] busArray = businesses.toArray(new String[0]);
@@ -525,6 +530,11 @@ public class ManagerCLI
 			String bus = CLIUtilities.prompt("Enter a nearby business (or type DONE to finish)");
 			if (bus.equals("DONE"))
 				break;
+			else if(bus.equals(""))
+			{
+				System.out.println("Business names must be non-empty");
+				continue;
+			}
 			businesses.add(bus);
 		}
 		String[] busArray = businesses.toArray(new String[0]);
