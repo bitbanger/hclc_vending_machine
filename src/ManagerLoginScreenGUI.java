@@ -84,37 +84,13 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 		loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
 		loginPanel.setAlignmentX(LEFT_ALIGNMENT);
 
-		// Panel to hold id label and text box
-		JPanel idPanel = new JPanel();
-		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
-
-		// Label for manager id text box
-		JLabel idLabel = new JLabel("Enter ID:");
-		idPanel.add(idLabel);
-		idPanel.add(Box.createHorizontalStrut(62)); // Creates space between ID label and text field
-
-		// Gap between label and text box
-		idPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-
-		// Text field for manager id
+		// Adds text fields to the panel
+		LabeledFieldPanel fieldsPanel = new LabeledFieldPanel();
+		loginPanel.add(fieldsPanel);
 		idTextField.setColumns(20);
-		idTextField.setMaximumSize(idTextField.getPreferredSize());
-		
-		// Panel to hold password label and text box
-		JPanel passPanel = new JPanel();
-		idPanel.setLayout(new BoxLayout(idPanel, BoxLayout.X_AXIS));
-		
-		// Label for password text box
-		JLabel passLabel = new JLabel("Enter password:");
-		passPanel.add(passLabel);
-		
-		// Gap between label and text box
-		passPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		
-		// Text field for manager password
-		passTextField.setColumns(20);
-		passTextField.setMaximumSize(passTextField.getPreferredSize());
-		
+		fieldsPanel.addLabeledTextField("Enter ID:", idTextField);
+		fieldsPanel.addLabeledTextField("Enter password:", passTextField);
+
 		// Make the id text field notify the login button when it is changed
 		final ConditionButton temp = loginButton;
 		idTextField.getDocument().addDocumentListener(new DocumentListener()
@@ -136,24 +112,7 @@ public class ManagerLoginScreenGUI extends JPanel implements ActionListener
 				temp.checkAndSetEnabled();
 			}
 		});
-		idPanel.add(idTextField);
-		passPanel.add(passTextField);
-
-		// Add box id label and text box to login panel
-		idPanel.setMaximumSize(idPanel.getPreferredSize());
-		loginPanel.add(idPanel);
 		
-		// Gap between above and pay with cash button
-		// Gap between id and password panels
-		this.add(Box.createRigidArea(new Dimension(0,20)));
-
-		// Add password label and text box to login panel
-		passPanel.setMaximumSize(passPanel.getPreferredSize());
-		loginPanel.add(passPanel);
-		
-		// Gap between customer id text box and login button
-		loginPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
 		// Panel to align the login button to the right
 		JPanel loginButtonPanel = new JPanel();
 		loginButtonPanel.setLayout(new BoxLayout(loginButtonPanel, BoxLayout.X_AXIS));
