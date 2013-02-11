@@ -112,7 +112,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		add(presetPanel);
 
 		// Creates the preset items label
-		JLabel presetItems = new JLabel("Preset Items");
+		JLabel presetItems = new JLabel("Frequently Bought");
 		presetPanel.add(Box.createVerticalStrut(35));
 		presetPanel.add(presetItems);
 
@@ -123,7 +123,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 
 		// adds the vending machine layout panel
 		topPanel.add(vmButtons);
-		topPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		topPanel.add(Box.createRigidArea(new Dimension(50, 0)));
 		
 		// Creates the favorites panel
 		favoritesPanel = new CustomerFavoritesPanel(controller.getFrequentlyBought(), vmButtons.getNumberOfRows());
