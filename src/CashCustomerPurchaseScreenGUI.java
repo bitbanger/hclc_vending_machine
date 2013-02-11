@@ -80,7 +80,6 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 		this.parent = parent;
 		this.moneyEntered = 0;
 
-		master.setTitle("Purchase Screen");
 
 		vmButtons = new VMLayoutPanel(controller.listLayout(), false);
 		enterMoneyField = new MoneyField(master.getStatusBar());
@@ -210,7 +209,6 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 		{
 			master.popContentPanel();
 			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
-			master.setTitle("Login Screen");
 			parent.refreshItemPurchased(false, "");
 		}
 		else if (source == purchaseButton)

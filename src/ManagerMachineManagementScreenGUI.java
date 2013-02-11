@@ -80,7 +80,6 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		this.master = master;
 		prior = last;
 
-		master.setTitle("Machine Management");
 
 		master.getStatusBar().clearStatus();
 
@@ -262,7 +261,6 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		{
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
-			master.setTitle("Home Screen");
 			prior.refreshYourself();
 		}
 

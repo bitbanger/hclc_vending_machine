@@ -70,7 +70,6 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		this.controller = controller;
 		this.master = master;
 
-		master.setTitle("Layout Management");
 
 		vmButtons = new VMLayoutPanel(controller.listRows(), true); 
 		stockableItems = new JList(controller.listItems().toArray());
@@ -181,7 +180,6 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		{
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
-			master.setTitle("Home Screen");
 		}
 
 		// Change row button clicked

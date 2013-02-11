@@ -62,7 +62,6 @@ public class RestockerTaskListScreenGUI extends JPanel
 		tasks = null;
 		taskList = new JPanel();
 		doneButton = null;
-		master.setTitle("Task List");
 		addComponents();
 		updateTaskList();
 	}

@@ -172,7 +172,6 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		{
 			master.popContentPanel();
 			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
-			master.setTitle("Login Screen");
 			parent.refreshItemPurchased(false, "");
 		}
 		else
@@ -196,7 +195,6 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 			{
 				master.popContentPanel();
 				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
-				master.setTitle("Login Screen");
 				parent.refreshItemPurchased(true, "Thank you for purchasing " + controller.getPurchasedItem().getName());
 			}
 			else

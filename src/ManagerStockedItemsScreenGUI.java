@@ -62,7 +62,6 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 		this.controller=controller;
 		this.master=master;
 		
-		master.setTitle("Stocked Items");
 		
 		nameField=new JTextField();
 		priceField=new MoneyField(master.getStatusBar());
@@ -127,7 +126,6 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 			{
 				master.popContentPanel();
 				master.getStatusBar().clearStatus();
-				master.setTitle("Home Screen");
 			}
 		});
 

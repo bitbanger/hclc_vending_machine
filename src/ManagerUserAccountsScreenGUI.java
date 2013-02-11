@@ -56,7 +56,6 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 		this.controller = controller;
 		this.master = master;
 
-		master.setTitle("User Accounts");
 
 		managerList = new JList(controller.listManagers().toArray());
 		customerList = new JList(controller.listCustomers().toArray());
@@ -140,7 +139,6 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 			public void actionPerformed(ActionEvent ignored)
 			{
 				master.popContentPanel();
-				master.setTitle("Home Screen");
 			}
 		});
 
@@ -152,7 +150,6 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 			public void actionPerformed(ActionEvent ignored)
 			{
 				master.popContentPanel();
-				master.setTitle("Home Screen");
 			}
 		});
 
