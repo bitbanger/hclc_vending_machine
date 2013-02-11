@@ -166,19 +166,17 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		JPanel businessButtonPanel = new JPanel();
 		businessButtonPanel.setAlignmentX(LEFT_ALIGNMENT);
 		businessButtonPanel.setLayout(new BoxLayout(businessButtonPanel, BoxLayout.X_AXIS));
+		businessButtonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, businessField.getPreferredSize().height));
 		businessPanel.add(businessButtonPanel);
 
 		removeBusinessButton.setEnabled(false);
-		removeBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)removeBusinessButton.getHeight()));
 		businessButtonPanel.add(removeBusinessButton);
 		businessButtonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		editBusinessButton.setEnabled(false);
-		editBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)editBusinessButton.getHeight()));
 		businessButtonPanel.add(editBusinessButton);
 
 		add(Box.createRigidArea(new Dimension(20, 0)));
-
 
 		LabeledFieldPanel zipAndStatePanel = new LabeledFieldPanel();
 		zipAndStatePanel.setAlignmentY(TOP_ALIGNMENT);
