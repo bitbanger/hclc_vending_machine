@@ -130,11 +130,6 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		// Sets the layout to a vertical layout
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-		add(new JScrollPane(stockableItems));
-
-		add(Box.createGlue());
-		add(Box.createRigidArea(new Dimension(20, 0)));
-
 		JPanel rightSide = new JPanel();
 		rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
 		add(rightSide);
@@ -153,17 +148,22 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		// Grid layout for bottom controls
 		bottomPanel.setLayout(new GridLayout(2,2,3,3));
 
-		// Empty Row button
-		bottomPanel.add(emptyRowButton);
-		
 		// Confirm Changes button
 		bottomPanel.add(commitChangesButton);
 
+		// Empty Row button
+		bottomPanel.add(emptyRowButton);
+		
+		// Return Home button
+		bottomPanel.add(logoutButton);
+		
 		// Change Row button
 		bottomPanel.add(changeRowButton);
 
-		// Return Home button
-		bottomPanel.add(logoutButton);
+		add(Box.createGlue());
+		add(Box.createRigidArea(new Dimension(20, 0)));
+		
+		add(new JScrollPane(stockableItems));
 	}
 
 	/**
