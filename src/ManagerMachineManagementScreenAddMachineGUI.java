@@ -267,13 +267,18 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 				}
 			}
 
-			master.popContentPanel();
 			// Try adding the machine. If it works then display a success
 			// message. If it fails then display an error message.
 			if (controller.addMachine(locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses(), stockingIntervalField.getNumber(), oldLayout) != -1)
+			{
+				master.popContentPanel();
 				master.getStatusBar().setStatus("Machine added successfully!", StatusBar.STATUS_GOOD_COLOR);
+			}
 			else
+			{
+				master.popContentPanel();
 				master.getStatusBar().setStatus("An error occurred while attempting to add the machine", StatusBar.STATUS_BAD_COLOR);
+			}
 			// Refresh the list on the ManagerMachineManagementScreenGUI and go
 			// back to it.
 			parent.refreshList();

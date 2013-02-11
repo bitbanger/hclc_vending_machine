@@ -109,17 +109,24 @@ public class ManagerMachineManagementScreenChangeLocationGUI extends JPanel impl
 	public void actionPerformed(ActionEvent event)
 	{
 		Object source = event.getSource();
-		master.popContentPanel();
 		if (source == confirmButton)
 		{
 			if (controller.changeMachineLocation(machine, locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses()))
+			{
+				master.popContentPanel();
 				master.getStatusBar().setStatus("Location changed successfully", StatusBar.STATUS_GOOD_COLOR);
+			}
 			else
+			{
+				master.popContentPanel();
 				master.getStatusBar().setStatus("An error occurred while attempting to change the location", StatusBar.STATUS_BAD_COLOR);
+			}
+
 			parent.refreshList();
 		}
 		else if (source == cancelButton)
 		{
+			master.popContentPanel();
 			master.getStatusBar().setStatus("Location changes canceled", StatusBar.STATUS_WARN_COLOR);
 		}
 	}
