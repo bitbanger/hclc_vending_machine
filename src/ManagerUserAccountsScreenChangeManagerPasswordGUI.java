@@ -168,16 +168,19 @@ public class ManagerUserAccountsScreenChangeManagerPasswordGUI extends JPanel im
 		if(event.getSource() == returnHomeButton) {
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
+			master.getStatusBar().setStatus("Manager changes canceled", StatusBar.STATUS_WARN_COLOR);
 		} else if(event.getSource() == confirmButton) {
+			master.popContentPanel();
 			if(toChange != null) {
 				controller.changePassword(toChange, new String(passwordField.getPassword()));
+				master.getStatusBar().setStatus("Manager edited");
 			} else {
 				controller.addManager(nameField.getText(), new String(passwordField.getPassword()));
+				master.getStatusBar().setStatus("Manager created");
 			}
 			
 			solsScreen.refreshYourselfYouSmellAwful();
 			
-			master.popContentPanel();
 		}
 	}
 }

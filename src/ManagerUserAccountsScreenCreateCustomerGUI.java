@@ -125,12 +125,14 @@ public class ManagerUserAccountsScreenCreateCustomerGUI extends JPanel implement
 		if(event.getSource() == returnHomeButton) {
 			master.getStatusBar().clearStatus();
 			master.popContentPanel();
+			master.getStatusBar().setStatus("Customer changes canceled", StatusBar.STATUS_WARN_COLOR);
 		} else if(event.getSource() == confirmButton) {
 			controller.addCustomer(nameField.getText(), U.parseMoney(initialBalanceField.getText()));
 			
 			solsScreen.refreshYourselfYouSmellAwful();
 			
 			master.popContentPanel();
+			master.getStatusBar().setStatus("Customer created");
 		}
 	}
 }

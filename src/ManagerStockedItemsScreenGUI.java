@@ -222,9 +222,13 @@ public class ManagerStockedItemsScreenGUI extends JPanel
 				controller.changeItemPrice(chosen, price);
 				controller.changeItemFreshLength(chosen, freshness);
 				controller.changeItemStatus(chosen, enablement);
+				master.getStatusBar().setStatus("Updated existing item");
 			}
 			else //addNew button hit
+			{
 				controller.addItem(name, price, freshness, enablement);
+				master.getStatusBar().setStatus("Created new item");
+			}
 			
 			products.setListData(controller.listItems().toArray());
 			products.clearSelection();

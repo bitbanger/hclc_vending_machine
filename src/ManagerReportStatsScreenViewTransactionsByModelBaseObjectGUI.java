@@ -64,6 +64,9 @@ public class ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI extend
 			transactions = controller.listFoodItemSales((FoodItem)modelBaseObject);
 		}
 		
+		if(transactions.size()==0)
+			master.getStatusBar().setStatus("No transactions matched query", StatusBar.STATUS_WARN_COLOR);
+		
 		String[] transactionStrings = new String[transactions.size()];
 		for(int i = 0; i < transactions.size(); ++i) {
 			transactionStrings[i] = transactions.get(i).toString().substring(ModelBase.ID_SPACES);

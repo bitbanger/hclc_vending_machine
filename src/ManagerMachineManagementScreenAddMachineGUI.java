@@ -253,6 +253,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		if (source == cancelButton)
 		{
 			master.popContentPanel();
+			master.getStatusBar().setStatus("Machine creation canceled", StatusBar.STATUS_WARN_COLOR);
 		}
 
 		// If the confirm button was pressed then add the new machine to the
@@ -274,6 +275,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 				}
 			}
 
+			master.popContentPanel();
 			// Try adding the machine. If it works then display a success
 			// message. If it fails then display an error message.
 			if (controller.addMachine(locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses(), stockingIntervalField.getNumber(), oldLayout) != -1)
@@ -283,7 +285,6 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 			// Refresh the list on the ManagerMachineManagementScreenGUI and go
 			// back to it.
 			parent.refreshList();
-			master.popContentPanel();
 		}
 	}
 }

@@ -160,7 +160,6 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource() == showTransactionsButton) {
 			ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI transactionsScreen = new ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI(controller, master, selectedModelObj);
-			master.getStatusBar().clearStatus();
 			master.pushContentPanel(transactionsScreen);
 		} else if(event.getSource() == returnHomeButton) {
 			master.getStatusBar().clearStatus();

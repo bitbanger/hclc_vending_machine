@@ -178,8 +178,8 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		// Logout button clicked
 		if (source == logoutButton)
 		{
-			master.getStatusBar().clearStatus();
 			master.popContentPanel();
+			master.getStatusBar().setStatus("Layout changes canceled", StatusBar.STATUS_WARN_COLOR);
 		}
 
 		// Change row button clicked
@@ -226,15 +226,15 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 			// Try to commit the changes
 			if (controller.commitRowChanges())
 			{
+				master.popContentPanel();
 				// Display a success message
-				master.getStatusBar().setStatus("Changes committed successfully!", StatusBar.STATUS_GOOD_COLOR);
+				master.getStatusBar().setStatus("Changes committed", StatusBar.STATUS_GOOD_COLOR);
 			}
 			else
 			{
 				// Display an error message
 				master.getStatusBar().setStatus("An error occurred while attempting to commit the changes", StatusBar.STATUS_BAD_COLOR);
 			}
-			master.popContentPanel();
 		}
 	}
 }
