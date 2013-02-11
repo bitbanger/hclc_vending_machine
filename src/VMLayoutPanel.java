@@ -2,6 +2,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.util.LinkedList;
@@ -13,6 +14,11 @@ import java.util.LinkedList;
  **/
 public class VMLayoutPanel extends JPanel implements ActionListener
 {
+	/**
+	 * Color of the text for unavailable items.
+	 */
+	private static final Color UNAVAILABLE_COLOR=Color.LIGHT_GRAY;
+
 	/**
 	 * Grid of toggle buttons that display the items.
 	 **/
@@ -106,7 +112,10 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 				// Disable the button if it is (null or inactive) and the
 				// manager mode is not set
 				if ((item == null || !item.isActive()) && !managerMode)
+				{
 					grid[j][i].setEnabled(false);
+					grid[j][i].setForeground(UNAVAILABLE_COLOR);
+				}
 
 				// This class will handle the button being clicked
 				grid[j][i].addActionListener(this);
