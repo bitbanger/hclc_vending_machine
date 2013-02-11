@@ -121,6 +121,14 @@ public class CustomerFavoritesPanel extends JPanel implements ActionListener
 	}
 
 	/**
+	 * @return whether there are any favorites
+	 */
+	public boolean areThereAnyFavorites()
+	{
+		return favorites.size()>0;
+	}
+
+	/**
 	 * Notifies our VendingMachineItemChangedListeners that this panel may have changed.
 	 **/
 	private void notifyItemChangedListeners()

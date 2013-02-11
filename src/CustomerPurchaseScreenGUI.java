@@ -111,11 +111,6 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		presetPanel.setLayout(new BoxLayout(presetPanel, BoxLayout.X_AXIS));
 		add(presetPanel);
 
-		// Creates the preset items label
-		JLabel presetItems = new JLabel("Frequently Bought");
-		presetPanel.add(Box.createVerticalStrut(35));
-		presetPanel.add(presetItems);
-
 		// Creates the top panel
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -123,11 +118,17 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 
 		// adds the vending machine layout panel
 		topPanel.add(vmButtons);
-		topPanel.add(Box.createRigidArea(new Dimension(50, 0)));
 		
 		// Creates the favorites panel
 		favoritesPanel = new CustomerFavoritesPanel(controller.getFrequentlyBought(), vmButtons.getNumberOfRows());
-		topPanel.add(favoritesPanel);
+		if(favoritesPanel.areThereAnyFavorites())
+		{
+			JLabel presetItems = new JLabel("Frequently Bought");
+			presetPanel.add(Box.createVerticalStrut(35));
+			presetPanel.add(presetItems);
+			topPanel.add(Box.createRigidArea(new Dimension(50, 0)));
+			topPanel.add(favoritesPanel);
+		}
 
 
 		// Spacing between panel and bottom controls
