@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.GridLayout;
+import javax.swing.ListSelectionModel;
 
 /**
  * Screen that allows the manager to manage machines
@@ -117,6 +118,9 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 		add(Box.createRigidArea(new Dimension(50, 0)));
 
 		machineList.setMaximumSize(new Dimension((int)machineList.getPreferredSize().getHeight(), Integer.MAX_VALUE));
+
+		machineList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 		add(new JScrollPane(machineList));
 	}
 

@@ -20,6 +20,7 @@ import java.util.Vector;
 import java.util.Arrays;
 import java.awt.Color;
 import java.awt.GridLayout;
+import javax.swing.ListSelectionModel;
 
 /**
  * Allows the user to select a location.
@@ -141,6 +142,7 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 
 		JPanel listPanel = new JPanel();
 		listPanel.setLayout(new GridLayout(1,1,0,0));
+		businessList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane scrollPane = new JScrollPane(businessList);
 		scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		listPanel.add(scrollPane);
