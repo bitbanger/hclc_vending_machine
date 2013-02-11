@@ -106,10 +106,11 @@ public class RestockerTaskListScreenGUI extends JPanel
 	 **/
 	private void addComponents()
 	{
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// Check boxes will be vertical
-		add(taskList, BorderLayout.CENTER);
+		taskList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		add(taskList);
 		taskList.setLayout(new BoxLayout(taskList, BoxLayout.Y_AXIS));
 
 		// Align the components to the left side
@@ -118,13 +119,11 @@ public class RestockerTaskListScreenGUI extends JPanel
 		// Panel to hold buttons
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
-		buttonsPanel.setAlignmentX(CENTER_ALIGNMENT);
+		buttonsPanel.setAlignmentX(LEFT_ALIGNMENT);
 
 		// Do some crazy stuff with buttons
 		JButton	cancelButton = new JButton("Leave machine");
 		doneButton = new ConditionButton("Done");
-		cancelButton.setAlignmentX(CENTER_ALIGNMENT);
-		doneButton.setAlignmentX(CENTER_ALIGNMENT);
 		
 		// Buttons' logic
 		doneButton.addActionListener(new ActionListener()
@@ -153,13 +152,12 @@ public class RestockerTaskListScreenGUI extends JPanel
 		
 		// Adds stuff and aligns the button to the right
 		buttonsPanel.add(cancelButton);
-		buttonsPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 		buttonsPanel.add(Box.createGlue());
 		buttonsPanel.add(doneButton);
 
 		// Put those buttons on board
-		buttonsPanel.setMaximumSize(buttonsPanel.getPreferredSize());
-		add(buttonsPanel, BorderLayout.SOUTH);
+		buttonsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)buttonsPanel.getPreferredSize().getHeight()));
+		add(buttonsPanel);
 	}
 
 	/**
