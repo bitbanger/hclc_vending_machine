@@ -223,6 +223,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 			if (result.equals("Good"))
 			{
 				master.popContentPanel();
+				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
 				parent.refreshItemPurchased(true, "<html><p>Thank you for purchasing " + controller.getPurchasedItem().getName() + "</p><p>Your change is " + U.formatMoney(controller.getBalance()) + "</p>");
 			}
 			else
