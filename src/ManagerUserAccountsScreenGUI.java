@@ -81,10 +81,24 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	
 	/** Lays out components on the JPanel */
 	private void addComponents() {
+		JButton returnHomeButton = new JButton("Return to Home Screen");
+		//returnHomeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		returnHomeButton.setAlignmentX(LEFT_ALIGNMENT);
+		returnHomeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ignored)
+			{
+				master.popContentPanel();
+			}
+		});
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		JTabbedPane tabPane = new JTabbedPane();
+		tabPane.setAlignmentX(tabPane.LEFT_ALIGNMENT);
 		add(tabPane);
+		add(Box.createRigidArea(new Dimension(0, 10)));
+		add(returnHomeButton);
 
 		JPanel managerTab = new JPanel();
 		managerTab.setBorder(new EmptyBorder(10,10,10,10));
@@ -131,17 +145,6 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 		newCustomerButton.addActionListener(this);
 		editSelectionButton.addActionListener(this);
 		
-		JButton returnHomeButtonManager = new JButton("Return to Home Screen");
-		returnHomeButtonManager.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		returnHomeButtonManager.setAlignmentX(LEFT_ALIGNMENT);
-		returnHomeButtonManager.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent ignored)
-			{
-				master.popContentPanel();
-			}
-		});
-
 		JButton returnHomeButtonCustomer = new JButton("Return to Home Screen");
 		returnHomeButtonCustomer.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		returnHomeButtonCustomer.setAlignmentX(LEFT_ALIGNMENT);
@@ -159,7 +162,6 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 
 		managerLeftPanel.add(newManagerButton);
 		managerLeftPanel.add(editSelectionButton);
-		managerLeftPanel.add(returnHomeButtonManager);
 
 		managerTab.add(Box.createRigidArea(new Dimension(50, 0)));
 		managerTab.add(new JScrollPane(managerList));
@@ -170,7 +172,6 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 
 		customerLeftPanel.add(newCustomerButton);
 		customerLeftPanel.add(Box.createRigidArea(new Dimension(0,0)));
-		customerLeftPanel.add(returnHomeButtonCustomer);
 
 		customerTab.add(Box.createRigidArea(new Dimension(50, 0)));
 		customerTab.add(new JScrollPane(customerList));
