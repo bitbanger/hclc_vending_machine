@@ -54,6 +54,8 @@ public class RestockerMachinePickerScreenGUI extends JPanel
 		machines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		master.getStatusBar().clearStatus();
+		if(machines.getModel().getSize()==0)
+			master.getStatusBar().setStatus("There are no active vending machines", StatusBar.STATUS_WARN_COLOR);
 
 		addComponents();
 	}
