@@ -127,16 +127,15 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
 		JPanel businessPanel = new JPanel();
-		businessPanel.setAlignmentY(TOP_ALIGNMENT);
 		businessPanel.setLayout(new BoxLayout(businessPanel, BoxLayout.Y_AXIS));
+		businessPanel.setAlignmentY(TOP_ALIGNMENT);
+		businessPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		add(businessPanel);
 
 		JPanel listPanel = new JPanel();
 		listPanel.setLayout(new GridLayout(1,1,0,0));
-		//businessList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		JScrollPane scrollPane = new JScrollPane(businessList);
-		//scrollPane.setAlignmentX(LEFT_ALIGNMENT);
-		//scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		listPanel.add(scrollPane);
 		listPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		listPanel.setAlignmentX(LEFT_ALIGNMENT);
@@ -146,7 +145,6 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 
 		JPanel addBusinessPanel = new JPanel();
 		addBusinessPanel.setLayout(new BoxLayout(addBusinessPanel, BoxLayout.X_AXIS));
-		addBusinessPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		addBusinessPanel.setAlignmentX(LEFT_ALIGNMENT);
 		addBusinessPanel.add(addBusinessButton);
 		businessPanel.add(addBusinessPanel);
@@ -154,39 +152,33 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		businessPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
 		JPanel businessFieldPanel = new JPanel();
-		businessFieldPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		businessFieldPanel.setAlignmentX(LEFT_ALIGNMENT);
 		businessFieldPanel.setLayout(new BoxLayout(businessFieldPanel, BoxLayout.X_AXIS));
 		businessFieldPanel.add(new JLabel("Business Name:"));
 		businessFieldPanel.add(Box.createRigidArea(new Dimension(20, 0)));
-		//businessField.setColumns(10);
 		businessField.setAlignmentX(LEFT_ALIGNMENT);
-		//businessField.setMaximumSize(businessField.getPreferredSize());
+		businessField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)businessField.getPreferredSize().getHeight()));
 		businessFieldPanel.add(businessField);
 		businessPanel.add(businessFieldPanel);
 
 		businessPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
 		JPanel businessButtonPanel = new JPanel();
-		businessButtonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		businessButtonPanel.setAlignmentX(LEFT_ALIGNMENT);
 		businessButtonPanel.setLayout(new BoxLayout(businessButtonPanel, BoxLayout.X_AXIS));
 		businessPanel.add(businessButtonPanel);
 
 		removeBusinessButton.setEnabled(false);
-		//removeBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)removeBusinessButton.getHeight()));
+		removeBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)removeBusinessButton.getHeight()));
 		businessButtonPanel.add(removeBusinessButton);
 		businessButtonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		editBusinessButton.setEnabled(false);
-		//editBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)editBusinessButton.getHeight()));
+		editBusinessButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)editBusinessButton.getHeight()));
 		businessButtonPanel.add(editBusinessButton);
-
-		businessPanel.setMaximumSize(businessPanel.getPreferredSize());
 
 		add(Box.createRigidArea(new Dimension(20, 0)));
 
-		scrollPane.setMaximumSize(new Dimension((int)businessField.getPreferredSize().getWidth(), Integer.MAX_VALUE));
 
 		LabeledFieldPanel zipAndStatePanel = new LabeledFieldPanel();
 		zipAndStatePanel.setAlignmentY(TOP_ALIGNMENT);
@@ -199,8 +191,6 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		stateField.setColumns(30);
 		stateField.setMaximumSize(stateField.getPreferredSize());
 		zipAndStatePanel.addLabeledTextField("State:", stateField);
-
-		add(Box.createGlue());
 	}
 
 	/**

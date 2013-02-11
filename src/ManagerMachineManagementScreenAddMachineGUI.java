@@ -165,20 +165,14 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	 **/
 	private void addComponents()
 	{
-		// Wraps the layout to prevent weird changes when resizing
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
 		// Set the layout of this panel to a vertical layout
-		JPanel innerLayout = new JPanel();
-		innerLayout.setLayout(new BoxLayout(innerLayout, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		// Add the location picker
 		locationPicker.setAlignmentX(LEFT_ALIGNMENT);
-		innerLayout.add(locationPicker);
-		add(innerLayout);
-		add(Box.createGlue());
+		add(locationPicker);
 
-		innerLayout.add(Box.createRigidArea(new Dimension(0, 50)));
+		add(Box.createRigidArea(new Dimension(0, 50)));
 
 		// Make the panel to be displayed below the location picker.
 		// It will contain the other fields and the confirm and cancel buttons.
@@ -186,7 +180,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		JPanel rightPanel = new JPanel();
 		rightPanel.setAlignmentX(LEFT_ALIGNMENT);
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		innerLayout.add(rightPanel);
+		add(rightPanel);
 
 		// Make the panel to hold the other fields (stocking interval, rows, etc.)
 		// It will have a grid bag layout.
@@ -237,8 +231,6 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 
 		// Helps center align the buttons
 		bottomPanel.add(Box.createGlue());
-
-		innerLayout.setMaximumSize(innerLayout.getPreferredSize());
 	}
 
 	/**

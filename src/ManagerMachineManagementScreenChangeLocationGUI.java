@@ -85,36 +85,20 @@ public class ManagerMachineManagementScreenChangeLocationGUI extends JPanel impl
 	 **/
 	private void addComponents()
 	{
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		add(Box.createGlue());
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		JPanel innerLayout = new JPanel();
-		innerLayout.setLayout(new BoxLayout(innerLayout, BoxLayout.Y_AXIS));
-
-		innerLayout.add(Box.createGlue());
-
-		innerLayout.add(locationPicker);
+		add(locationPicker);
 		locationPicker.setAlignmentX(CENTER_ALIGNMENT);
 
-		innerLayout.add(Box.createRigidArea(new Dimension(0, 50)));
+		add(Box.createRigidArea(new Dimension(0, 50)));
 
 		JPanel bottomPanel = new JPanel();
-		innerLayout.add(bottomPanel);
+		add(bottomPanel);
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
-		bottomPanel.add(Box.createGlue());
 		bottomPanel.add(cancelButton);
 		bottomPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 		bottomPanel.add(confirmButton);
-		bottomPanel.add(Box.createGlue());
 		bottomPanel.setAlignmentX(CENTER_ALIGNMENT);
-
-		innerLayout.setMaximumSize(innerLayout.getPreferredSize());
-
-		innerLayout.setAlignmentY(CENTER_ALIGNMENT);
-
-		add(innerLayout);
-
-		add(Box.createGlue());
 	}
 
 	/**
