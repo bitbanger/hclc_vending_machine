@@ -207,12 +207,12 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		purchaseItemPanel.add(Box.createRigidArea(new Dimension(0, 100)));
 
 		JLabel purchaseItemIcon = new JLabel(new ImageIcon(ImageLoader.loadItemPurchaseImage()));
-		purchaseItemIcon.setAlignmentX(CENTER_ALIGNMENT);
+		purchaseItemIcon.setAlignmentX(LEFT_ALIGNMENT);
 		purchaseItemPanel.add(purchaseItemIcon);
 
 		purchaseItemPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-		purchaseItemLabel.setAlignmentX(CENTER_ALIGNMENT);
+		purchaseItemLabel.setAlignmentX(LEFT_ALIGNMENT);
 		purchaseItemPanel.add(purchaseItemLabel);
 
 		purchaseItemPanel.setVisible(false);
