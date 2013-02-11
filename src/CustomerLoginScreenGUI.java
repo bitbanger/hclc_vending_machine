@@ -263,7 +263,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		{
 			CashCustomerPurchaseScreen next = controller.cashLogin();
 			idTextField.clearNumberEntered();
-			CashCustomerPurchaseScreenGUI nextGUI = new CashCustomerPurchaseScreenGUI(next, master);
+			CashCustomerPurchaseScreenGUI nextGUI = new CashCustomerPurchaseScreenGUI(next, master, this);
 			master.pushContentPanel(nextGUI);
 		}
 		else if (event.getSource() == exitButton)

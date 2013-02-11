@@ -60,17 +60,24 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 	 * Amount of money (in cents) that the customer has entered
 	 **/
 	private int moneyEntered;
+	
+	/**
+	 * CustomerLoginScreenGUI that created this screen.
+	 **/
+	private CustomerLoginScreenGUI parent;
 
 	/**
 	 * Creates the panel using the given arguments.
 	 * @param controller The controller instance for this GUI.
 	 * @param master The master for this GUI.
+	 * @param parent CustomerLoginScreenGUI that created this screen.
 	 **/
-	public CashCustomerPurchaseScreenGUI(CashCustomerPurchaseScreen controller, BaseGUI master)
+	public CashCustomerPurchaseScreenGUI(CashCustomerPurchaseScreen controller, BaseGUI master, CustomerLoginScreenGUI parent)
 	{
 		master.getStatusBar().clearStatus();
 		this.master = master;
 		this.controller = controller;
+		this.parent = parent;
 		this.moneyEntered = 0;
 
 		master.setTitle("Purchase Screen");
@@ -204,6 +211,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 			master.popContentPanel();
 			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
 			master.setTitle("Login Screen");
+			parent.refreshItemPurchased(false, "");
 		}
 		else if (source == purchaseButton)
 		{
@@ -217,7 +225,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 			if (result.equals("Good"))
 			{
 				master.popContentPanel();
-				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
+				parent.refreshItemPurchased(true, "Thank you for purchasing " + controller.getPurchasedItem().getName());
 			}
 			else
 			{
