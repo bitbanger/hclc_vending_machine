@@ -71,7 +71,10 @@ public class RestockerCLI {
 	 */
 	private static void pickMachine(RestockerMachinePickerScreen restockerMachinePickerScreen) {
 		ArrayList<VendingMachine> vms = RestockerMachinePickerScreen.listActiveMachines();
-
+		if ( vms.size() == 0 ) {
+			System.out.println("There are no machines to restock.");
+			return;
+		}
 		int idNumber;
 	
 		CLIUtilities.printTitle("Please Pick a Machine");
