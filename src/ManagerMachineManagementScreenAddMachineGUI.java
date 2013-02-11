@@ -172,7 +172,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		locationPicker.setAlignmentX(LEFT_ALIGNMENT);
 		add(locationPicker);
 
-		add(Box.createRigidArea(new Dimension(0, 50)));
+		//add(Box.createRigidArea(new Dimension(0, 50)));
 
 		// Make the panel to be displayed below the location picker.
 		// It will contain the other fields and the confirm and cancel buttons.
@@ -184,27 +184,26 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 
 		// Make the panel to hold the other fields (stocking interval, rows, etc.)
 		// It will have a grid bag layout.
-		LabeledFieldPanel attributePanel = new LabeledFieldPanel();
+		LabeledFieldPanel attributePanel = locationPicker.getZipAndStatePanel();
 		attributePanel.setAlignmentX(LEFT_ALIGNMENT);
-		rightPanel.add(attributePanel);
 
 		// Add the field for stocking interval.
-		stockingIntervalField.setColumns(20);
+		stockingIntervalField.setColumns(12);
 		stockingIntervalField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)stockingIntervalField.getPreferredSize().getHeight()));
 		attributePanel.addLabeledTextField("Stocking interval (days):", stockingIntervalField);
 		
 		// Add the field for rows
-		rowField.setColumns(20);
+		rowField.setColumns(12);
 		rowField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)rowField.getPreferredSize().getHeight()));
 		attributePanel.addLabeledTextField("Number of rows:", rowField);
 		
 		// Add the field for columns.
-		colField.setColumns(20);
+		colField.setColumns(12);
 		colField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)colField.getPreferredSize().getHeight()));
 		attributePanel.addLabeledTextField("Number of columns:", colField);
 
 		// Add the field for depth.
-		depthField.setColumns(20);
+		depthField.setColumns(12);
 		depthField.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)depthField.getPreferredSize().getHeight()));
 		attributePanel.addLabeledTextField("Depth of machine:", depthField);
 

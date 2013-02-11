@@ -69,6 +69,11 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	 * The list of nearby businesses.
 	 **/
 	private Vector<String> businesses;
+	
+	/**
+	 * The right-hand zip and state panel, exposed so we can add custom text boxes.
+	 **/
+	private LabeledFieldPanel zipAndStatePanel;
 
 	/**
 	 * Creates a new location picker to edit the given location.
@@ -177,16 +182,16 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 		businessButtonPanel.add(editBusinessButton);
 
 		add(Box.createRigidArea(new Dimension(20, 0)));
-
-		LabeledFieldPanel zipAndStatePanel = new LabeledFieldPanel();
+		
+		zipAndStatePanel = new LabeledFieldPanel();
 		zipAndStatePanel.setAlignmentY(TOP_ALIGNMENT);
 		add(zipAndStatePanel);
-
-		zipCodeField.setColumns(10);
+		
 		zipCodeField.setMaximumSize(zipCodeField.getPreferredSize());
 		zipAndStatePanel.addLabeledTextField("Zip Code:", zipCodeField);
-
-		stateField.setColumns(30);
+		
+		// This dictates the longest text box length in this panel
+		stateField.setColumns(12);
 		stateField.setMaximumSize(stateField.getPreferredSize());
 		zipAndStatePanel.addLabeledTextField("State:", stateField);
 	}
@@ -248,6 +253,14 @@ public class LocationPickerPanel extends JPanel implements ActionListener
 	public String[] getNearbyBusinesses()
 	{
 		return businesses.toArray(new String[0]);
+	}
+	
+	/**
+	 * @return	The right-hand zip and state panel, to which you should add any custom text boxes you have.
+	 **/
+	public LabeledFieldPanel getZipAndStatePanel()
+	{
+		return zipAndStatePanel;
 	}
 
 	/**
