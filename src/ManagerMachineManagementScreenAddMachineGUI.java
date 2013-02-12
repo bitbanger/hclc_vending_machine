@@ -220,6 +220,9 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
 		rightPanel.add(bottomPanel);
 
+		// Space between cancel buttons and components above it  
+		bottomPanel.add(Box.createVerticalStrut(50));
+
 		// Helps center align the buttons
 		bottomPanel.add(Box.createGlue());
 
@@ -227,7 +230,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		bottomPanel.add(cancelButton);
 
 		// Space between buttons.
-		bottomPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		bottomPanel.add(Box.createRigidArea(new Dimension(430, 0)));
 
 		// Add the confirmation button.
 		bottomPanel.add(confirmButton);
