@@ -42,6 +42,11 @@ public class RestockerCLI {
 			System.out.println();
 		}
 
+		if ( list.size() == 0 ) {
+			System.out.println("There are no instructions to complete.");
+			return;
+		}
+	
 		while(true) {
 			int response = CLIUtilities.promptInt("Enter the number of the instruction completed, 0 to attempt to finish, or -1 to quit", new MinValueNumberFormat( -1 ) );
 			if ( response == 0 ) {
