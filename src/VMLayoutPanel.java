@@ -149,6 +149,14 @@ public class VMLayoutPanel extends JPanel implements ActionListener
 	}
 
 	/**
+	 * @return whether the currently-selected row is empty
+	 */
+	public boolean selectionIsEmpty()
+	{
+		return selectedRow==null || grid[selectedRow.first][selectedRow.second].getText().equals("<html>EMPTY<br /></html>");
+	}
+
+	/**
 	 * Handles a toggle button getting clicked. Ensures the toggle button clicked
 	 * remains selected and all the other toggle buttons are not selected. Also
 	 * sets selectedRow to the appropriate value.

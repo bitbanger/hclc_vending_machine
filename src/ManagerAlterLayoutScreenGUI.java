@@ -108,7 +108,7 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 			@Override
 			public boolean checkCondition()
 			{
-				return vmButtons.getSelectedRow() != null;
+				return !vmButtons.selectionIsEmpty();
 			}
 		});
 
