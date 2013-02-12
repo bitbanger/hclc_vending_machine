@@ -225,18 +225,27 @@ public class ManagerAlterLayoutScreenGUI extends JPanel implements ActionListene
 		// Commit changes clicked
 		else if (source == commitChangesButton)
 		{
-			// Try to commit the changes
-			if (controller.commitRowChanges())
+			new Thread()
 			{
-				master.popContentPanel();
-				// Display a success message
-				master.getStatusBar().setStatus("Changes committed", StatusBar.STATUS_GOOD_COLOR);
-			}
-			else
-			{
-				// Display an error message
-				master.getStatusBar().setStatus("An error occurred while attempting to commit the changes", StatusBar.STATUS_BAD_COLOR);
-			}
+				public void run()
+				{
+					master.setProcessing(commitChangesButton);
+					// Try to commit the changes
+					if (controller.commitRowChanges())
+					{
+						master.popContentPanel();
+						// Display a success message
+						master.getStatusBar().setStatus("Changes committed", StatusBar.STATUS_GOOD_COLOR);
+					}
+					else
+					{
+						// Display an error message
+						master.doneProcessing();
+						commitChangesButton.setEnabled(true);
+						master.getStatusBar().setStatus("An error occurred while attempting to commit the changes", StatusBar.STATUS_BAD_COLOR);
+					}
+				}
+			}.start();
 		}
 	}
 }
