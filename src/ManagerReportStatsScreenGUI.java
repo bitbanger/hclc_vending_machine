@@ -199,7 +199,6 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		
 		machineList = new JTable(machineData);
 		JLabel machineLabel = new JLabel("Machines:");
-		machineList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		machineList.setAlignmentX(LEFT_ALIGNMENT);
 		
 		// Create a JList of all the customers in the database
@@ -210,7 +209,6 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		}
 		customerList = new JTable(customerData);
 		JLabel customerLabel = new JLabel("Customers:");
-		customerList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		customerList.setAlignmentX(LEFT_ALIGNMENT);
 		
 		// Create a JList of all the food items in the database
@@ -221,13 +219,11 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		}
 		itemList = new JTable(itemData);
 		JLabel itemLabel = new JLabel("Items:");
-		itemList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		itemList.setAlignmentX(LEFT_ALIGNMENT);
 		setAlignmentX(LEFT_ALIGNMENT);
 		
 		// Create the show transactions button and add ourselves as an action listener
 		showTransactionsButton = new JButton("Show Transactions");
-		showTransactionsButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		showTransactionsButton.setAlignmentX(LEFT_ALIGNMENT);
 		
 		// Only one thing should be selected at a time
@@ -245,7 +241,6 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		showTransactionsButton.setEnabled(false);
 		
 		returnHomeButton = new JButton("Return to Home Screen");
-		returnHomeButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		returnHomeButton.setAlignmentX(LEFT_ALIGNMENT);
 		returnHomeButton.addActionListener(this);
 		
@@ -263,26 +258,38 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		/*TableRowSorter<TableModel> machineSorter = new TableRowSorter<TableModel>(machineList.getModel());
 		machineList.setRowSorter(machineSorter);*/
 		machineList.setAutoCreateRowSorter(true);
-		this.add(new JScrollPane(machineList));
+		machineList.getColumnModel().getColumn(2).setPreferredWidth(100);
+		//machineList.setMaximumSize(machineList.getPreferredSize());
+		JScrollPane machineScroll = new JScrollPane(machineList);
+		machineScroll.setAlignmentX(LEFT_ALIGNMENT);
+		machineScroll.setPreferredSize(new Dimension(machineList.getPreferredSize().width, machineList.getRowHeight() * (machineList.getRowCount() + 1)+2));
+		//machineScroll.setMaximumSize(machineList.getPreferredSize());
+		this.add(machineScroll);
 
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 		this.add(customerLabel);
 		add(Box.createRigidArea(new Dimension(0, 5)));
 		customerList.setAutoCreateRowSorter(true);
-		this.add(new JScrollPane(customerList));
+		JScrollPane customerScroll = new JScrollPane(customerList);
+		customerScroll.setAlignmentX(LEFT_ALIGNMENT);
+		customerScroll.setPreferredSize(new Dimension(customerList.getPreferredSize().width, customerList.getRowHeight() * (customerList.getRowCount() + 1)+2));
+		this.add(customerScroll);
 
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 		this.add(itemLabel);
 		add(Box.createRigidArea(new Dimension(0, 5)));
 		itemList.setAutoCreateRowSorter(true);
-		this.add(new JScrollPane(itemList));
+		JScrollPane itemScroll = new JScrollPane(itemList);
+		itemScroll.setAlignmentX(LEFT_ALIGNMENT);
+		itemScroll.setPreferredSize(new Dimension(itemList.getPreferredSize().width, itemList.getRowHeight() * (itemList.getRowCount() + 1)+2));
+		this.add(itemScroll);
 
 		add(Box.createRigidArea(new Dimension(0, 50)));
 
 		this.add(buttonPanel);
-		this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		//this.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}
 	
 	@Override
