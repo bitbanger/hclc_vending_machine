@@ -155,7 +155,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		bottomPanel.add(cancelButton);
 
 		// Spacing between buttons
-		bottomPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		bottomPanel.add(Box.createRigidArea(new Dimension(30, 0)));
 
 		// Purchase button
 		purchaseButton = new JButton("Purchase!");
@@ -169,7 +169,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		JButton source = (JButton)event.getSource();
+		final JButton source = (JButton)event.getSource();
 		if (source == cancelButton)
 		{
 			master.popContentPanel();
@@ -178,32 +178,39 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		}
 		else
 		{
-			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
-			String result;
-			if (selected == null)
+			new Thread()
 			{
-				FoodItem fav = favoritesPanel.getSelectedItem();
-				if (fav == null)
+				public void run()
 				{
-					master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
-					return;
+					master.setProcessing(source);
+					Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
+					String result;
+					if (selected == null)
+					{
+						FoodItem fav = favoritesPanel.getSelectedItem();
+						if (fav == null)
+						{
+							master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
+							return;
+						}
+						else
+							result = controller.tryPurchase(fav);
+					}
+					else
+						result = controller.tryPurchase(selected);
+					if (result.equals("Good"))
+					{
+						master.popContentPanel();
+						master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
+						parent.refreshItemPurchased(true, "<html><p>Thank you for purchasing " + controller.getPurchasedItem().getName() + "</p><p>Your change is " + U.formatMoney(controller.getBalance()) + "</p>");
+					}
+					else
+					{
+						master.getStatusBar().setStatus(result, StatusBar.STATUS_BAD_COLOR);
+						return;
+					}
 				}
-				else
-					result = controller.tryPurchase(fav);
-			}
-			else
-				result = controller.tryPurchase(selected);
-			if (result.equals("Good"))
-			{
-				master.popContentPanel();
-				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
-				parent.refreshItemPurchased(true, "<html><p>Thank you for purchasing " + controller.getPurchasedItem().getName() + "</p><p>Your change is " + U.formatMoney(controller.getBalance()) + "</p>");
-			}
-			else
-			{
-				master.getStatusBar().setStatus(result, StatusBar.STATUS_BAD_COLOR);
-				return;
-			}
+			}.start();
 		}
 	}
 }

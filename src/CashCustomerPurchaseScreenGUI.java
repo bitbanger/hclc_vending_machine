@@ -205,7 +205,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		JButton source = (JButton)event.getSource();
+		final JButton source = (JButton)event.getSource();
 		if (source == cancelButton)
 		{
 			master.popContentPanel();
@@ -214,24 +214,31 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 		}
 		else if (source == purchaseButton)
 		{
-			Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
-			if (selected == null)
+			new Thread()
 			{
-				master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
-				return;
-			}
-			String result = controller.tryPurchase(selected);
-			if (result.equals("Good"))
-			{
-				master.popContentPanel();
-				master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
-				parent.refreshItemPurchased(true, "<html><p>Thank you for purchasing " + controller.getPurchasedItem().getName() + "</p><p>Your change is " + U.formatMoney(controller.getBalance()) + "</p>");
-			}
-			else
-			{
-				master.getStatusBar().setStatus(result, StatusBar.STATUS_BAD_COLOR);
-				return;
-			}
+				public void run()
+				{
+					master.setProcessing(source);
+					Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
+					if (selected == null)
+					{
+						master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
+						return;
+					}
+					String result = controller.tryPurchase(selected);
+					if (result.equals("Good"))
+					{
+						master.popContentPanel();
+						master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
+						parent.refreshItemPurchased(true, "<html><p>Thank you for purchasing " + controller.getPurchasedItem().getName() + "</p><p>Your change is " + U.formatMoney(controller.getBalance()) + "</p>");
+					}
+					else
+					{
+						master.getStatusBar().setStatus(result, StatusBar.STATUS_BAD_COLOR);
+						return;
+					}
+				}
+			}.start();
 		}
 		else if (source == enterMoneyButton)
 		{

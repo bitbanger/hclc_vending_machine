@@ -214,6 +214,8 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 		purchaseItemLabel.setAlignmentX(LEFT_ALIGNMENT);
 		purchaseItemPanel.add(purchaseItemLabel);
 
+		purchaseItemPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
 		purchaseItemPanel.setVisible(false);
 
 		add(purchaseItemPanel);
@@ -241,7 +243,7 @@ public class CustomerLoginScreenGUI extends JPanel implements ActionListener
 			// Get the next controller
 			CustomerPurchaseScreen next = controller.tryLogin(Integer.parseInt(idTextField.getText()));
 
-			// If the custoker id was not found
+			// If the customer id was not found
 			if (next == null)
 			{
 				master.getStatusBar().setStatus("Customer id not found", StatusBar.STATUS_BAD_COLOR);
