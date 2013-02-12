@@ -113,8 +113,7 @@ public class StatusBar extends JPanel
 	 * @param priority	The priority of the message.
 	 **/
 	public void setStatus(String status, int priority) {
-		statusLabel.setText(status);
-		currentPriority = priority;
+		setStatus(status, STATUS_GOOD_COLOR, priority);
 	}
 
 	/**
@@ -123,8 +122,7 @@ public class StatusBar extends JPanel
 	 **/
 	public void setStatus(String status)
 	{
-		statusLabel.setText(status);
-		currentPriority = DEFAULT_PRIORITY;
+		setStatus(status, DEFAULT_PRIORITY);
 	}
 
 	/**
