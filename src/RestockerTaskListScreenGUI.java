@@ -122,7 +122,7 @@ public class RestockerTaskListScreenGUI extends JPanel
 		buttonsPanel.setAlignmentX(LEFT_ALIGNMENT);
 
 		// Do some crazy stuff with buttons
-		JButton	cancelButton = new JButton("Leave machine");
+		JButton cancelButton = new JButton("Leave machine");
 		doneButton = new ConditionButton("Done");
 		
 		// Buttons' logic
@@ -131,13 +131,20 @@ public class RestockerTaskListScreenGUI extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent ignored)
 			{
-				for(int index=0; index<tasks.length; ++index)
-					if(tasks[index].isSelected())
-						controller.removeInstruction(index+1);
-				
-				controller.completeStocking();
-				master.popContentPanel();
-				master.getStatusBar().setStatus("Restocking complete!", StatusBar.STATUS_GOOD_COLOR);
+				new Thread()
+				{
+					public void run()
+					{
+						master.setProcessing(doneButton);
+						for(int index=0; index<tasks.length; ++index)
+							if(tasks[index].isSelected())
+								controller.removeInstruction(index+1);
+						
+						controller.completeStocking();
+						master.getStatusBar().setStatus("Restocking complete!", StatusBar.STATUS_GOOD_COLOR);
+						master.popContentPanel();
+					}
+				}.start();
 			}
 		});
 		cancelButton.addActionListener(new ActionListener()
