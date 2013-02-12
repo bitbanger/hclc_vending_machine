@@ -158,7 +158,7 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 			private String[] columnNames = {"Item Name", "Price", "Days to Expiration"};
 			public String getColumnName(int col) { return columnNames[col]; }
 			public int getColumnCount() { return columnNames.length; }
-			public int getRowCount() { return controller.listCustomers().size(); }
+			public int getRowCount() { return controller.listFoodItems().size(); }
 			public Object getValueAt(int row, int col) {
 				final FoodItem item = controller.listFoodItems().get(row);
 				
