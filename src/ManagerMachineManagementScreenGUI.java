@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.GridLayout;
 import javax.swing.ListSelectionModel;
+import java.awt.Component;
 
 /**
  * Screen that allows the manager to manage machines
@@ -219,24 +220,51 @@ public class ManagerMachineManagementScreenGUI extends JPanel implements ActionL
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		Object source = event.getSource();
+		final Object source = event.getSource();
+		final Object selected = machineList.getSelectedValue();
 
 		// Deactivate button
 		if (source == deactivateButton)
 		{
-			if (controller.deactivateMachine((VendingMachine)machineList.getSelectedValue()))
-				master.getStatusBar().setStatus("Machine deactivated successfully", StatusBar.STATUS_GOOD_COLOR);
-			else
-				master.getStatusBar().setStatus("An error occurred while trying to deactivate the machine", StatusBar.STATUS_BAD_COLOR);
+			new Thread()
+			{
+				public void run()
+				{
+					master.setProcessing((Component)source);
+					if (controller.deactivateMachine((VendingMachine)selected))
+					{
+						master.doneProcessing();
+						master.getStatusBar().setStatus("Machine deactivated successfully", StatusBar.STATUS_GOOD_COLOR);
+					}
+					else
+					{
+						master.doneProcessing();
+						master.getStatusBar().setStatus("An error occurred while trying to deactivate the machine", StatusBar.STATUS_BAD_COLOR);
+					}
+				}
+			}.start();
 		}
 
 		// Reactivate button
 		else if (source == reactivateButton)
 		{
-			if (controller.reactivateMachine((VendingMachine)machineList.getSelectedValue()))
-				master.getStatusBar().setStatus("Machine reactivated successfully", StatusBar.STATUS_GOOD_COLOR);
-			else
-				master.getStatusBar().setStatus("An error occurred while trying to reactivate the machine", StatusBar.STATUS_BAD_COLOR);
+			new Thread()
+			{
+				public void run()
+				{
+					master.setProcessing((Component)source);
+					if (controller.reactivateMachine((VendingMachine)selected))
+					{
+						master.doneProcessing();
+						master.getStatusBar().setStatus("Machine reactivated successfully", StatusBar.STATUS_GOOD_COLOR);
+					}
+					else
+					{
+						master.doneProcessing();
+						master.getStatusBar().setStatus("An error occurred while trying to reactivate the machine", StatusBar.STATUS_BAD_COLOR);
+					}
+				}
+			}.start();
 		}
 
 		// Set location button

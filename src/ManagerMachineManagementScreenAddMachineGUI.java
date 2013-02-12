@@ -9,6 +9,7 @@ import javax.swing.Box;
 import java.awt.Dimension;
 import javax.swing.JLabel;
 import java.util.ArrayList;
+import java.awt.Component;
 
 /**
  * Panel that allows a manager to add machines. Used in the machine management
@@ -241,7 +242,7 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		Object source = event.getSource();
+		final Object source = event.getSource();
 
 		// If the cancel button was pressed then return to the previous panel.
 		if (source == cancelButton)
@@ -255,35 +256,43 @@ public class ManagerMachineManagementScreenAddMachineGUI extends JPanel implemen
 		// screen.
 		if (source == confirmButton)
 		{
-			// If the old layout was null then we need to make one from the
-			// manager's input.
-			if (oldLayout == null)
+			new Thread()
 			{
-				try
+				public void run()
 				{
-					oldLayout=new VMLayout(colField.getNumber(), rowField.getNumber(), depthField.getNumber());
-				}
-				catch(BadArgumentException no)
-				{
-					ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, no);
-				}
-			}
 
-			// Try adding the machine. If it works then display a success
-			// message. If it fails then display an error message.
-			if (controller.addMachine(locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses(), stockingIntervalField.getNumber(), oldLayout) != -1)
-			{
-				master.popContentPanel();
-				master.getStatusBar().setStatus("Machine added successfully!", StatusBar.STATUS_GOOD_COLOR);
-			}
-			else
-			{
-				master.popContentPanel();
-				master.getStatusBar().setStatus("An error occurred while attempting to add the machine", StatusBar.STATUS_BAD_COLOR);
-			}
-			// Refresh the list on the ManagerMachineManagementScreenGUI and go
-			// back to it.
-			parent.refreshList();
+					master.setProcessing((Component)source);
+					// If the old layout was null then we need to make one from the
+					// manager's input.
+					if (oldLayout == null)
+					{
+						try
+						{
+							oldLayout=new VMLayout(colField.getNumber(), rowField.getNumber(), depthField.getNumber());
+						}
+						catch(BadArgumentException no)
+						{
+							ControllerExceptionHandler.registerConcern(ControllerExceptionHandler.Verbosity.FATAL, no);
+						}
+					}
+
+					// Try adding the machine. If it works then display a success
+					// message. If it fails then display an error message.
+					if (controller.addMachine(locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses(), stockingIntervalField.getNumber(), oldLayout) != -1)
+					{
+						master.popContentPanel();
+						master.getStatusBar().setStatus("Machine added successfully!", StatusBar.STATUS_GOOD_COLOR);
+					}
+					else
+					{
+						master.popContentPanel();
+						master.getStatusBar().setStatus("An error occurred while attempting to add the machine", StatusBar.STATUS_BAD_COLOR);
+					}
+					// Refresh the list on the ManagerMachineManagementScreenGUI and go
+					// back to it.
+					parent.refreshList();
+				}
+			}.start();
 		}
 	}
 }

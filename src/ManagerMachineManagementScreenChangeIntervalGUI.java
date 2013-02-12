@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import java.awt.Dimension;
+import java.awt.Component;
 
 /**
  * Changes the stocking interval of a vending machine.
@@ -127,15 +127,22 @@ public class ManagerMachineManagementScreenChangeIntervalGUI extends JPanel impl
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		Object source = event.getSource();
+		final Object source = event.getSource();
 		if (source == confirmButton) {
-			if(controller.changeMachineStockingInterval(machine, stockingField.getNumber()) == 0) {
-				master.popContentPanel();
-				master.getStatusBar().setStatus("Stocking interval changed successfully", StatusBar.STATUS_GOOD_COLOR);
-			} else {
-				master.popContentPanel();
-				master.getStatusBar().setStatus("An error occurred while attempting to change the stocking interval", StatusBar.STATUS_BAD_COLOR);
-			}
+			new Thread()
+			{
+				public void run()
+				{
+					master.setProcessing((Component)source);
+					if(controller.changeMachineStockingInterval(machine, stockingField.getNumber()) == 0) {
+						master.popContentPanel();
+						master.getStatusBar().setStatus("Stocking interval changed successfully", StatusBar.STATUS_GOOD_COLOR);
+					} else {
+						master.popContentPanel();
+						master.getStatusBar().setStatus("An error occurred while attempting to change the stocking interval", StatusBar.STATUS_BAD_COLOR);
+					}
+				}
+			}.start();
 			parent.refreshList();
 		} else if (source == cancelButton) {
 			master.popContentPanel();

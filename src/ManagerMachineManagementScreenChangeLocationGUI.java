@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Component;
 
 /**
  * Changes the location of a vending machine.
@@ -108,21 +109,28 @@ public class ManagerMachineManagementScreenChangeLocationGUI extends JPanel impl
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		Object source = event.getSource();
+		final Object source = event.getSource();
 		if (source == confirmButton)
 		{
-			if (controller.changeMachineLocation(machine, locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses()))
+			new Thread()
 			{
-				master.popContentPanel();
-				master.getStatusBar().setStatus("Location changed successfully", StatusBar.STATUS_GOOD_COLOR);
-			}
-			else
-			{
-				master.popContentPanel();
-				master.getStatusBar().setStatus("An error occurred while attempting to change the location", StatusBar.STATUS_BAD_COLOR);
-			}
+				public void run()
+				{
+					master.setProcessing((Component)source);
+					if (controller.changeMachineLocation(machine, locationPicker.getZipCode(), locationPicker.getState(), locationPicker.getNearbyBusinesses()))
+					{
+						master.popContentPanel();
+						master.getStatusBar().setStatus("Location changed successfully", StatusBar.STATUS_GOOD_COLOR);
+					}
+					else
+					{
+						master.popContentPanel();
+						master.getStatusBar().setStatus("An error occurred while attempting to change the location", StatusBar.STATUS_BAD_COLOR);
+					}
 
-			parent.refreshList();
+					parent.refreshList();
+				}
+			}.start();
 		}
 		else if (source == cancelButton)
 		{
