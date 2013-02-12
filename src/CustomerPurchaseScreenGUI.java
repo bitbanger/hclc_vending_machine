@@ -202,7 +202,8 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 					{
 						master.popContentPanel();
 						master.getStatusBar().setStatus("Item purchased", StatusBar.STATUS_GOOD_COLOR);
-						parent.refreshItemPurchased(true, "<html><p>Thank you for purchasing " + controller.getPurchasedItem().getName() + ". Your change is " + U.formatMoney(controller.getBalance()) + "</p>");
+						parent.refreshItemPurchased(true, "<html><p>Thank you for purchasing " + controller.getPurchasedItem().getName() + "</p><p>Your change is " + U.formatMoney(controller.getBalance()) + "</p>");
+						master.pack();
 					}
 					else
 					{
