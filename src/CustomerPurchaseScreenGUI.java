@@ -173,7 +173,7 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 		if (source == cancelButton)
 		{
 			master.popContentPanel();
-			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
+			master.getStatusBar().setStatus("Logged out without making a purchase", StatusBar.STATUS_WARN_COLOR);
 			parent.refreshItemPurchased(false, "");
 		}
 		else

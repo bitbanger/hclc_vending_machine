@@ -209,7 +209,7 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 		if (source == cancelButton)
 		{
 			master.popContentPanel();
-			master.getStatusBar().setStatus("Logged out", StatusBar.STATUS_GOOD_COLOR);
+			master.getStatusBar().setStatus("Purchase canceled"+(controller.getBalance()>0 ? "; "+U.formatMoney(controller.getBalance())+" refunded" : ""), StatusBar.STATUS_WARN_COLOR);
 			parent.refreshItemPurchased(false, "");
 		}
 		else if (source == purchaseButton)
