@@ -222,6 +222,8 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 					Pair<Integer, Integer> selected = vmButtons.getSelectedRow();
 					if (selected == null)
 					{
+						master.doneProcessing();
+						purchaseButton.setEnabled(true);
 						master.getStatusBar().setStatus("You haven't selected an item yet!", StatusBar.STATUS_BAD_COLOR);
 						return;
 					}
