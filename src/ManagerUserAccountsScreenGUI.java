@@ -10,11 +10,16 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.Dimension;
+import javax.swing.table.TableModel;
 import java.util.ArrayList;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import java.awt.GridLayout;
 import javax.swing.JScrollPane;
+import javax.swing.event.TableModelEvent;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 
 /**
  * Manager GUI screen to manage accounts.
@@ -22,7 +27,7 @@ import javax.swing.border.EmptyBorder;
  * @author Lane Lawley <lxl5734@rit.edu>
  * @author Sol Boucher <slb1566@rit.edu>
  */
-public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListener, ListSelectionListener {
+public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListener, ListSelectionListener, TableModelListener {
 	
 	/** Controller instance to allow this screen's manipulation of the model */
 	private ManagerUserAccountsScreen controller;
@@ -34,7 +39,7 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	private JList managerList;
 	
 	/** Graphical list of all customers. */
-	private JList customerList;
+	private JTable customerList;
 	
 	/** Button used to edit existing stuff. */
 	private ConditionButton editSelectionButton;
@@ -44,6 +49,12 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	
 	/** Button used to make new customers. */
 	private JButton newCustomerButton;
+	
+	/** Model feeding the JTable of customers. */
+	private TableModel customerData;
+	
+	/** Array of customers to display in the JList. */
+	private Customer[] customerArray;
 	
 	/**
 	 * Constructor for this screen.
@@ -58,7 +69,16 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 
 
 		managerList = new JList(controller.listManagers().toArray());
-		customerList = new JList(controller.listCustomers().toArray());
+		//customerList = new JList(controller.listCustomers().toArray());
+		customerArray = controller.listCustomers().toArray(new Customer[controller.listCustomers().size()]);
+		
+		customerData = new AbstractTableModel() {
+			public int getColumnCount() { return 1; }
+			public int getRowCount() { return 10; }
+			public Object getValueAt(int row, int col) { return customerArray[row]; }	
+		};
+		customerList = new JTable(customerData);
+		
 		editSelectionButton = new ConditionButton("Edit selected user");
 		newManagerButton = new JButton("Create new manager");
 		newCustomerButton = new JButton("Create new customer");
@@ -73,7 +93,8 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 	public void refreshYourselfYouSmellAwful()
 	{
 		managerList.setListData(controller.listManagers().toArray());
-		customerList.setListData(controller.listCustomers().toArray());
+		//customerList.setListData(controller.listCustomers().toArray());
+		customerArray = controller.listCustomers().toArray(new Customer[controller.listCustomers().size()]);
 		managerList.clearSelection();
 		customerList.clearSelection();
 		editSelectionButton.checkAndSetEnabled();
@@ -140,7 +161,8 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 		
 		// Add all listeners
 		managerList.addListSelectionListener(this);
-		customerList.addListSelectionListener(this);
+		//customerList.addListSelectionListener(this);
+		customerList.getModel().addTableModelListener(this);
 		newManagerButton.addActionListener(this);
 		newCustomerButton.addActionListener(this);
 		editSelectionButton.addActionListener(this);
@@ -217,5 +239,18 @@ public class ManagerUserAccountsScreenGUI extends JPanel implements ActionListen
 			managerList.clearSelection();
 		
 		editSelectionButton.checkAndSetEnabled();
+	}
+	
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		System.out.println("Trigger!");
+		if(e.getSource() == customerData) {
+			int row = e.getFirstRow();
+			int col = e.getColumn();
+			TableModel model = (TableModel)e.getSource();
+			Customer c = (Customer)model.getValueAt(row, col);
+			
+			System.out.println(c);
+		}
 	}
 }

@@ -13,6 +13,15 @@ import javax.swing.event.ListSelectionListener;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.JTable;
+import javax.swing.event.TableModelListener;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.table.TableRowSorter;
 
 /**
  * Manager GUI screen to view sale statistics by machine, customer, and specific item.
@@ -28,13 +37,22 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 	private BaseGUI master;
 	
 	/** Graphical list of all machines */
-	private JList machineList;
+	private JTable machineList;
 	
 	/** Graphical list of all customers */
-	private JList customerList;
+	private JTable customerList;
 	
 	/** Graphical list of all food items */
-	private JList itemList;
+	private JTable itemList;
+	
+	/** The data feeding the machine list */
+	private TableModel machineData;
+	
+	/** The data feeding the customer list */
+	private TableModel customerData;
+	
+	/** The data feeding the item list */
+	private TableModel itemData;
 	
 	/** Button used to show transactions related to the selected element */
 	private JButton showTransactionsButton;
@@ -56,7 +74,6 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		this.controller = controller;
 		this.master = master;
 		
-
 		master.getStatusBar().clearStatus();
 		addComponents();
 	}
@@ -67,13 +84,120 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		
 		this.setAlignmentX(LEFT_ALIGNMENT);
 		
+		machineData = new AbstractTableModel() {
+			private String[] columnNames = {"State", "ZIP Code", "Stocking Interval", "Active?"};
+			public String getColumnName(int col) { return columnNames[col]; }
+			public int getColumnCount() { return columnNames.length; }
+			public int getRowCount() { return controller.listMachines().size(); }
+			public Object getValueAt(int row, int col) {
+				VendingMachine machine = controller.listMachines().get(row);
+				
+				Object retVal = null;
+				
+				switch(col) {
+					case 0:
+						retVal = machine.getLocation().getState();
+						break;
+					case 1:
+						retVal = machine.getLocation().getZipCode();
+						break;
+					case 2:
+						retVal = machine.getStockingInterval();
+						break;
+					case 3:
+						retVal = (machine.isActive() ? "Yes" : "No");
+						break;
+				}
+				
+				return retVal;
+			}
+			
+			@Override
+			public Class getColumnClass(int col) {
+				if (col == 1 || col == 2)
+					return Integer.class;
+				else
+					return super.getColumnClass(col);
+			}
+			
+		};
+		
+		customerData = new AbstractTableModel() {
+			private String[] columnNames = {"Name", "Account Balance"};
+			public String getColumnName(int col) { return columnNames[col]; }
+			public int getColumnCount() { return columnNames.length; }
+			public int getRowCount() { return controller.listCustomers().size(); }
+			public Object getValueAt(int row, int col) {
+				final Customer customer = controller.listCustomers().get(row);
+				
+				Object retVal = null;
+				
+				switch(col) {
+					case 0:
+						retVal = customer.getName();
+						break;
+					case 1:
+						retVal = new MoneyInteger(customer.getMoney());
+						break;
+				}
+				
+				return retVal;
+			}
+			
+			@Override
+			public Class getColumnClass(int col) {
+				if (col == 1)
+					return MoneyInteger.class;
+				else
+					return super.getColumnClass(col);
+			}
+			
+		};
+		
+		itemData = new AbstractTableModel() {
+			private String[] columnNames = {"Item Name", "Price", "Days to Expiration"};
+			public String getColumnName(int col) { return columnNames[col]; }
+			public int getColumnCount() { return columnNames.length; }
+			public int getRowCount() { return controller.listCustomers().size(); }
+			public Object getValueAt(int row, int col) {
+				final FoodItem item = controller.listFoodItems().get(row);
+				
+				Object retVal = null;
+				
+				switch(col) {
+					case 0:
+						retVal = item.getName();
+						break;
+					case 1:
+						retVal = new MoneyInteger(item.getPrice());
+						break;
+					case 2:
+						retVal = item.getFreshLength();
+				}
+				
+				return retVal;
+			}
+			
+			@Override
+			public Class getColumnClass(int col) {
+				if (col == 1)
+					return MoneyInteger.class;
+				else if (col == 2)
+					return Integer.class;
+				else
+					return super.getColumnClass(col);
+			}
+			
+		};
+		
 		// Create a JList of all the machines in the database
 		ArrayList<VendingMachine> machines = controller.listMachines();
 		String[] machineStrings = new String[machines.size()];
 		for(int i = 0; i < machines.size(); ++i) {
 			machineStrings[i] = machines.get(i).toString().substring(ModelBase.ID_SPACES);
 		}
-		machineList = new JList(machineStrings);
+		
+		machineList = new JTable(machineData);
 		JLabel machineLabel = new JLabel("Machines:");
 		machineList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		machineList.setAlignmentX(LEFT_ALIGNMENT);
@@ -84,7 +208,7 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		for(int i = 0; i < customers.size(); ++i) {
 			customerStrings[i] = customers.get(i).toString().substring(ModelBase.ID_SPACES);
 		}
-		customerList = new JList(customerStrings);
+		customerList = new JTable(customerData);
 		JLabel customerLabel = new JLabel("Customers:");
 		customerList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		customerList.setAlignmentX(LEFT_ALIGNMENT);
@@ -95,7 +219,7 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		for(int i = 0; i < items.size(); ++i) {
 			itemStrings[i] = items.get(i).toString().substring(ModelBase.ID_SPACES);
 		}
-		itemList = new JList(itemStrings);
+		itemList = new JTable(itemData);
 		JLabel itemLabel = new JLabel("Items:");
 		itemList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		itemList.setAlignmentX(LEFT_ALIGNMENT);
@@ -112,9 +236,9 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		// Add all listeners
-		machineList.addListSelectionListener(this);
-		customerList.addListSelectionListener(this);
-		itemList.addListSelectionListener(this);
+		machineList.getSelectionModel().addListSelectionListener(this);
+		customerList.getSelectionModel().addListSelectionListener(this);
+		itemList.getSelectionModel().addListSelectionListener(this);
 		showTransactionsButton.addActionListener(this);
 		
 		// Initially disable the show transactions button
@@ -136,19 +260,24 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		// Add everything to the visible panel
 		this.add(machineLabel);
 		add(Box.createRigidArea(new Dimension(0, 5)));
-		this.add(machineList);
+		/*TableRowSorter<TableModel> machineSorter = new TableRowSorter<TableModel>(machineList.getModel());
+		machineList.setRowSorter(machineSorter);*/
+		machineList.setAutoCreateRowSorter(true);
+		this.add(new JScrollPane(machineList));
 
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 		this.add(customerLabel);
 		add(Box.createRigidArea(new Dimension(0, 5)));
-		this.add(customerList);
+		customerList.setAutoCreateRowSorter(true);
+		this.add(new JScrollPane(customerList));
 
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 		this.add(itemLabel);
 		add(Box.createRigidArea(new Dimension(0, 5)));
-		this.add(itemList);
+		itemList.setAutoCreateRowSorter(true);
+		this.add(new JScrollPane(itemList));
 
 		add(Box.createRigidArea(new Dimension(0, 50)));
 
@@ -174,21 +303,25 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 			showTransactionsButton.setEnabled(true);
 		}
 		
-		int index = ((JList)event.getSource()).getLeadSelectionIndex();
-		
-		if(event.getSource() == machineList) {
+		if(event.getSource() == machineList.getSelectionModel()) {
+			int index = machineList.convertRowIndexToModel(((DefaultListSelectionModel)event.getSource()).getLeadSelectionIndex());
+			
 			customerList.clearSelection();
 			itemList.clearSelection();
 			
 			selectedModelObj = controller.listMachines().get(index);
 			
-		} else if(event.getSource() == customerList) {
+		} else if(event.getSource() == customerList.getSelectionModel()) {
+			int index = customerList.convertRowIndexToModel(((DefaultListSelectionModel)event.getSource()).getLeadSelectionIndex());
+			
 			machineList.clearSelection();
 			itemList.clearSelection();
 			
 			selectedModelObj = controller.listCustomers().get(index);
 			
-		} else if(event.getSource() == itemList) {
+		} else if(event.getSource() == itemList.getSelectionModel()) {
+			int index = itemList.convertRowIndexToModel(((DefaultListSelectionModel)event.getSource()).getLeadSelectionIndex());
+			
 			machineList.clearSelection();
 			customerList.clearSelection();
 			
@@ -196,3 +329,4 @@ public class ManagerReportStatsScreenGUI extends JPanel implements ActionListene
 		}
 	}
 }
+

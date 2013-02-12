@@ -10,6 +10,16 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.JTable;
+import javax.swing.event.TableModelListener;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.table.TableRowSorter;
+
+import java.util.GregorianCalendar;
+
 /**
  * Screen used by ManagerReportStatsScreenGUI to actually view the selected list of transactions.
  * Please forgive the long class name.
@@ -27,10 +37,13 @@ public class ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI extend
 	private ModelBase modelBaseObject;
 	
 	/** Graphical list of all transactions for the object */
-	private JList transactionList;
+	private JTable transactionList;
 	
 	/** Button to return to the main stats screen */
 	private JButton returnToMainScreenButton;
+	
+	/** The data feeding the transaction list */
+	private TableModel transactionData;
 	
 	/**
 	 * Constructor for this screen.
@@ -64,6 +77,59 @@ public class ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI extend
 			transactions = controller.listFoodItemSales((FoodItem)modelBaseObject);
 		}
 		
+		final ArrayList<Transaction> finalTransactions = transactions;
+		
+		transactionData = new AbstractTableModel() {
+			private String[] columnNames = {"Time", "Vending Machine", "Customer", "Purchased Item", "Row"};
+			public String getColumnName(int col) { return columnNames[col]; }
+			public int getColumnCount() { return columnNames.length; }
+			public int getRowCount() { return finalTransactions.size(); }
+			public Object getValueAt(int row, int col) {
+				final Transaction transaction = finalTransactions.get(row);
+				
+				Object retVal = null;
+				
+				switch(col) {
+					case 0:
+						retVal = transaction.getTimestamp().getTime();
+						break;
+					case 1:
+						retVal = transaction.getMachine();
+						break;
+					case 2:
+						retVal = transaction.getCustomer().getName();
+						break;
+					case 3:
+						retVal = transaction.getProduct().getName();
+						break;
+					case 4:
+						retVal = transaction.getRow();
+						break;
+				}
+				
+				return retVal;
+			}
+			
+			@Override
+			public Class getColumnClass(int col) {
+				switch(col) {
+					case 0:
+						return GregorianCalendar.class;
+					case 1:
+						return VendingMachine.class;
+					case 2:
+						return String.class;
+					case 3:
+						return String.class;
+					case 4:
+						return Pair.class;
+				}
+				
+				return super.getColumnClass(col);
+			}
+			
+		};
+		
 		if(transactions.size()==0)
 			master.getStatusBar().setStatus("No transactions matched query", StatusBar.STATUS_WARN_COLOR);
 		
@@ -72,7 +138,8 @@ public class ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI extend
 			transactionStrings[i] = transactions.get(i).toString().substring(ModelBase.ID_SPACES);
 		}
 		
-		transactionList = new JList(transactionStrings);
+		transactionList = new JTable(transactionData);
+		transactionList.setAutoCreateRowSorter(true);
 		transactionList.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		transactionList.setAlignmentX(LEFT_ALIGNMENT);
 		
@@ -81,7 +148,7 @@ public class ManagerReportStatsScreenViewTransactionsByModelBaseObjectGUI extend
 		returnToMainScreenButton.setAlignmentX(LEFT_ALIGNMENT);
 		returnToMainScreenButton.addActionListener(this);
 		
-		this.add(transactionList);
+		this.add(new JScrollPane(transactionList));
 		add(Box.createRigidArea(new Dimension(0, 20)));
 		this.add(returnToMainScreenButton);
 		
