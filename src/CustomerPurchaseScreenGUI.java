@@ -206,6 +206,8 @@ public class CustomerPurchaseScreenGUI extends JPanel implements ActionListener
 					}
 					else
 					{
+						master.doneProcessing();
+						purchaseButton.setEnabled(true);
 						master.getStatusBar().setStatus(result, StatusBar.STATUS_BAD_COLOR);
 						return;
 					}

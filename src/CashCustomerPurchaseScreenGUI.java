@@ -234,6 +234,8 @@ public class CashCustomerPurchaseScreenGUI extends JPanel implements ActionListe
 					}
 					else
 					{
+						master.doneProcessing();
+						purchaseButton.setEnabled(true);
 						master.getStatusBar().setStatus(result, StatusBar.STATUS_BAD_COLOR);
 						return;
 					}
