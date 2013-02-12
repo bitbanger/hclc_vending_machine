@@ -4,6 +4,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import java.util.Stack;
+import java.awt.Component;
 
 /**
  * Frame that is used for all GUIs in this project. This helps keep a consistent
@@ -115,6 +116,7 @@ public class BaseGUI extends JFrame
 		contentStack.pop();
 		displayTop();
 		statusBar.clearStatus();
+		setEnabled(true);
 	}
 
 	/**
@@ -130,5 +132,40 @@ public class BaseGUI extends JFrame
 		currentPanel.repaint();
 		validate();
 		pack();
+	}
+
+	/**
+	 * Sets the application to a processing state. This causes the following behavior:
+	 * <ul>
+	 * <li>The entire application frame is disabled, preventing the user from
+	 * changing anything</li>
+	 * <li>The component that caused the processing state (probably a button) is
+	 * disabled to help the user understand what is going on</li>
+	 * <li>The status bar is set to a warning color and displays "Processing..."<li>
+	 * <li>The master frame gets the focus, preventing weird behavior</li>
+	 * </ul>
+	 *
+	 * @param cause The component that caused this processing state.
+	 **/
+	public void setProcessing(Component cause)
+	{
+		this.requestFocusInWindow();
+		cause.setEnabled(false);
+		getStatusBar().setStatus("Processing...", StatusBar.STATUS_WARN_COLOR);
+		setEnabled(false);
+	}
+
+	/**
+	 * This method needs to be called if setProcessing() is called in a situation
+	 * where the next behavior is not to pop the content panel. This method
+	 * will reset the state so that the user can use the system again.
+	 *
+	 * Note: This does not reset the enabled status of the component that
+	 * caused the processing to occur. That must be done manually.
+	 **/
+	public void doneProcessing()
+	{
+		getStatusBar().clearStatus();
+		setEnabled(true);
 	}
 }
